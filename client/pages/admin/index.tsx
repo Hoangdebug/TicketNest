@@ -109,11 +109,11 @@ const AdminPages: React.FC = (props) => {
     return (
         <Container maxWidth="lg">
             <Box my={4}>
-                <Typography variant="h4" component="h1" gutterBottom={false} align="center">
+                <Typography variant="h4" component="h1" gutterBottom={true} align="center">
                     Sales Event Manager
                 </Typography>
-                <Grid container={false} spacing={3}>
-                    <Grid item={false} xs={12} md={6}>
+                <Grid container={true} spacing={3}>
+                    <Grid item={true} xs={12} md={6}>
                         <StyledPaper>
                             <SectionTitle variant="h6">
                                 <FaChartLine /> Monthly Sales Trend
@@ -144,7 +144,7 @@ const AdminPages: React.FC = (props) => {
                             </Box>
                         </StyledPaper>
                     </Grid>
-                    <Grid item={false} xs={12} md={6}>
+                    <Grid item={true} xs={12} md={6}>
                         <StyledPaper>
                             <SectionTitle variant="h6">
                                 <FaChartBar /> Regional Sales Comparison
@@ -175,7 +175,7 @@ const AdminPages: React.FC = (props) => {
                             </Box>
                         </StyledPaper>
                     </Grid>
-                    <Grid item={false} xs={12}>
+                    <Grid item={true} xs={12}>
                         <StyledPaper>
                             <SectionTitle variant="h6">
                                 <FaTable /> Top Product Performance
@@ -230,7 +230,7 @@ const AdminPages: React.FC = (props) => {
                             </TableContainer>
                         </StyledPaper>
                     </Grid>
-                    <Grid item={false} xs={12}>
+                    <Grid item={true} xs={12}>
                         <StyledPaper>
                             <SectionTitle variant="h6">
                                 <FaFilter /> Sales Pipeline
@@ -238,7 +238,7 @@ const AdminPages: React.FC = (props) => {
                             <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} justifyContent="space-between">
                                 {pipelineStages.map((stage, index) => (
                                     <Box key={stage.name} width={isMobile ? '100%' : '18%'} mb={isMobile ? 2 : 0}>
-                                        <Typography variant="body2" gutterBottom={false}>
+                                        <Typography variant="body2" gutterBottom={true}>
                                             {stage.name}
                                         </Typography>
                                         <LinearProgress
