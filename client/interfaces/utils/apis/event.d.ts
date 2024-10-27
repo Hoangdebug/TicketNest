@@ -34,6 +34,10 @@ interface IEventDataApiRes extends IBaseAPIRes {
     };
 }
 
+interface IEventDetailsApiRes extends IBaseAPIRes {
+    result?: IEventDataApi;
+}
+
 interface IEventUpdateByAdmin extends IBaseAPIRes {
     code: number;
     result?: IEventDataApi;

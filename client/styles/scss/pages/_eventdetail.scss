@@ -379,5 +379,21 @@
                 }
             }
         }
+        &_comment {
+            background-color: white;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            &_infor {
+                &_user {
+                    display: flex;
+                    align-items: center;
+                    img {
+                        width: 10%;
+                        height: 10%;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
     }
 }

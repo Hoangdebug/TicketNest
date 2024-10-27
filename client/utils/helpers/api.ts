@@ -159,7 +159,7 @@ export const listEventOrganizer = async () => {
 
 export const detailsEvent = async (id: string) => {
     try {
-        return await axios.get<IEventDataApiRes>(`${routes.API.EVENT.href}/${id}`);
+        return await axios.get<IEventDetailsApiRes>(`${routes.API.EVENT.href}/${id}`);
     } catch (err) {
         throw err;
     }
