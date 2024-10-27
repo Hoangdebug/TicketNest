@@ -456,7 +456,7 @@ export const fetchListEventOrganizer = async (
 
 export const fetchDetailsEvent = async (
     id: string,
-    callBack?: (result: IEventDataApiRes | IErrorAPIRes | null) => void,
+    callBack?: (result: IEventDetailsApiRes | IErrorAPIRes | null) => void,
     isLoad: boolean = true,
 ) => {
     return async (dispatch: Dispatch) => {

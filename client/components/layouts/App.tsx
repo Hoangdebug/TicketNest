@@ -99,7 +99,7 @@ const App: IAppComponent<IAppComponentProps> = (props) => {
             <Header isShow={isShowComponent && !noHeaderFooterPath.includes(router.pathname)} />
             {isOrganizerPage || (isAdminPage && isAdmin) ? (
                 <>
-                    <div className="row position-relative bases__background--gray-opacity" style={{ minHeight: '100vh' }}>
+                    <div className="row position-relative" style={{ minHeight: '100vh' }}>
                         <div className="col-xl-2 p-0">
                             <AdminSidebarComponents />
                             <div className="components__app--headerAdmin p-0">
@@ -107,7 +107,12 @@ const App: IAppComponent<IAppComponentProps> = (props) => {
                             </div>
                         </div>
                         <div className={`col-xl-9 bases__width83 p-0 bases__padding--top70 position-relative`}>
-                            <div className={`components__app--children`}>{children}</div>
+                            <div
+                                className={`components__app--children bases__background--gray-opacity p-4`}
+                                style={{ minHeight: '100vh', borderRadius: '10px' }}
+                            >
+                                {children}
+                            </div>
                         </div>
                     </div>
                 </>
