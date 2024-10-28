@@ -15,7 +15,11 @@ import { setModal } from '@redux/actions';
 import axios from 'axios';
 
 const locations = [
-    { name: 'Location A', image: 'https://phongvu.vn/cong-nghe/wp-content/uploads/2024/07/Cong-cu-AI-nen-dung-1024x640.jpg', areas: [30, 40, 50] },
+    {
+        name: 'Location A',
+        image: 'https://phongvu.vn/cong-nghe/wp-content/uploads/2024/07/Cong-cu-AI-nen-dung-1024x640.jpg',
+        areas: [30, 40, 50],
+    },
     { name: 'Location B', image: '/path/to/imageB.png', areas: [35, 45] },
     { name: 'Location C', image: '/path/to/imageC.png', areas: [25, 45] },
     { name: 'ANOTHER', image: '', areas: [] },
@@ -54,7 +58,16 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     });
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const { eventAdd, selectedLocationImage, selectedLocationAreas, ticketPrices, ticketQuantities, isValidateStartDateTime, isValidateEndDateTime, previewUrl } = state;
+    const {
+        eventAdd,
+        selectedLocationImage,
+        selectedLocationAreas,
+        ticketPrices,
+        ticketQuantities,
+        isValidateStartDateTime,
+        isValidateEndDateTime,
+        previewUrl,
+    } = state;
 
     const titleValidatorRef = createRef<IValidatorComponentHandle>();
     const descriptionValidatorRef = createRef<IValidatorComponentHandle>();
@@ -94,7 +107,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 ticketQuantities: Array(numberTicketType).fill(''),
             }));
         } else {
-            const selectedLocation = locations.find(location => location.name === value);
+            const selectedLocation = locations.find((location) => location.name === value);
             setState((prevState) => ({
                 ...prevState,
                 eventAdd: {
@@ -124,9 +137,9 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
 
         const updatedErrors = [...errorMessages];
         if (parseInt(value, 10) > selectedLocationAreas[index]) {
-            updatedErrors[index] = "Cannot select higher seat quantity";
+            updatedErrors[index] = 'Cannot select higher seat quantity';
         } else {
-            updatedErrors[index] = "";
+            updatedErrors[index] = '';
         }
 
         setErrorMessages(updatedErrors);
@@ -136,7 +149,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
         }));
     };
 
-    /////////////////////////////////////////////////////////////////////////////////////   
+    /////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         setState((prevState) => ({
             ...prevState,
@@ -465,8 +478,9 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 Day Start<span className="text-danger"></span>
                             </label>
                             <div
-                                className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                                    }`}
+                                className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                    !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                                }`}
                             >
                                 <Validator
                                     className="bases__width-percent--40 components__addevent_picker_from"
@@ -485,7 +499,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
                                     ~
                                 </span>
-
                             </div>
                         </div>
                         <div className="form-group">
@@ -493,10 +506,14 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 Day End<span className="text-danger"></span>
                             </label>
                             <div
-                                className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                                    }`}
+                                className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                    !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                                }`}
                             >
-                                <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={endDateTimeValidatorRef}>
+                                <Validator
+                                    className="bases__width-percent--40 components__addevent_picker_to"
+                                    ref={endDateTimeValidatorRef}
+                                >
                                     <DateTimePicker
                                         value={eventAdd?.day_end}
                                         onBlur={() => handleValidateEndDateTime()}
@@ -507,9 +524,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                         classNameTime="components__addevent_picker-time"
                                     />
                                 </Validator>
-
                             </div>
-
                         </div>
                         <div className="form-group">
                             <label htmlFor="description" className="pb-2">
@@ -562,7 +577,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 <Select
                                     value={eventAdd?.location}
                                     onChange={handleLocationChange}
-                                    options={locations.map(loc => ({ value: loc.name, label: loc.name }))}
+                                    options={locations.map((loc) => ({ value: loc.name, label: loc.name }))}
                                 />
                             </Validator>
                         </div>
@@ -583,7 +598,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             ticketQuantities: Array(num).fill(''),
                                         }));
                                     }}
-                                    options={[ // Danh sách các tùy chọn từ 1 đến 3
+                                    options={[
+                                        // Danh sách các tùy chọn từ 1 đến 3
                                         { value: 1, label: '1' },
                                         { value: 2, label: '2' },
                                         { value: 3, label: '3' },
@@ -606,10 +622,12 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     onChange={handleAvatarChange}
                                 />
                             </div>
-                        ) : selectedLocationImage && (
-                            <div className="components__addevent-location-image">
-                                <img src={selectedLocationImage} alt="Selected Location" className="img-thumbnail" />
-                            </div>
+                        ) : (
+                            selectedLocationImage && (
+                                <div className="components__addevent-location-image">
+                                    <img src={selectedLocationImage} alt="Selected Location" className="img-thumbnail" />
+                                </div>
+                            )
                         )}
                         {selectedLocationAreas.length > 0 && (
                             <div className="components__addevent-ticket-grid">
