@@ -37,6 +37,13 @@ export const EVENTLOCATION_AREAS: { [key in EVENTLOCATION]: number } = {
     [EVENTLOCATION.ANOTHER]: 0,
 };
 
+export const TICKET_QUANTITY_LIMITS: { [key in EVENTLOCATION]: number[] } = {
+    [EVENTLOCATION.LOCATIONA]: [50, 60, 40],
+    [EVENTLOCATION.LOCATIONB]: [40, 60],
+    [EVENTLOCATION.LOCATIONC]: [35, 75],
+    [EVENTLOCATION.ANOTHER]: [],
+};
+
 export enum EVENTTICKET {
     BASE = '50',
     MEDIUM = '60',

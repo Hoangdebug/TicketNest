@@ -14,7 +14,7 @@ import Img from '@components/commons/Img';
 import { setModal } from '@redux/actions';
 import axios from 'axios';
 
-/////theanh318 add thanh cong
+    //theanh318 add thanh cong
 const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     const { event } = props;
 
@@ -45,6 +45,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const { eventAdd, isValidateStartDateTime, isValidateEndDateTime, previewUrl } = state;
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
     const titleValidatorRef = createRef<IValidatorComponentHandle>();
     const descriptionValidatorRef = createRef<IValidatorComponentHandle>();
@@ -121,7 +122,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
 
     const handleAddTicketPrice = () => {
         const maxPrices = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
-        if ((eventAdd?.price?.length ?? 0) < maxPrices) { 
+        if ((eventAdd?.price?.length ?? 0) < maxPrices) {
             setState((prevState) => ({
                 ...prevState,
                 eventAdd: {
@@ -162,7 +163,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 ...prevState,
                 eventAdd: {
                     ...prevState.eventAdd ?? {},
-                    quantity: [...(prevState.eventAdd?.quantity ?? []), 0], 
+                    quantity: [...(prevState.eventAdd?.quantity ?? []), 0],
                 },
             }));
         }
@@ -182,13 +183,32 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     };
 
     const handleOnChangeQuantity = (index: number, value: string | number) => {
-        setState((prevState) => ({
-            ...prevState,
-            eventAdd: {
-                ...prevState.eventAdd ?? {},
-                quantity: prevState.eventAdd?.quantity?.map((q, i) => (i === index ? Number(value) : q)) || [],
-            },
-        }));
+        const location = eventAdd?.location as enums.EVENTLOCATION;
+        const maxQuantities = enums.TICKET_QUANTITY_LIMITS[location] || [];
+
+        const newValue = Number(value);
+        const maxQuantity = maxQuantities[index] ?? Infinity; 
+
+        let errorMessage = ''; 
+        if (newValue > maxQuantity) {
+            errorMessage = `Giới hạn chỉ là ${maxQuantity}`;
+        }
+
+        setErrorMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            newMessages[index] = errorMessage; 
+            return newMessages;
+        });
+
+        if (!errorMessage) {
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd ?? {},
+                    quantity: prevState.eventAdd?.quantity?.map((q, i) => (i === index ? newValue : q)) || [],
+                },
+            }));
+        }
     };
 
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -661,26 +681,27 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 Ticket Quantities<span className="text-danger">*</span>
                             </label>
                             <Validator ref={ticketQuantityValidatorRef}>
-                                {(eventAdd?.quantity ?? []).map((quantity, index) => (
-                                    <div key={index} className="d-flex align-items-center mb-2">
-                                        <Input
-                                            value={quantity}
-                                            type="signed-number"
-                                            onChange={(value: string) => handleOnChangeQuantity(index, value)}
-                                            id={`ticketquantity${index}`}
-                                            name={`ticketquantity${index}`}
-                                            placeholder={`Enter Ticket Quantity ${index + 1}`}
-                                            isBlockSpecial={true}
-                                            maxLength={10}
-                                        />
-                                        {(eventAdd?.quantity?.length ?? 0) > (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
-                                            <Button
-                                                buttonText="Remove"
-                                                onClick={() => handleRemoveTicketQuantity(index)}
-                                                background="red"
-                                                fontSize="14"
-                                                className="ms-2"
+                                {eventAdd?.quantity?.map((quantity, index) => (
+                                    <div key={index} className="d-flex flex-column mb-2">
+                                        <div className="d-flex align-items-center">
+                                            <Input
+                                                value={quantity}
+                                                type="signed-number"
+                                                onChange={(value: string) => handleOnChangeQuantity(index, value)}
+                                                id={`ticketquantity${index}`}
+                                                name={`ticketquantity${index}`}
+                                                placeholder={`Enter Ticket Quantity ${index + 1}`}
+                                                isBlockSpecial={true}
+                                                maxLength={10}
                                             />
+                                            <span className="ms-2">
+                                                Max: {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
+                                            </span>
+                                        </div>
+                                        {errorMessages[index] && (
+                                            <span style={{ color: 'red', fontSize: '20px' }}>
+                                                {errorMessages[index]}
+                                            </span>
                                         )}
                                     </div>
                                 ))}
