@@ -86,6 +86,66 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
         }));
     }, [event]);
 
+    const handleAddTicketPrice = () => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd ?? {},
+                price: [...(prevState.eventAdd?.price || []), 0],
+            },
+        }));
+    };
+
+    const handleRemoveTicketPrice = (index: number) => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd ?? {},
+                price: prevState.eventAdd?.price?.filter((_, i) => i !== index) || [],
+            },
+        }));
+    };
+
+    const handleOnChangePrice = (index: number, value: string | number) => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd ?? {},
+                price: prevState.eventAdd?.price?.map((p, i) => (i === index ? Number(value) : p)) || [],
+            },
+        }));
+    };
+
+    const handleAddTicketQuantity = () => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd ?? {},
+                quantity: [...(prevState.eventAdd?.quantity || []), 0],
+            },
+        }));
+    };
+
+    const handleRemoveTicketQuantity = (index: number) => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd ?? {},
+                quantity: prevState.eventAdd?.quantity?.filter((_, i) => i !== index) || [],
+            },
+        }));
+    };
+
+    const handleOnChangeQuantity = (index: number, value: string | number) => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd ?? {},
+                quantity: prevState.eventAdd?.quantity?.map((q, i) => (i === index ? Number(value) : q)) || [],
+            },
+        }));
+    };
+
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -513,30 +573,71 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                         </div>
                         <div className="form-group">
                             <label htmlFor="ticketPrice" className="pb-2">
-                                Ticket Price<span className="text-danger">*</span>
+                                Ticket Prices<span className="text-danger">*</span>
                             </label>
                             <Validator ref={ticketPriceValidatorRef}>
-                                <Input
-                                    value={eventAdd?.price}
-                                    type="signed-number"
-                                    onChange={(value: string) => handleOnChange('price', value)}
-                                    id="ticketprice"
-                                    name="ticketprice"
-                                    placeholder="Enter Ticket Price"
-                                    isBlockSpecial={true}
-                                    maxLength={10}
+                                {eventAdd?.price?.map((price, index) => (
+                                    <div key={index} className="d-flex align-items-center mb-2">
+                                        <Input
+                                            value={price}
+                                            type="signed-number"
+                                            onChange={(value: string) => handleOnChangePrice(index, value)}
+                                            id={`ticketprice${index}`}
+                                            name={`ticketprice${index}`}
+                                            placeholder={`Enter Ticket Price ${index + 1}`}
+                                            isBlockSpecial={true}
+                                            maxLength={10}
+                                        />
+                                        <Button
+                                            buttonText="Remove"
+                                            onClick={() => handleRemoveTicketPrice(index)}
+                                            background="red"
+                                            fontSize="14"
+                                            className="ms-2"
+                                        />
+                                    </div>
+                                ))}
+                                <Button
+                                    buttonText="Add Price"
+                                    onClick={handleAddTicketPrice}
+                                    background="blue"
+                                    fontSize="14"
+                                    className="mt-2"
                                 />
                             </Validator>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="ticketquantity" className="pb-2">
-                                Ticket Quantity<span className="text-danger">*</span>
+                            <label htmlFor="ticketQuantity" className="pb-2">
+                                Ticket Quantities<span className="text-danger">*</span>
                             </label>
                             <Validator ref={ticketQuantityValidatorRef}>
-                                <Select
-                                    value={eventAdd?.ticket_number}
-                                    onChange={(value: string) => handleOnChange('ticket_number', value)}
-                                    options={renderEventTicketOptions()}
+                                {eventAdd?.quantity?.map((quantity, index) => (
+                                    <div key={index} className="d-flex align-items-center mb-2">
+                                        <Input
+                                            value={quantity}
+                                            type="signed-number"
+                                            onChange={(value: string) => handleOnChangeQuantity(index, value)}
+                                            id={`ticketquantity${index}`}
+                                            name={`ticketquantity${index}`}
+                                            placeholder={`Enter Ticket Quantity ${index + 1}`}
+                                            isBlockSpecial={true}
+                                            maxLength={10}
+                                        />
+                                        <Button
+                                            buttonText="Remove"
+                                            onClick={() => handleRemoveTicketQuantity(index)}
+                                            background="red"
+                                            fontSize="14"
+                                            className="ms-2"
+                                        />
+                                    </div>
+                                ))}
+                                <Button
+                                    buttonText="Add Quantity"
+                                    onClick={handleAddTicketQuantity}
+                                    background="blue"
+                                    fontSize="14"
+                                    className="mt-2"
                                 />
                             </Validator>
                         </div>
