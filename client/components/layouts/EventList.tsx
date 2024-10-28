@@ -69,36 +69,24 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
             <div className="components__event--items row">
                 {filteredEvents && filteredEvents.length > 0 ? (
                     filteredEvents.map((item, index) => (
-                        <div className="col-md-3 mb-4" key={index}>
+                        <div
+                            className="col-md-3 mb-4 bases__p--cursor"
+                            key={index}
+                            onClick={() =>
+                                router.push({ pathname: routes.CLIENT.EVENT_DETAILS.href, query: { id: item._id } }, undefined, {
+                                    scroll: false,
+                                })
+                            }
+                        >
                             <div className="components__event--items-card">
                                 <div className="w-100" style={{ position: 'relative' }}>
-                                    <Img
-                                        src={item?.images ?? undefined}
-                                        alt={item?.name}
-                                        className="components__event--items-card-img img-fluid w-100"
-                                    />
-                                    <div className="components__event--items-save" onClick={handleClick}>
-                                        {isActive ? (
-                                            <BookmarkOutlinedIcon sx={{ cursor: 'pointer', color: '#fff', fontSize: '30px' }} />
-                                        ) : (
-                                            <BookmarkBorderOutlinedIcon sx={{ cursor: 'pointer', color: '#fff', fontSize: '30px' }} />
-                                        )}
-                                    </div>
+                                    <Img src={item?.images as string} className="components__event--items-card-img img-fluid w-100" />
                                 </div>
                                 <div className="p-3 ">
-                                    <h3
-                                        onClick={() =>
-                                            router.push(
-                                                { pathname: routes.CLIENT.EVENT_DETAILS.href, query: { id: item._id } },
-                                                undefined,
-                                                { scroll: false },
-                                            )
-                                        }
-                                        className="fw-bold pb-5 bases__font--20 bases__p--cusor"
-                                    >
-                                        {item?.name}
-                                    </h3>
-                                    <p>{item?.price} $</p>
+                                    <div className="d-flex align-items-center flex-row gap-2">
+                                        <h3 className="fw-bold pb-2 bases__font--20 ">{item?.name}</h3>
+                                        <p className="m-0">{item?.price} $</p>
+                                    </div>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span className="d-flex flex-row w-100 gap-2">
                                             <TodayIcon />

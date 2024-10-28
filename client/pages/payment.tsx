@@ -156,7 +156,7 @@ const Payment = () => {
                         <div className="components__payment-paymentSection-method">
                             <input type="radio" id="paypal" name="payment" value="paypal" />
                             <label>PayPal</label>
-                        </div>                        
+                        </div>
                     </div>
                 </div>
                 <div className="components__payment-paymentSection-right">
@@ -165,7 +165,7 @@ const Payment = () => {
                         <p>Seat: {formattedSeatDetails}</p>
                         <p>Number: {seatCount}</p>
                         <p>{ticketPrice}</p>
-                    </div>                    
+                    </div>
                     <div className="components__payment-paymentSection-total">
                         <h2>Order information</h2>
                         <p>Subtotal: {ticketPrice}</p>
