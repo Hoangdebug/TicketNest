@@ -7,7 +7,8 @@ interface IEventDataApi {
     day_end?: string;
     event_type?: string;
     location?: string;
-    price?: number;
+    price?: number[];
+    quantity?: number[];
     ticket_number?: string;
     createdAt?: string;
     created_by?: {

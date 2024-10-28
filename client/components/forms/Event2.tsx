@@ -14,7 +14,18 @@ import Img from '@components/commons/Img';
 import { setModal } from '@redux/actions';
 import axios from 'axios';
 
-const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
+const locations = [
+    {
+        name: 'Location A',
+        image: 'https://phongvu.vn/cong-nghe/wp-content/uploads/2024/07/Cong-cu-AI-nen-dung-1024x640.jpg',
+        areas: [30, 40, 50],
+    },
+    { name: 'Location B', image: '/path/to/imageB.png', areas: [35, 45] },
+    { name: 'Location C', image: '/path/to/imageC.png', areas: [25, 45] },
+    { name: 'ANOTHER', image: '', areas: [] },
+];
+
+const AddEventForm2: IAddEventComponent<IAddEventComponentProps> = (props) => {
     const { event } = props;
 
     const dispatch = useDispatch();
@@ -39,11 +50,24 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 ...(event ?? {}),
             },
             previewUrl,
+            selectedLocationImage: '',
+            selectedLocationAreas: [],
+            ticketPrices: [],
+            ticketQuantities: [],
         };
     });
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const { eventAdd, isValidateStartDateTime, isValidateEndDateTime, previewUrl } = state;
+    const {
+        eventAdd,
+        selectedLocationImage,
+        selectedLocationAreas,
+        ticketPrices,
+        ticketQuantities,
+        isValidateStartDateTime,
+        isValidateEndDateTime,
+        previewUrl,
+    } = state;
 
     const titleValidatorRef = createRef<IValidatorComponentHandle>();
     const descriptionValidatorRef = createRef<IValidatorComponentHandle>();
@@ -65,7 +89,67 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             },
         }));
     };
+    /////////////////////////////////////////////////////////////////////////////////////
+    const [errorMessages, setErrorMessages] = useState([]); // Thêm trạng thái lưu lỗi
+    const [numberTicketType, setNumberTicketType] = useState(1);
 
+    const handleLocationChange = (value) => {
+        if (value === 'ANOTHER') {
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd,
+                    location: value,
+                },
+                selectedLocationImage: '', // Không hiển thị ảnh
+                selectedLocationAreas: Array(numberTicketType).fill(''), // Số lượng area dựa trên số lượng ticket type
+                ticketPrices: Array(numberTicketType).fill(''),
+                ticketQuantities: Array(numberTicketType).fill(''),
+            }));
+        } else {
+            const selectedLocation = locations.find((location) => location.name === value);
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd,
+                    location: value,
+                },
+                selectedLocationImage: selectedLocation?.image ?? '',
+                selectedLocationAreas: selectedLocation?.areas ?? [],
+                ticketPrices: selectedLocation?.areas.map(() => ''),
+                ticketQuantities: selectedLocation?.areas.map(() => ''),
+            }));
+        }
+    };
+
+    const handleTicketPriceChange = (index, value) => {
+        const updatedPrices = [...ticketPrices];
+        updatedPrices[index] = value;
+        setState((prevState) => ({
+            ...prevState,
+            ticketPrices: updatedPrices,
+        }));
+    };
+
+    const handleTicketQuantityChange = (index, value) => {
+        const updatedQuantities = [...ticketQuantities];
+        updatedQuantities[index] = value;
+
+        const updatedErrors = [...errorMessages];
+        if (parseInt(value, 10) > selectedLocationAreas[index]) {
+            updatedErrors[index] = 'Cannot select higher seat quantity';
+        } else {
+            updatedErrors[index] = '';
+        }
+
+        setErrorMessages(updatedErrors);
+        setState((prevState) => ({
+            ...prevState,
+            ticketQuantities: updatedQuantities,
+        }));
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         setState((prevState) => ({
             ...prevState,
@@ -76,9 +160,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 day_start: event?.day_start ?? '',
                 day_end: event?.day_end ?? '',
                 event_type: event?.event_type ?? enums.EVENTTYPE.MUSIC,
-                location: event?.location ?? enums.EVENTLOCATION.LOCATIONA,
-                price: event?.price ?? [0],
-                quantity: event?.quantity ?? [0],
+                location: event?.location ?? '',
+                price: event?.price ?? 0,
                 ticket_number: event?.ticket_number ?? enums.EVENTTICKET.BASE,
             },
             previewUrl: typeof event?.images === 'string' ? event.images : prevState.previewUrl,
@@ -239,29 +322,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
         return eventTypeOptions;
     };
 
-    const renderEventLocationOptions = () => {
-        const eventLocationOptions = [
-            {
-                value: enums.EVENTLOCATION.LOCATIONA,
-                label: enums.EVENTLOCATION.LOCATIONA,
-            },
-            {
-                value: enums.EVENTLOCATION.LOCATIONB,
-                label: enums.EVENTLOCATION.LOCATIONB,
-            },
-            {
-                value: enums.EVENTLOCATION.LOCATIONC,
-                label: enums.EVENTLOCATION.LOCATIONC,
-            },
-            {
-                value: enums.EVENTLOCATION.ANOTHER,
-                label: enums.EVENTLOCATION.ANOTHER,
-            },
-        ];
-
-        return eventLocationOptions;
-    };
-
     const renderEventTicketOptions = () => {
         const eventTicketOptions = [
             {
@@ -413,41 +473,61 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 />
                             </Validator>
                         </div>
-                        <div
-                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                        <div className="form-group">
+                            <label htmlFor="location" className="pb-2">
+                                Day Start<span className="text-danger"></span>
+                            </label>
+                            <div
+                                className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                    !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
                                 }`}
-                        >
-                            <Validator
-                                className="bases__width-percent--40 components__addevent_picker_from"
-                                ref={startDateTimeValidatorRef}
                             >
-                                <DateTimePicker
-                                    value={eventAdd?.day_start}
-                                    onBlur={() => handleValidateStartDateTime()}
-                                    onChange={(value: string) => handleOnChange('day_start', value)}
-                                    maxDate={null}
-                                    maxTime={null}
-                                    classNameDate="components__addevent_picker-date"
-                                    classNameTime="components__addevent_picker-time"
-                                />
-                            </Validator>
-                            <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
-                                ~
-                            </span>
-                            <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={endDateTimeValidatorRef}>
-                                <DateTimePicker
-                                    value={eventAdd?.day_end}
-                                    onBlur={() => handleValidateEndDateTime()}
-                                    onChange={(value: string) => handleOnChange('day_end', value)}
-                                    minDate={null}
-                                    minTime={null}
-                                    classNameDate="components__addevent_picker-date"
-                                    classNameTime="components__addevent_picker-time"
-                                />
-                            </Validator>
+                                <Validator
+                                    className="bases__width-percent--40 components__addevent_picker_from"
+                                    ref={startDateTimeValidatorRef}
+                                >
+                                    <DateTimePicker
+                                        value={eventAdd?.day_start}
+                                        onBlur={() => handleValidateStartDateTime()}
+                                        onChange={(value: string) => handleOnChange('day_start', value)}
+                                        maxDate={null}
+                                        maxTime={null}
+                                        classNameDate="components__addevent_picker-date"
+                                        classNameTime="components__addevent_picker-time"
+                                    />
+                                </Validator>
+                                <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
+                                    ~
+                                </span>
+                            </div>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="avatar" className="pb-2">
+                            <label htmlFor="location" className="pb-2">
+                                Day End<span className="text-danger"></span>
+                            </label>
+                            <div
+                                className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                    !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                                }`}
+                            >
+                                <Validator
+                                    className="bases__width-percent--40 components__addevent_picker_to"
+                                    ref={endDateTimeValidatorRef}
+                                >
+                                    <DateTimePicker
+                                        value={eventAdd?.day_end}
+                                        onBlur={() => handleValidateEndDateTime()}
+                                        onChange={(value: string) => handleOnChange('day_end', value)}
+                                        minDate={null}
+                                        minTime={null}
+                                        classNameDate="components__addevent_picker-date"
+                                        classNameTime="components__addevent_picker-time"
+                                    />
+                                </Validator>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="description" className="pb-2">
                                 Avatar <span className="text-danger">*</span>
                             </label>
                             <div className="form-group d-flex justify-content-center align-items-center col-md-12">
@@ -493,53 +573,113 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             <label htmlFor="location" className="pb-2">
                                 Location<span className="text-danger">*</span>
                             </label>
-                            <Validator ref={locationValidatorRef}>
+                            <Validator>
                                 <Select
                                     value={eventAdd?.location}
-                                    onChange={(value: string) => handleOnChange('location', value)}
-                                    options={renderEventLocationOptions()}
-                                />
-                            </Validator>
-                            {eventAdd?.location && (
-                                <div className="mt-3">
-                                    <img
-                                        src={enums.EVENTLOCATION_IMAGE_URL[eventAdd.location as enums.EVENTLOCATION]} // Lấy URL từ enums
-                                        alt="Location preview"
-                                        style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="ticketPrice" className="pb-2">
-                                Ticket Price<span className="text-danger">*</span>
-                            </label>
-                            <Validator ref={ticketPriceValidatorRef}>
-                                <Input
-                                    value={eventAdd?.price}
-                                    type="signed-number"
-                                    onChange={(value: string) => handleOnChange('price', value)}
-                                    id="ticketprice"
-                                    name="ticketprice"
-                                    placeholder="Enter Ticket Price"
-                                    isBlockSpecial={true}
-                                    maxLength={10}
+                                    onChange={handleLocationChange}
+                                    options={locations.map((loc) => ({ value: loc.name, label: loc.name }))}
                                 />
                             </Validator>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="ticketquantity" className="pb-2">
-                                Ticket Quantity<span className="text-danger">*</span>
-                            </label>
-                            <Validator ref={ticketQuantityValidatorRef}>
+                        {eventAdd?.location === 'ANOTHER' && (
+                            <div className="form-group">
+                                <label htmlFor="numberTicketType" className="pb-2">
+                                    Number Ticket type <span className="text-danger">*</span> (Max: 3)
+                                </label>
                                 <Select
-                                    value={eventAdd?.ticket_number}
-                                    onChange={(value: string) => handleOnChange('ticket_number', value)}
-                                    options={renderEventTicketOptions()}
+                                    value={numberTicketType}
+                                    onChange={(value) => {
+                                        const num = parseInt(value, 10); // Chọn số từ danh sách
+                                        setNumberTicketType(num);
+                                        setState((prevState) => ({
+                                            ...prevState,
+                                            selectedLocationAreas: Array(num).fill(''), // Cập nhật số lượng area dựa trên lựa chọn
+                                            ticketPrices: Array(num).fill(''),
+                                            ticketQuantities: Array(num).fill(''),
+                                        }));
+                                    }}
+                                    options={[
+                                        // Danh sách các tùy chọn từ 1 đến 3
+                                        { value: 1, label: '1' },
+                                        { value: 2, label: '2' },
+                                        { value: 3, label: '3' },
+                                    ]}
+                                    id="numberTicketType"
+                                    name="numberTicketType"
                                 />
-                            </Validator>
-                        </div>
+                            </div>
+                        )}
+                        {eventAdd?.location === 'ANOTHER' ? (
+                            <div className="form-group">
+                                <label htmlFor="anotherImage" className="pb-2">
+                                    Upload Seat Map Image <span className="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="file"
+                                    className="form-control"
+                                    id="anotherImage"
+                                    name="anotherImage"
+                                    onChange={handleAvatarChange}
+                                />
+                            </div>
+                        ) : (
+                            selectedLocationImage && (
+                                <div className="components__addevent-location-image">
+                                    <img src={selectedLocationImage} alt="Selected Location" className="img-thumbnail" />
+                                </div>
+                            )
+                        )}
+                        {selectedLocationAreas.length > 0 && (
+                            <div className="components__addevent-ticket-grid">
+                                {/* Ticket Price */}
+                                <div className="components__addevent-ticket-grid-row">
+                                    <label htmlFor="location" className="pb-2">
+                                        Ticket Price<span className="text-danger">*</span>
+                                    </label>
+                                    <div className="components__addevent-ticket-grid-row-items">
+                                        {selectedLocationAreas.map((_, index) => (
+                                            <div key={index} className="components__addevent-ticket-grid-row-items-item">
+                                                <label>Area {index + 1}</label>
+                                                <Input
+                                                    value={ticketPrices[index]}
+                                                    type="signed-number"
+                                                    onChange={(value) => handleTicketPriceChange(index, value)}
+                                                    id={`ticketPriceArea${index}`}
+                                                    name={`ticketPriceArea${index}`}
+                                                    placeholder={`Enter Price`}
+                                                    isBlockSpecial={true}
+                                                    maxLength={10}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
 
+                                {/* Ticket Quantity */}
+                                <div className="components__addevent-ticket-grid-row">
+                                    <label htmlFor="location" className="pb-2">
+                                        Ticket Quantity<span className="text-danger">*</span>
+                                    </label>
+                                    <div className="components__addevent-ticket-grid-row-items">
+                                        {selectedLocationAreas.map((_, index) => (
+                                            <div key={index} className="components__addevent-ticket-grid-row-items-item">
+                                                <label>Area {index + 1}</label>
+                                                <Input
+                                                    value={ticketQuantities[index]}
+                                                    type="signed-number"
+                                                    onChange={(value) => handleTicketQuantityChange(index, value)}
+                                                    id={`ticketQuantityArea${index}`}
+                                                    name={`ticketQuantityArea${index}`}
+                                                    placeholder={`Enter Quantity`}
+                                                    isBlockSpecial={true}
+                                                    maxLength={10}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="d-flex flex-row-reverse gap-2">
@@ -551,4 +691,4 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     );
 };
 
-export default AddEventForm;
+export default AddEventForm2;
