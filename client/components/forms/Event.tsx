@@ -14,6 +14,7 @@ import Img from '@components/commons/Img';
 import { setModal } from '@redux/actions';
 import axios from 'axios';
 
+/////theanh318 add thanh cong
 const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     const { event } = props;
 
