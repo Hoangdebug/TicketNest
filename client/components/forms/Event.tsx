@@ -14,17 +14,7 @@ import Img from '@components/commons/Img';
 import { setModal } from '@redux/actions';
 import axios from 'axios';
 
-const locations = [
-    {
-        name: 'Location A',
-        image: 'https://phongvu.vn/cong-nghe/wp-content/uploads/2024/07/Cong-cu-AI-nen-dung-1024x640.jpg',
-        areas: [30, 40, 50],
-    },
-    { name: 'Location B', image: '/path/to/imageB.png', areas: [35, 45] },
-    { name: 'Location C', image: '/path/to/imageC.png', areas: [25, 45] },
-    { name: 'ANOTHER', image: '', areas: [] },
-];
-
+    //theanh318 add thanh cong
 const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     const { event } = props;
 
@@ -50,24 +40,12 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 ...(event ?? {}),
             },
             previewUrl,
-            selectedLocationImage: '',
-            selectedLocationAreas: [],
-            ticketPrices: [],
-            ticketQuantities: [],
         };
     });
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const {
-        eventAdd,
-        selectedLocationImage,
-        selectedLocationAreas,
-        ticketPrices,
-        ticketQuantities,
-        isValidateStartDateTime,
-        isValidateEndDateTime,
-        previewUrl,
-    } = state;
+    const { eventAdd, isValidateStartDateTime, isValidateEndDateTime, previewUrl } = state;
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
     const titleValidatorRef = createRef<IValidatorComponentHandle>();
     const descriptionValidatorRef = createRef<IValidatorComponentHandle>();
@@ -89,67 +67,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             },
         }));
     };
-    /////////////////////////////////////////////////////////////////////////////////////
-    const [errorMessages, setErrorMessages] = useState([]); // Thêm trạng thái lưu lỗi
-    const [numberTicketType, setNumberTicketType] = useState(1);
 
-    const handleLocationChange = (value) => {
-        if (value === 'ANOTHER') {
-            setState((prevState) => ({
-                ...prevState,
-                eventAdd: {
-                    ...prevState.eventAdd,
-                    location: value,
-                },
-                selectedLocationImage: '', // Không hiển thị ảnh
-                selectedLocationAreas: Array(numberTicketType).fill(''), // Số lượng area dựa trên số lượng ticket type
-                ticketPrices: Array(numberTicketType).fill(''),
-                ticketQuantities: Array(numberTicketType).fill(''),
-            }));
-        } else {
-            const selectedLocation = locations.find((location) => location.name === value);
-            setState((prevState) => ({
-                ...prevState,
-                eventAdd: {
-                    ...prevState.eventAdd,
-                    location: value,
-                },
-                selectedLocationImage: selectedLocation?.image ?? '',
-                selectedLocationAreas: selectedLocation?.areas ?? [],
-                ticketPrices: selectedLocation?.areas.map(() => ''),
-                ticketQuantities: selectedLocation?.areas.map(() => ''),
-            }));
-        }
-    };
-
-    const handleTicketPriceChange = (index, value) => {
-        const updatedPrices = [...ticketPrices];
-        updatedPrices[index] = value;
-        setState((prevState) => ({
-            ...prevState,
-            ticketPrices: updatedPrices,
-        }));
-    };
-
-    const handleTicketQuantityChange = (index, value) => {
-        const updatedQuantities = [...ticketQuantities];
-        updatedQuantities[index] = value;
-
-        const updatedErrors = [...errorMessages];
-        if (parseInt(value, 10) > selectedLocationAreas[index]) {
-            updatedErrors[index] = 'Cannot select higher seat quantity';
-        } else {
-            updatedErrors[index] = '';
-        }
-
-        setErrorMessages(updatedErrors);
-        setState((prevState) => ({
-            ...prevState,
-            ticketQuantities: updatedQuantities,
-        }));
-    };
-
-    /////////////////////////////////////////////////////////////////////////////////////
     useEffect(() => {
         setState((prevState) => ({
             ...prevState,
@@ -160,13 +78,138 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 day_start: event?.day_start ?? '',
                 day_end: event?.day_end ?? '',
                 event_type: event?.event_type ?? enums.EVENTTYPE.MUSIC,
-                location: event?.location ?? '',
-                price: event?.price ?? 0,
+                location: event?.location ?? enums.EVENTLOCATION.LOCATIONA,
+                price: event?.price ?? [0],
+                quantity: event?.quantity ?? [0],
                 ticket_number: event?.ticket_number ?? enums.EVENTTICKET.BASE,
             },
             previewUrl: typeof event?.images === 'string' ? event.images : prevState.previewUrl,
         }));
     }, [event]);
+
+    const handleLocationChange = (value: string) => {
+        let newPrices = eventAdd?.price || [];
+        let newQuantities = eventAdd?.quantity || [];
+
+        switch (value) {
+            case enums.EVENTLOCATION.LOCATIONA:
+                newPrices = newPrices.slice(0, 3);
+                newQuantities = newQuantities.slice(0, 3);
+                while (newPrices.length < 3) newPrices.push(0);
+                while (newQuantities.length < 3) newQuantities.push(0);
+                break;
+            case enums.EVENTLOCATION.LOCATIONB:
+            case enums.EVENTLOCATION.LOCATIONC:
+                newPrices = newPrices.slice(0, 2);
+                newQuantities = newQuantities.slice(0, 2);
+                while (newPrices.length < 2) newPrices.push(0);
+                while (newQuantities.length < 2) newQuantities.push(0);
+                break;
+            default:
+                break;
+        }
+
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd,
+                location: value,
+                price: newPrices,
+                quantity: newQuantities,
+            },
+        }));
+    };
+
+    const handleAddTicketPrice = () => {
+        const maxPrices = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
+        if ((eventAdd?.price?.length ?? 0) < maxPrices) {
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd ?? {},
+                    price: [...(prevState.eventAdd?.price ?? []), 0],
+                },
+            }));
+        }
+    };
+
+    const handleRemoveTicketPrice = (index: number) => {
+        const minPrices = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
+        if ((eventAdd?.price?.length ?? 0) > minPrices) {
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd ?? {},
+                    price: (prevState.eventAdd?.price ?? []).filter((_, i) => i !== index),
+                },
+            }));
+        }
+    };
+
+    const handleOnChangePrice = (index: number, value: string | number) => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...prevState.eventAdd ?? {},
+                price: prevState.eventAdd?.price?.map((p, i) => (i === index ? Number(value) : p)) || [],
+            },
+        }));
+    };
+
+    const handleAddTicketQuantity = () => {
+        const maxQuantities = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
+        if ((eventAdd?.quantity?.length ?? 0) < maxQuantities) {
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd ?? {},
+                    quantity: [...(prevState.eventAdd?.quantity ?? []), 0],
+                },
+            }));
+        }
+    };
+
+    const handleRemoveTicketQuantity = (index: number) => {
+        const minQuantities = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
+        if ((eventAdd?.quantity?.length ?? 0) > minQuantities) {
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd ?? {},
+                    quantity: (prevState.eventAdd?.quantity ?? []).filter((_, i) => i !== index),
+                },
+            }));
+        }
+    };
+
+    const handleOnChangeQuantity = (index: number, value: string | number) => {
+        const location = eventAdd?.location as enums.EVENTLOCATION;
+        const maxQuantities = enums.TICKET_QUANTITY_LIMITS[location] || [];
+
+        const newValue = Number(value);
+        const maxQuantity = maxQuantities[index] ?? Infinity; 
+
+        let errorMessage = ''; 
+        if (newValue > maxQuantity) {
+            errorMessage = `Giới hạn chỉ là ${maxQuantity}`;
+        }
+
+        setErrorMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+            newMessages[index] = errorMessage; 
+            return newMessages;
+        });
+
+        if (!errorMessage) {
+            setState((prevState) => ({
+                ...prevState,
+                eventAdd: {
+                    ...prevState.eventAdd ?? {},
+                    quantity: prevState.eventAdd?.quantity?.map((q, i) => (i === index ? newValue : q)) || [],
+                },
+            }));
+        }
+    };
 
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -322,6 +365,29 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
         return eventTypeOptions;
     };
 
+    const renderEventLocationOptions = () => {
+        const eventLocationOptions = [
+            {
+                value: enums.EVENTLOCATION.LOCATIONA,
+                label: enums.EVENTLOCATION.LOCATIONA,
+            },
+            {
+                value: enums.EVENTLOCATION.LOCATIONB,
+                label: enums.EVENTLOCATION.LOCATIONB,
+            },
+            {
+                value: enums.EVENTLOCATION.LOCATIONC,
+                label: enums.EVENTLOCATION.LOCATIONC,
+            },
+            {
+                value: enums.EVENTLOCATION.ANOTHER,
+                label: enums.EVENTLOCATION.ANOTHER,
+            },
+        ];
+
+        return eventLocationOptions;
+    };
+
     const renderEventTicketOptions = () => {
         const eventTicketOptions = [
             {
@@ -473,61 +539,41 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 />
                             </Validator>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="location" className="pb-2">
-                                Day Start<span className="text-danger"></span>
-                            </label>
-                            <div
-                                className={`w-100 d-flex flex-wrap components__addevent_picker ${
-                                    !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                        <div
+                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
                                 }`}
+                        >
+                            <Validator
+                                className="bases__width-percent--40 components__addevent_picker_from"
+                                ref={startDateTimeValidatorRef}
                             >
-                                <Validator
-                                    className="bases__width-percent--40 components__addevent_picker_from"
-                                    ref={startDateTimeValidatorRef}
-                                >
-                                    <DateTimePicker
-                                        value={eventAdd?.day_start}
-                                        onBlur={() => handleValidateStartDateTime()}
-                                        onChange={(value: string) => handleOnChange('day_start', value)}
-                                        maxDate={null}
-                                        maxTime={null}
-                                        classNameDate="components__addevent_picker-date"
-                                        classNameTime="components__addevent_picker-time"
-                                    />
-                                </Validator>
-                                <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
-                                    ~
-                                </span>
-                            </div>
+                                <DateTimePicker
+                                    value={eventAdd?.day_start}
+                                    onBlur={() => handleValidateStartDateTime()}
+                                    onChange={(value: string) => handleOnChange('day_start', value)}
+                                    maxDate={null}
+                                    maxTime={null}
+                                    classNameDate="components__addevent_picker-date"
+                                    classNameTime="components__addevent_picker-time"
+                                />
+                            </Validator>
+                            <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
+                                ~
+                            </span>
+                            <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={endDateTimeValidatorRef}>
+                                <DateTimePicker
+                                    value={eventAdd?.day_end}
+                                    onBlur={() => handleValidateEndDateTime()}
+                                    onChange={(value: string) => handleOnChange('day_end', value)}
+                                    minDate={null}
+                                    minTime={null}
+                                    classNameDate="components__addevent_picker-date"
+                                    classNameTime="components__addevent_picker-time"
+                                />
+                            </Validator>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="location" className="pb-2">
-                                Day End<span className="text-danger"></span>
-                            </label>
-                            <div
-                                className={`w-100 d-flex flex-wrap components__addevent_picker ${
-                                    !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                                }`}
-                            >
-                                <Validator
-                                    className="bases__width-percent--40 components__addevent_picker_to"
-                                    ref={endDateTimeValidatorRef}
-                                >
-                                    <DateTimePicker
-                                        value={eventAdd?.day_end}
-                                        onBlur={() => handleValidateEndDateTime()}
-                                        onChange={(value: string) => handleOnChange('day_end', value)}
-                                        minDate={null}
-                                        minTime={null}
-                                        classNameDate="components__addevent_picker-date"
-                                        classNameTime="components__addevent_picker-time"
-                                    />
-                                </Validator>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="description" className="pb-2">
+                            <label htmlFor="avatar" className="pb-2">
                                 Avatar <span className="text-danger">*</span>
                             </label>
                             <div className="form-group d-flex justify-content-center align-items-center col-md-12">
@@ -573,113 +619,104 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             <label htmlFor="location" className="pb-2">
                                 Location<span className="text-danger">*</span>
                             </label>
-                            <Validator>
+                            <Validator ref={locationValidatorRef}>
                                 <Select
                                     value={eventAdd?.location}
-                                    onChange={handleLocationChange}
-                                    options={locations.map((loc) => ({ value: loc.name, label: loc.name }))}
+                                    onChange={(value: string) => handleLocationChange(value)}
+                                    options={renderEventLocationOptions()}
                                 />
                             </Validator>
+                            {eventAdd?.location && (
+                                <div className="mt-3">
+                                    <img
+                                        src={enums.EVENTLOCATION_IMAGE_URL[eventAdd.location as enums.EVENTLOCATION]}
+                                        alt="Location preview"
+                                        style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                                    />
+                                </div>
+                            )}
                         </div>
-                        {eventAdd?.location === 'ANOTHER' && (
-                            <div className="form-group">
-                                <label htmlFor="numberTicketType" className="pb-2">
-                                    Number Ticket type <span className="text-danger">*</span> (Max: 3)
-                                </label>
-                                <Select
-                                    value={numberTicketType}
-                                    onChange={(value) => {
-                                        const num = parseInt(value, 10); // Chọn số từ danh sách
-                                        setNumberTicketType(num);
-                                        setState((prevState) => ({
-                                            ...prevState,
-                                            selectedLocationAreas: Array(num).fill(''), // Cập nhật số lượng area dựa trên lựa chọn
-                                            ticketPrices: Array(num).fill(''),
-                                            ticketQuantities: Array(num).fill(''),
-                                        }));
-                                    }}
-                                    options={[
-                                        // Danh sách các tùy chọn từ 1 đến 3
-                                        { value: 1, label: '1' },
-                                        { value: 2, label: '2' },
-                                        { value: 3, label: '3' },
-                                    ]}
-                                    id="numberTicketType"
-                                    name="numberTicketType"
-                                />
-                            </div>
-                        )}
-                        {eventAdd?.location === 'ANOTHER' ? (
-                            <div className="form-group">
-                                <label htmlFor="anotherImage" className="pb-2">
-                                    Upload Seat Map Image <span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="file"
-                                    className="form-control"
-                                    id="anotherImage"
-                                    name="anotherImage"
-                                    onChange={handleAvatarChange}
-                                />
-                            </div>
-                        ) : (
-                            selectedLocationImage && (
-                                <div className="components__addevent-location-image">
-                                    <img src={selectedLocationImage} alt="Selected Location" className="img-thumbnail" />
-                                </div>
-                            )
-                        )}
-                        {selectedLocationAreas.length > 0 && (
-                            <div className="components__addevent-ticket-grid">
-                                {/* Ticket Price */}
-                                <div className="components__addevent-ticket-grid-row">
-                                    <label htmlFor="location" className="pb-2">
-                                        Ticket Price<span className="text-danger">*</span>
-                                    </label>
-                                    <div className="components__addevent-ticket-grid-row-items">
-                                        {selectedLocationAreas.map((_, index) => (
-                                            <div key={index} className="components__addevent-ticket-grid-row-items-item">
-                                                <label>Area {index + 1}</label>
-                                                <Input
-                                                    value={ticketPrices[index]}
-                                                    type="signed-number"
-                                                    onChange={(value) => handleTicketPriceChange(index, value)}
-                                                    id={`ticketPriceArea${index}`}
-                                                    name={`ticketPriceArea${index}`}
-                                                    placeholder={`Enter Price`}
-                                                    isBlockSpecial={true}
-                                                    maxLength={10}
-                                                />
-                                            </div>
-                                        ))}
+                        <div className="form-group">
+                            <label htmlFor="ticketPrice" className="pb-2">
+                                Ticket Prices<span className="text-danger">*</span>
+                            </label>
+                            <Validator ref={ticketPriceValidatorRef}>
+                                {(eventAdd?.price ?? []).map((price, index) => (
+                                    <div key={index} className="d-flex align-items-center mb-2">
+                                        <Input
+                                            value={price}
+                                            type="signed-number"
+                                            onChange={(value: string) => handleOnChangePrice(index, value)}
+                                            id={`ticketprice${index}`}
+                                            name={`ticketprice${index}`}
+                                            placeholder={`Enter Ticket Price ${index + 1}`}
+                                            isBlockSpecial={true}
+                                            maxLength={10}
+                                        />
+                                        {(eventAdd?.price?.length ?? 0) > (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
+                                            <Button
+                                                buttonText="Remove"
+                                                onClick={() => handleRemoveTicketPrice(index)}
+                                                background="red"
+                                                fontSize="14"
+                                                className="ms-2"
+                                            />
+                                        )}
                                     </div>
-                                </div>
+                                ))}
+                                {(eventAdd?.price?.length ?? 0) < (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
+                                    <Button
+                                        buttonText="Add Price"
+                                        onClick={handleAddTicketPrice}
+                                        background="blue"
+                                        fontSize="14"
+                                        className="mt-2"
+                                    />
+                                )}
+                            </Validator>
+                        </div>
 
-                                {/* Ticket Quantity */}
-                                <div className="components__addevent-ticket-grid-row">
-                                    <label htmlFor="location" className="pb-2">
-                                        Ticket Quantity<span className="text-danger">*</span>
-                                    </label>
-                                    <div className="components__addevent-ticket-grid-row-items">
-                                        {selectedLocationAreas.map((_, index) => (
-                                            <div key={index} className="components__addevent-ticket-grid-row-items-item">
-                                                <label>Area {index + 1}</label>
-                                                <Input
-                                                    value={ticketQuantities[index]}
-                                                    type="signed-number"
-                                                    onChange={(value) => handleTicketQuantityChange(index, value)}
-                                                    id={`ticketQuantityArea${index}`}
-                                                    name={`ticketQuantityArea${index}`}
-                                                    placeholder={`Enter Quantity`}
-                                                    isBlockSpecial={true}
-                                                    maxLength={10}
-                                                />
-                                            </div>
-                                        ))}
+                        <div className="form-group">
+                            <label htmlFor="ticketQuantity" className="pb-2">
+                                Ticket Quantities<span className="text-danger">*</span>
+                            </label>
+                            <Validator ref={ticketQuantityValidatorRef}>
+                                {eventAdd?.quantity?.map((quantity, index) => (
+                                    <div key={index} className="d-flex flex-column mb-2">
+                                        <div className="d-flex align-items-center">
+                                            <Input
+                                                value={quantity}
+                                                type="signed-number"
+                                                onChange={(value: string) => handleOnChangeQuantity(index, value)}
+                                                id={`ticketquantity${index}`}
+                                                name={`ticketquantity${index}`}
+                                                placeholder={`Enter Ticket Quantity ${index + 1}`}
+                                                isBlockSpecial={true}
+                                                maxLength={10}
+                                            />
+                                            <span className="ms-2">
+                                                Max: {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
+                                            </span>
+                                        </div>
+                                        {errorMessages[index] && (
+                                            <span style={{ color: 'red', fontSize: '20px' }}>
+                                                {errorMessages[index]}
+                                            </span>
+                                        )}
                                     </div>
-                                </div>
-                            </div>
-                        )}
+                                ))}
+                                {(eventAdd?.quantity?.length ?? 0) < (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
+                                    <Button
+                                        buttonText="Add Quantity"
+                                        onClick={handleAddTicketQuantity}
+                                        background="blue"
+                                        fontSize="14"
+                                        className="mt-2"
+                                    />
+                                )}
+                            </Validator>
+                        </div>
+
                     </div>
                 </div>
                 <div className="d-flex flex-row-reverse gap-2">
