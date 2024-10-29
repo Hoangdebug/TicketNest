@@ -727,3 +727,34 @@ export const fetchReplyComment = async (
         }
     };
 };
+
+export const fetchListReplyComment = async (
+    eid: string,
+    commentId: string,
+    callBack?: (result: ICommentListDataAPIRes | IErrorAPIRes | null) => void,
+    isLoad: boolean = true,
+) => {
+    return async (dispatch: Dispatch) => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res = await apiHelper.listReplyCommemt(eid, commentId);
+            if (callBack) {
+                callBack(res?.data);
+            }
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
+            }
+        }
+
+        if (isLoad) {
+            dispatch(setLoader(false));
+        }
+    };
+};

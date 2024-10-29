@@ -11,4 +11,5 @@ interface IEventDetailPageState {
     replyId?: any;
     comment?: string;
     listComments?: ICommentDataAPI[];
+    replyComments?: ICommentDataAPI[];
 }

@@ -3,8 +3,6 @@ import Button from '@components/commons/Button';
 import { useRouter } from 'next/router';
 import TodayIcon from '@mui/icons-material/Today';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
-import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
 import { routes } from '@utils/constants';
 import moment from 'moment';
 import Img from '@components/commons/Img';
@@ -15,16 +13,8 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
 
     const [state, setState] = useState<IEventListComponentState>({
         type: 'All',
-        isActive: undefined,
     });
-    const { type, isActive } = state;
-
-    const handleClick = () => {
-        setState((prevState) => ({
-            ...prevState,
-            isActive: !isActive,
-        }));
-    };
+    const { type } = state;
 
     useEffect(() => {
         const { type } = router.query;

@@ -7,7 +7,14 @@ import { CiHeart } from 'react-icons/ci';
 import { MdOutlinePeople } from 'react-icons/md';
 import { SlCalender } from 'react-icons/sl';
 import { useDispatch } from 'react-redux';
-import { fetchCreateComment, fetchDetailsEvent, fetchListComment, fetchListEvent, fetchReplyComment } from '@redux/actions/api';
+import {
+    fetchCreateComment,
+    fetchDetailsEvent,
+    fetchListComment,
+    fetchListEvent,
+    fetchListReplyComment,
+    fetchReplyComment,
+} from '@redux/actions/api';
 import { enums, http, images, routes } from '@utils/constants';
 import Countdown from '@components/commons/Countdown';
 import moment from 'moment';
@@ -26,8 +33,9 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         replyId: null,
         listComments: [],
         isValidate: true,
+        replyComments: [],
     });
-    const { eventDetails, event, comment, replyId, listComments } = state;
+    const { eventDetails, event, comment, replyId, listComments, replyComments } = state;
 
     const [quantity, setQuantity] = useState(0);
 
@@ -55,6 +63,12 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         handleFetchListComment();
     }, []);
 
+    useEffect(() => {
+        if (replyId) {
+            handleFetchListReplyComments(replyId);
+        }
+    }, [replyId]);
+
     const handleOnChange = (feild: string, value: string | null) => {
         setState((prev) => ({
             ...prev,
@@ -73,6 +87,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 ...prevState,
                 replyId: id,
             }));
+            handleFetchListReplyComments(id);
         }
     };
 
@@ -110,9 +125,24 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
             await fetchListComment(id?.toString() ?? '', (res: ICommentListDataAPIRes | IErrorAPIRes | null) => {
                 if (res?.code === http.SUCCESS_CODE) {
                     const data = (res as ICommentListDataAPIRes).result;
+                    const dataCommentFilter = data?.filter((comment) => comment.parentComment === null);
                     setState((prevState) => ({
                         ...prevState,
-                        listComments: data,
+                        listComments: dataCommentFilter,
+                    }));
+                }
+            }),
+        );
+    };
+
+    const handleFetchListReplyComments = async (idComment: string) => {
+        dispatch(
+            await fetchListReplyComment(id?.toString() ?? '', idComment, (res: ICommentListDataAPIRes | IErrorAPIRes | null) => {
+                if (res?.code === http.SUCCESS_CODE) {
+                    const data = (res as ICommentListDataAPIRes).result;
+                    setState((prevState) => ({
+                        ...prevState,
+                        replyComments: data,
                     }));
                 }
             }),
@@ -371,7 +401,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <div className="pages__eventdetail_comment_infor">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="pages__eventdetail_comment_infor_user">
-                                        <Img src={item?.userId?.images as ''} />
+                                        <Img src={(item?.userId?.images as '') || images.ICON_USER} />
                                         <h4>{item?.userId?.username}</h4>
                                     </div>
                                     <div className="pages__eventdetail_comment_time bases__width26 text-end">
@@ -397,6 +427,27 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                     <div className="d-flex justify-content-end pt-3">
                                         <Button buttonText="Submit" onClick={() => handleFetchReplyComment(item._id ?? '')} />
                                     </div>
+                                </div>
+                            )}
+
+                            {replyId === item._id && (
+                                <div className="reply-list pt-3 pl-3">
+                                    {replyComments?.map((reply, replyIndex) => (
+                                        <div key={replyIndex} className="reply-comment p-2 border-top bases__margin--left90">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <div className="pages__eventdetail_comment_infor_user">
+                                                    <Img src={(reply?.userId?.images as '') || images.ICON_USER} />
+                                                    <h5>{reply?.userId?.username}</h5>
+                                                </div>
+                                                <div className="reply-comment-time bases__width26 text-end">
+                                                    {moment(reply?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
+                                                </div>
+                                            </div>
+                                            <div className="reply-comment-content">
+                                                <p>{reply?.comment}</p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </div>

@@ -236,3 +236,11 @@ export const replyCommemt = async (eid: string, idComment: string, data: ICommen
         throw err;
     }
 };
+
+export const listReplyCommemt = async (eid: string, idComment: string) => {
+    try {
+        return await axios.get<ICommentListDataAPIRes>(`${routes.API.COMMENT.href}/reply/${eid}/${idComment}`);
+    } catch (err) {
+        throw err;
+    }
+};
