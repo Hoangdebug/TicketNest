@@ -233,6 +233,9 @@ const OTP_VERIFY_FORGOTPASS_API: IRouteConstant = {
     href: '/user/verify-forgot-pass',
 };
 
+const COMMENT_API: IRouteConstant = {
+    href: 'comment',
+};
 export const API = {
     LOGIN: LOGIN_API,
     REGISTER: REGISTER_API,
@@ -243,6 +246,7 @@ export const API = {
     CHANGEPASSWORD: CHANGEPASSWORD_API,
     REQUEST_ORGANIZER: REQUEST_ORGANIZER_API,
     UPLOAD_IMG: UPLOAD_IMG_API,
+    COMMENT: COMMENT_API,
     // organizer
     EVENT: EVENT_API,
     ORGANIZER_LIST_EVENT: EVENT_LIST_ORGANIZER_API,

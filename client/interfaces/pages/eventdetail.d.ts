@@ -5,8 +5,10 @@ interface IEventDetailPageProps extends IBasePageProps {}
 interface IEventDetailPage<P = {}> extends IBasePage<P> {}
 
 interface IEventDetailPageState {
+    isValidate?: boolean;
     eventDetails?: IEventDataApi;
     event?: IEventDataApi[];
-    comment?: string;
     replyId?: any;
+    comment?: string;
+    listComments?: ICommentDataAPI[];
 }
