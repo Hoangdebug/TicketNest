@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { authHelper, apiHelper } from '@utils/helpers';
 import { SET_LOADER, SET_MEMBER_PROFILE } from '@redux/actions/type';
 
@@ -356,6 +356,34 @@ export const fetchAddEvent = (data: IEventDataApi, isLoad: boolean = true): any 
                 return res.data;
             }
             return { code: 500, mes: err.message };
+        } finally {
+            if (isLoad) {
+                dispatch(setLoader(false));
+            }
+        }
+    };
+};
+
+export const fetchAddSeat = (data: ISeatType2DataAPI, isLoad: boolean = true): any => {
+    return async (dispatch: Dispatch): Promise<ISeattype2DataApiRes | IErrorAPIRes | null> => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res: AxiosResponse<ISeattype2DataApiRes> = await apiHelper.addSeat(data);
+            return res.data;
+        } catch (err) {
+            // Kiểm tra nếu lỗi là AxiosError
+            if (axios.isAxiosError(err)) {
+                const res = err.response;
+                if (res && res.data) {
+                    return res.data; // Trả về data từ response nếu tồn tại
+                }
+            }
+
+            // Xử lý các lỗi khác (nếu không phải lỗi Axios)
+            return { code: 500, mes: err instanceof Error ? err.message : 'An unknown error occurred' };
         } finally {
             if (isLoad) {
                 dispatch(setLoader(false));
