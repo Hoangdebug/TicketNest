@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { http, routes } from '@utils/constants';
 import { useRouter } from 'next/router';
-import { fetchDetailsEvent } from '@redux/actions/api';
+import { fetchDetailsEvent, fetchDetailsSeatType2ByEventId } from '@redux/actions/api';
 import { useDispatch } from 'react-redux';
 
 const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
@@ -90,17 +90,19 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
 
     const handleDetialsSeatType2 = async () => {
         dispatch(
-            await fetchDetailsEvent(id?.toString() ?? '', (res: ISeattype2DetailsApiRes | IErrorAPIRes | null) => {
-                if (res && res.code === http.SUCCESS_CODE) {
-                    const event = (res as ISeattype2DetailsApiRes).result;
+            await fetchDetailsSeatType2ByEventId(id?.toString() ?? '', (res: ISeattype2DetailsApiRes | IErrorAPIRes | null) => {
+                if (res && 'success' in res && res.success && 'result' in res && Array.isArray(res.result) && res.result.length > 0) {
+                    const seat = res.result[0];  
+                    console.log('Fetched Seat:', seat);
                     setState((prevState) => ({
                         ...prevState,
-                        eventDetails: event,
+                        seatDetails: seat, 
                     }));
                 }
-            }),
+            })
         );
     };
+
 
     return (
         <div
@@ -130,9 +132,9 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                 </div>
                 <div className="pages__eventdetail_body_sideleft_description">
                     <h2>About This Seat</h2>
-                    <p>{seatDetails?.location}</p>
-                    <p>{seatDetails?.price}</p>
-                    <p>{seatDetails?.quantity}</p>
+                    <p>{seatDetails?.location ?? 'No location available'}</p>
+                    <p>{seatDetails?.price?.join(', ') ?? 'No price available'}</p>
+                    <p>{seatDetails?.quantity?.join(', ') ?? 'No quantity available'}</p>
                 </div>
                 <ul className="components__seattype2-seattitle">
                     <li className="components__seattype2-row text-white">

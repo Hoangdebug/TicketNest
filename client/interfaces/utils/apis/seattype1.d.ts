@@ -1,18 +1,28 @@
 interface ISeatType1DataAPI {
-    rows?: string[];
-    numSeatOfRowLeft?: number[];
-    numSeatOfRowRight?: number[];
-    vipRows?: string[];
-    selectedSeat?: string | null;
-    orderedSeats?: string[];
-    ticketPrice?: number;
+    _id?: string;
+    username?: {
+        _id?: string;
+        name?: string;
+    };
+    status?: 'all' | enums.SeatStatus.ACCEPTED | enums.SeatStatus.CANCELLED | enums.SeatStatus.PENDING | undefined;
+    location?: string;
+    price?: number[];
+    quantity?: number[];
 }
 
-interface ICurrentSeatType1APIRes {
+interface ISeattype1DetailsApiRes extends IBaseAPIRes {
     result?: ISeatType1DataAPI;
 }
-interface ISeatType1DataAPIRes extends IBaseAPIRes {
-    code?: number;
-    message?: string;
-    result?: ISeatType1DataAPI;
+
+interface ISeattype1DataApiRes extends IBaseAPIRes {
+    code: number;
+    result?: {
+        metadata?: {
+            pages?: number;
+            pageSize?: number;
+            currentPage?: number;
+            totalItems?: number;
+        };
+        Seattype2?: ISeatType2DataAPI;
+    };
 }
