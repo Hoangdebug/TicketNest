@@ -1,5 +1,5 @@
 import { IEventDetailPageState, IEventDetailPage, IEventDetailPageProps } from '@interfaces/pages/eventdetail';
-import { useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { IoLocationOutline } from 'react-icons/io5';
 import { IoMdShare } from 'react-icons/io';
@@ -7,42 +7,22 @@ import { CiHeart } from 'react-icons/ci';
 import { MdOutlinePeople } from 'react-icons/md';
 import { SlCalender } from 'react-icons/sl';
 import { useDispatch } from 'react-redux';
-import { fetchDetailsEvent, fetchListEvent } from '@redux/actions/api';
+import {
+    fetchCreateComment,
+    fetchDetailsEvent,
+    fetchListComment,
+    fetchListEvent,
+    fetchListReplyComment,
+    fetchReplyComment,
+} from '@redux/actions/api';
 import { enums, http, images, routes } from '@utils/constants';
 import Countdown from '@components/commons/Countdown';
 import moment from 'moment';
 import { Button, Img, Input } from '@components/index';
+import Validator from '@components/commons/Validator';
+import { validateHelper } from '@utils/helpers';
+import { setModal } from '@redux/actions';
 
-const dataDumyCommentEvent = [
-    {
-        _id: 'kdfhadsfadsf383udssf7raf',
-        avatar: images.DA_LAT,
-        userName: 'Heheh',
-        create_at: '29-04-2024',
-        content_comment: 'Mình hỗ trợ sinh viên trả góp như thế nào v ạ',
-    },
-    {
-        _id: 'fadf7238idfasdf92fds9fiadfu8',
-        avatar: images.DA_LAT,
-        userName: 'Heheh',
-        create_at: '29-04-2024',
-        content_comment: 'Mình hỗ trợ sinh viên trả góp như thế nào v ạ',
-    },
-    {
-        _id: 'fadf3242384ifjsdfyifds7f342',
-        avatar: images.DA_LAT,
-        userName: 'Heheh',
-        create_at: '29-04-2024',
-        content_comment: 'Mình hỗ trợ sinh viên trả góp như thế nào v ạ',
-    },
-    {
-        _id: 'adfslkf29934u32oisdfaydfuiasf83',
-        avatar: images.DA_LAT,
-        userName: 'Heheh',
-        create_at: '29-04-2024',
-        content_comment: 'Mình hỗ trợ sinh viên trả góp như thế nào v ạ',
-    },
-];
 const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const router = useRouter();
     const { id } = router.query;
@@ -50,8 +30,12 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const [state, setState] = useState<IEventDetailPageState>({
         eventDetails: undefined,
         event: [],
+        replyId: null,
+        listComments: [],
+        isValidate: true,
+        replyComments: [],
     });
-    const { eventDetails, event, comment, replyId } = state;
+    const { eventDetails, event, comment, replyId, listComments, replyComments } = state;
 
     const [quantity, setQuantity] = useState(0);
 
@@ -64,7 +48,9 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
             setQuantity(quantity - 1);
         }
     };
-    const totalMoney = quantity * (eventDetails?.price ?? 0);
+    const commentValidatorRef = createRef<IValidatorComponentHandle>();
+
+    const totalMoney = quantity * (eventDetails?.price as any);
     const slicedEvents = event?.slice(0, 4);
     const formattedDayStart = moment(eventDetails?.day_start).format('MMM DD, YYYY HH:mm:ss');
     const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
@@ -76,6 +62,12 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         handleFetchListEvents();
         handleFetchListComment();
     }, []);
+
+    useEffect(() => {
+        if (replyId) {
+            handleFetchListReplyComments(replyId);
+        }
+    }, [replyId]);
 
     const handleOnChange = (feild: string, value: string | null) => {
         setState((prev) => ({
@@ -95,6 +87,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 ...prevState,
                 replyId: id,
             }));
+            handleFetchListReplyComments(id);
         }
     };
 
@@ -127,10 +120,120 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         );
     };
 
-    const handleFetchListComment = () => {};
+    const handleFetchListComment = async () => {
+        dispatch(
+            await fetchListComment(id?.toString() ?? '', (res: ICommentListDataAPIRes | IErrorAPIRes | null) => {
+                if (res?.code === http.SUCCESS_CODE) {
+                    const data = (res as ICommentListDataAPIRes).result;
+                    const dataCommentFilter = data?.filter((comment) => comment.parentComment === null);
+                    setState((prevState) => ({
+                        ...prevState,
+                        listComments: dataCommentFilter,
+                    }));
+                }
+            }),
+        );
+    };
 
-    const handleFetchAddComment = () => {
-        console.log(comment);
+    const handleFetchListReplyComments = async (idComment: string) => {
+        dispatch(
+            await fetchListReplyComment(id?.toString() ?? '', idComment, (res: ICommentListDataAPIRes | IErrorAPIRes | null) => {
+                if (res?.code === http.SUCCESS_CODE) {
+                    const data = (res as ICommentListDataAPIRes).result;
+                    setState((prevState) => ({
+                        ...prevState,
+                        replyComments: data,
+                    }));
+                }
+            }),
+        );
+    };
+
+    const handleFetchAddComment = async () => {
+        let validate = state.isValidate;
+
+        const validator = [{ ref: commentValidatorRef, value: comment, message: 'Enter your comment' }];
+
+        validator.forEach(({ ref, value, message }) => {
+            ref.current?.onValidateMessage('');
+            if (validateHelper.isEmpty(String(value ?? ''))) {
+                ref.current?.onValidateMessage(message);
+                validate = false;
+            }
+        });
+
+        if (validate) {
+            dispatch(
+                await fetchCreateComment(id?.toString() ?? '', { comment }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
+                    if (res?.code === http.SUCCESS_CODE) {
+                        setState((prevState) => ({
+                            ...prevState,
+                            comment: '',
+                        }));
+                        handleFetchListComment();
+                    } else {
+                        setModal({
+                            isShow: true,
+                            content: (
+                                <>
+                                    <div className="text-center bases__margin--bottom31">
+                                        <Img src={images.ICON_TIMES} className="bases__width--90 bases__height--75" />
+                                    </div>
+                                    <div className="bases__text--bold bases__font--14 text-center">Error while you add new comment!!!</div>
+                                </>
+                            ),
+                        });
+                    }
+                }),
+            );
+        }
+    };
+
+    const handleFetchReplyComment = async (idComment: string) => {
+        let validate = state.isValidate;
+
+        const validator = [{ ref: commentValidatorRef, value: comment, message: 'Enter your comment' }];
+
+        validator.forEach(({ ref, value, message }) => {
+            ref.current?.onValidateMessage('');
+            if (validateHelper.isEmpty(String(value ?? ''))) {
+                ref.current?.onValidateMessage(message);
+                validate = false;
+            }
+        });
+
+        if (validate) {
+            dispatch(
+                await fetchReplyComment(
+                    id?.toString() ?? '',
+                    idComment ?? '',
+                    { comment },
+                    (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
+                        if (res?.code === http.SUCCESS_CODE) {
+                            setState((prevState) => ({
+                                ...prevState,
+                                comment: '',
+                            }));
+                            handleFetchListComment();
+                        } else {
+                            setModal({
+                                isShow: true,
+                                content: (
+                                    <>
+                                        <div className="text-center bases__margin--bottom31">
+                                            <Img src={images.ICON_TIMES} className="bases__width--90 bases__height--75" />
+                                        </div>
+                                        <div className="bases__text--bold bases__font--14 text-center">
+                                            Error while you add new comment!!!
+                                        </div>
+                                    </>
+                                ),
+                            });
+                        }
+                    },
+                ),
+            );
+        }
     };
 
     return (
@@ -276,7 +379,14 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
             <div className="p-4">
                 <div>
                     <h2>Leave a Comment</h2>
-                    <Input className="" type="textarea" value={comment} onChange={(value: string) => handleOnChange('comment', value)} />
+                    <Validator ref={commentValidatorRef}>
+                        <Input
+                            className=""
+                            type="textarea"
+                            value={comment ?? ''}
+                            onChange={(value: string) => handleOnChange('comment', value)}
+                        />
+                    </Validator>
                 </div>
                 <div className="d-flex justify-content-end w-100">
                     <Button onClick={() => handleFetchAddComment()} buttonText="Send" background="#FF7E00" />
@@ -285,38 +395,59 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
             <hr />
 
             <div className="p-3 d-flex gap-3 w-100 flex-column">
-                {dataDumyCommentEvent.map((item, index) => (
+                {listComments?.map((item, index) => (
                     <div key={index}>
                         <div className="pages__eventdetail_comment p-3">
                             <div className="pages__eventdetail_comment_infor">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="pages__eventdetail_comment_infor_user">
-                                        <Img src={item?.avatar ?? ''} />
-                                        <h4>{item?.userName}</h4>
+                                        <Img src={(item?.userId?.images as '') || images.ICON_USER} />
+                                        <h4>{item?.userId?.username}</h4>
                                     </div>
-                                    <div className="pages__eventdetail_comment_time">
-                                        {moment(item?.create_at ?? '').format('DD/MM/YYYY HH:mm')}
+                                    <div className="pages__eventdetail_comment_time bases__width26 text-end">
+                                        {moment(item?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
                                     </div>
                                 </div>
                                 <div className="pages__eventdetail_comment_infor_content">
-                                    <p>{item?.content_comment}</p>
+                                    <p>{item?.comment}</p>
                                 </div>
                             </div>
                             <div className="pages__eventdetail_comment_time d-flex justify-content-end">
-                                <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item._id)} />
+                                <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
                             </div>
 
                             {replyId === item._id && (
                                 <div className="reply-form pt-4">
-                                    <Input type="textarea" placeholder="Enter your reply..." />
+                                    <Input
+                                        type="textarea"
+                                        value={comment ?? ''}
+                                        onChange={(value: string) => handleOnChange('comment', value)}
+                                        placeholder="Enter your reply..."
+                                    />
                                     <div className="d-flex justify-content-end pt-3">
-                                        <Button
-                                            buttonText="Submit"
-                                            onClick={() => {
-                                                /* Handle submit logic here */
-                                            }}
-                                        />
+                                        <Button buttonText="Submit" onClick={() => handleFetchReplyComment(item._id ?? '')} />
                                     </div>
+                                </div>
+                            )}
+
+                            {replyId === item._id && (
+                                <div className="reply-list pt-3 pl-3">
+                                    {replyComments?.map((reply, replyIndex) => (
+                                        <div key={replyIndex} className="reply-comment p-2 border-top bases__margin--left90">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <div className="pages__eventdetail_comment_infor_user">
+                                                    <Img src={(reply?.userId?.images as '') || images.ICON_USER} />
+                                                    <h5>{reply?.userId?.username}</h5>
+                                                </div>
+                                                <div className="reply-comment-time bases__width26 text-end">
+                                                    {moment(reply?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
+                                                </div>
+                                            </div>
+                                            <div className="reply-comment-content">
+                                                <p>{reply?.comment}</p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </div>

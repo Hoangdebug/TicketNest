@@ -212,3 +212,35 @@ export const updateEventsStatusByAdmin = async (id: string, data: IEventDataApi)
         throw err;
     }
 };
+
+export const createCommemt = async (eid: string, data: ICommentDataAPI) => {
+    try {
+        return await axios.post<ICommentDataAPIRes>(`${routes.API.COMMENT.href}/${eid}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const listCommemt = async (eid: string) => {
+    try {
+        return await axios.get<ICommentDataAPIRes>(`${routes.API.COMMENT.href}/${eid}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const replyCommemt = async (eid: string, idComment: string, data: ICommentDataAPI) => {
+    try {
+        return await axios.post<ICommentDataAPIRes>(`${routes.API.COMMENT.href}/reply/${eid}/${idComment}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const listReplyCommemt = async (eid: string, idComment: string) => {
+    try {
+        return await axios.get<ICommentListDataAPIRes>(`${routes.API.COMMENT.href}/reply/${eid}/${idComment}`);
+    } catch (err) {
+        throw err;
+    }
+};
