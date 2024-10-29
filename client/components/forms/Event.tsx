@@ -436,6 +436,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     };
 
     const handleSubmitAddEvent = async (): Promise<string | null> => {
+        console.log('Event data being sent:', eventAdd);  // Kiểm tra dữ liệu event trước khi gửi
+    
         const res: IEventDataApiRes | IErrorAPIRes | null = await dispatch(fetchAddEvent(eventAdd ?? {}));
     
         if (res?.code === http.SUCCESS_CODE) {
@@ -444,10 +446,13 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             if (eventId) {
                 const seatAdd: ISeatType2DataAPI = {
                     location: eventAdd?.location,
-                    price: eventAdd?.price,
-                    quantity: eventAdd?.quantity,
+                    price: eventAdd?.price,    // Gửi lên mảng price
+                    quantity: eventAdd?.quantity,  // Gửi lên mảng quantity
                     status: enums.SeatStatus.PENDING,
                 };
+    
+                // Kiểm tra dữ liệu seat trước khi gửi
+                console.log('Seat data being sent:', seatAdd);
     
                 const seatRes = await dispatch(fetchAddSeat(seatAdd));
     
