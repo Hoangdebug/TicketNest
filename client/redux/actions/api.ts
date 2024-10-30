@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { authHelper, apiHelper } from '@utils/helpers';
 import { SET_LOADER, SET_MEMBER_PROFILE } from '@redux/actions/type';
 
@@ -364,6 +364,34 @@ export const fetchAddEvent = (data: IEventDataApi, isLoad: boolean = true): any 
     };
 };
 
+export const fetchAddSeat = (data: ISeatType2DataAPI, isLoad: boolean = true): any => {
+    return async (dispatch: Dispatch): Promise<ISeattype2DataApiRes | IErrorAPIRes | null> => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res: AxiosResponse<ISeattype2DataApiRes> = await apiHelper.addSeat(data);
+            return res.data;
+        } catch (err) {
+            // Kiểm tra nếu lỗi là AxiosError
+            if (axios.isAxiosError(err)) {
+                const res = err.response;
+                if (res && res.data) {
+                    return res.data; // Trả về data từ response nếu tồn tại
+                }
+            }
+
+            // Xử lý các lỗi khác (nếu không phải lỗi Axios)
+            return { code: 500, mes: err instanceof Error ? err.message : 'An unknown error occurred' };
+        } finally {
+            if (isLoad) {
+                dispatch(setLoader(false));
+            }
+        }
+    };
+};
+
 export const fetchUpdateEvent = async (
     id: string,
     data: IEventDataApi,
@@ -466,6 +494,66 @@ export const fetchDetailsEvent = async (
 
         try {
             const res = await apiHelper.detailsEvent(id);
+            if (callBack) {
+                callBack(res?.data);
+            }
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
+            }
+        }
+
+        if (isLoad) {
+            dispatch(setLoader(false));
+        }
+    };
+};
+
+export const fetchDetailsSeat = async (
+    id: string,
+    callBack?: (result: ISeattype2DetailsApiRes | IErrorAPIRes | null) => void,
+    isLoad: boolean = true,
+) => {
+    return async (dispatch: Dispatch) => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res = await apiHelper.detailsSeat(id);
+            if (callBack) {
+                callBack(res?.data);
+            }
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
+            }
+        }
+
+        if (isLoad) {
+            dispatch(setLoader(false));
+        }
+    };
+};
+
+export const fetchDetailsSeatType2ByEventId = async (
+    eventId: string,
+    callBack?: (result: ISeattype2DetailsApiRes | IErrorAPIRes | null) => void,
+    isLoad: boolean = true,
+) => {
+    return async (dispatch: Dispatch) => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res = await apiHelper.detailsSeatType2ByEventId(eventId);
             if (callBack) {
                 callBack(res?.data);
             }

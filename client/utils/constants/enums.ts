@@ -61,3 +61,9 @@ export enum EventStatus {
     PENDING = 'Pending',
     ACCEPTED = 'Successed',
 }
+
+export enum SeatStatus {
+    CANCELLED = 'Cancelled',
+    PENDING = 'Pending',
+    ACCEPTED = 'Successed',
+}

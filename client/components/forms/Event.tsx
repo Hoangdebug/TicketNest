@@ -6,7 +6,7 @@ import { validateHelper } from '@utils/helpers';
 import Input from '@components/commons/Input';
 import DateTimePicker from '@components/commons/DateTimePicker';
 import { useDispatch } from 'react-redux';
-import { fetchAddEvent, fetchUpdateEvent, fetchUploadImagesEvent } from '@redux/actions/api';
+import { fetchAddEvent, fetchUpdateEvent, fetchUploadImagesEvent, fetchAddSeat } from '@redux/actions/api';
 import { enums, http, images, routes } from '@utils/constants';
 import Select from '@components/commons/Select';
 import Button from '@components/commons/Button';
@@ -436,13 +436,32 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     };
 
     const handleSubmitAddEvent = async (): Promise<string | null> => {
+        console.log('Event data being sent:', eventAdd);  // Kiểm tra dữ liệu event trước khi gửi
+    
         const res: IEventDataApiRes | IErrorAPIRes | null = await dispatch(fetchAddEvent(eventAdd ?? {}));
-
+    
         if (res?.code === http.SUCCESS_CODE) {
             const eventId = res.result?._id ?? null;
-
+    
             if (eventId) {
-                router.push(routes.CLIENT.ORGANIZER_LIST_EVENT.href, undefined, { scroll: false });
+                const seatAdd: ISeatType2DataAPI = {
+                    location: eventAdd?.location,
+                    price: eventAdd?.price,    // Gửi lên mảng price
+                    quantity: eventAdd?.quantity,  // Gửi lên mảng quantity
+                    status: enums.SeatStatus.PENDING,
+                };
+    
+                // Kiểm tra dữ liệu seat trước khi gửi
+                console.log('Seat data being sent:', seatAdd);
+    
+                const seatRes = await dispatch(fetchAddSeat(seatAdd));
+    
+                if (seatRes?.code === http.SUCCESS_CODE) {
+                    router.push(routes.CLIENT.ORGANIZER_LIST_EVENT.href, undefined, { scroll: false });
+                } else {
+                    // Thêm thông báo khi tạo ghế thất bại
+                    alert('Error while creating seat: ' + seatRes?.mes);
+                }
             }
             return eventId;
         } else if (res?.code === http.ERROR_EXCEPTION_CODE) {

@@ -1,4 +1,4 @@
-interface ISeatType1DataAPI {
+interface ISeatType2DataAPI {
     _id?: string;
     username?: {
         _id?: string;
@@ -10,11 +10,11 @@ interface ISeatType1DataAPI {
     quantity?: number[];
 }
 
-interface ISeattype1DetailsApiRes extends IBaseAPIRes {
-    result?: ISeatType1DataAPI;
+interface ISeattype2DetailsApiRes extends IBaseAPIRes {
+    result?: ISeatType2DataAPI;
 }
 
-interface ISeattype1DataApiRes extends IBaseAPIRes {
+interface ISeattype2DataApiRes extends IBaseAPIRes {
     code: number;
     result?: {
         metadata?: {

@@ -133,6 +133,13 @@ export const addEvent = async (data: IEventDataApi) => {
         throw err;
     }
 };
+export const addSeat = async (data: ISeatType2DataAPI) => {
+    try {
+        return await axios.post<ISeattype2DataApiRes>(`${routes.API.SEAT.href}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
 export const updateEvent = async (id: string, data: IEventDataApi) => {
     try {
         return await axios.put<IEventDataApiRes>(`${routes.API.EVENT.href}/${id}`, data);
@@ -160,6 +167,22 @@ export const listEventOrganizer = async () => {
 export const detailsEvent = async (id: string) => {
     try {
         return await axios.get<IEventDetailsApiRes>(`${routes.API.EVENT.href}/${id}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const detailsSeat = async (id: string) => {
+    try {
+        return await axios.get<ISeattype2DetailsApiRes>(`${routes.API.SEAT.href}/${id}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const detailsSeatType2ByEventId = async (eventId: string) => {
+    try {
+        return await axios.get<ISeattype2DetailsApiRes>(`${routes.API.SEAT.href}/event/${eventId}`);
     } catch (err) {
         throw err;
     }

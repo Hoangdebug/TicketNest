@@ -193,6 +193,11 @@ const CHANGEPASSWORD_API: IRouteConstant = {
 const EVENT_API: IRouteConstant = {
     href: 'event/',
 };
+
+const SEAT_API: IRouteConstant = {
+    href: 'seat/',
+};
+
 const EVENT_UPLOAD_IMG_API: IRouteConstant = {
     href: 'event/upload-image',
 };
@@ -249,6 +254,7 @@ export const API = {
     COMMENT: COMMENT_API,
     // organizer
     EVENT: EVENT_API,
+    SEAT: SEAT_API,
     ORGANIZER_LIST_EVENT: EVENT_LIST_ORGANIZER_API,
     EVENT_UPLOAD_IMG: EVENT_UPLOAD_IMG_API,
 

@@ -259,6 +259,32 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
             </div>
             <div className="pages__eventdetail_body">
                 <div className="pages__eventdetail_body_sideleft col-md-8">
+                    <button
+                        className="pages__eventdetail_body_sideright_book"
+                        onClick={() => {
+                            if (eventDetails?.location === 'Location A') {
+                                router.push(
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id} },
+                                    undefined,
+                                    { scroll: false },
+                                );
+                            } else if (eventDetails?.location === 'Location B') {
+                                router.push(
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE2.href, query: { id: id } },
+                                    undefined,
+                                    { scroll: false },
+                                );
+                            } else if (eventDetails?.location === 'Location C' || eventDetails?.location === 'ANOTHER') {
+                                router.push(
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE3.href, query: { id: id } },
+                                    undefined,
+                                    { scroll: false },
+                                );
+                            }
+                        }}
+                    >
+                        Book now
+                    </button>
                     <div className="pages__eventdetail_body_sideleft_image">
                         <Img src={eventDetails?.images as string} />
                     </div>
@@ -274,105 +300,17 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     <div className="pages__eventdetail_body_sideleft_description">
                         <h2>About This Event</h2>
                         <p>{eventDetails?.description}</p>
+                        <p>{eventDetails?.description}</p>
+                        <ul>
+                            <li>Name: {eventDetails?.name}</li>
+                            <li>Location: {eventDetails?.location}</li>
+                            <li>Price: {eventDetails?.price}</li>
+                            <li>Quantity: {eventDetails?.quantity}</li>
+                            <li>Start Date: {eventDetails?.day_start}</li>
+                            <li>End Date: {eventDetails?.day_end}</li>
+                            {/* Thêm các thuộc tính khác bạn muốn in ra */}
+                        </ul>
                     </div>
-                </div>
-
-                <div className="pages__eventdetail_body_sideright col-md-4">
-                    <div className="pages__eventdetail_body_sideright_titles">
-                        <h3>Event Details</h3>
-                    </div>
-
-                    <div className="pages__eventdetail_body_sideright_line"></div>
-
-                    <Countdown dayEnd={eventDetails?.day_end ?? ''} />
-
-                    <div className="pages__eventdetail_body_sideright_infor">
-                        <div className="pages__eventdetail_body_sideright_infor_item">
-                            <div className="pages__eventdetail_body_sideright_infor_item_sec">
-                                <MdOutlinePeople className="pages__eventdetail_body_sideright_infor_item_sec_icon col-md-2" />
-                                <div className="pages__eventdetail_body_sideright_infor_item_sec_text col-md-10">
-                                    <span className="pages__eventdetail_body_sideright_infor_item_sec_label">Organised by</span>
-                                    <span className="pages__eventdetail_body_sideright_infor_item_sec_value">
-                                        {eventDetails?.created_by?.name}
-                                    </span>
-                                    <a href="#" className="pages__eventdetail_body_sideright_infor_item_sec_link">
-                                        View Profile
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div className="pages__eventdetail_body_sideright_infor_item_sec">
-                                <SlCalender className="pages__eventdetail_body_sideright_infor_item_sec_icon col-md-2" />
-                                <div className="pages__eventdetail_body_sideright_infor_item_sec_text col-md-10">
-                                    <span className="pages__eventdetail_body_sideright_infor_item_sec_label">Date and Time</span>
-                                    <span className="pages__eventdetail_body_sideright_infor_item_sec_value">{formattedDayEnd}</span>
-                                    <a href="#" className="pages__eventdetail_body_sideright_infor_item_sec_link">
-                                        Add to Calendar
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div className="pages__eventdetail_body_sideright_infor_item_sec">
-                                <IoLocationOutline className="pages__eventdetail_body_sideright_infor_item_sec_icon col-md-2" />
-                                <div className="pages__eventdetail_body_sideright_infor_item_sec_text col-md-10">
-                                    <span className="pages__eventdetail_body_sideright_infor_item_sec_label">Location</span>
-                                    <span className="pages__eventdetail_body_sideright_infor_item_sec_value">{eventDetails?.location}</span>
-                                    <a href="#" className="pages__eventdetail_body_sideright_infor_item_sec_link">
-                                        View Map
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="pages__eventdetail_body_sideright_titles">
-                        <h5>Select Tickets</h5>
-                    </div>
-                    <div className="pages__eventdetail_body_sideright_line"></div>
-                    <div className="pages__eventdetail_body_sideright_seat">
-                        <div className="pages__eventdetail_body_sideright_seat_price">{eventDetails?.price} $</div>
-                        <div className="pages__eventdetail_body_sideright_seat_quantity">
-                            <button className="pages__eventdetail_body_sideright_seat_quantity_decrease" onClick={decreaseQuantity}>
-                                -
-                            </button>
-                            <span className="pages__eventdetail_body_sideright_seat_quantity_value">{quantity}</span>
-                            <button className="pages__eventdetail_body_sideright_seat_quantity_increase" onClick={increaseQuantity}>
-                                +
-                            </button>
-                        </div>
-                    </div>
-                    <p>2 x pair hand painted leather earrings 1 x glass of bubbles / or coffee Individual grazing box / fruit cup</p>
-                    <div className="pages__eventdetail_body_sideright_line"></div>
-                    <div className="pages__eventdetail_body_sideright_actions">
-                        <span>{quantity}x Ticket(s)</span>
-                        <span className="pages__eventdetail_body_sideright_actions_total">AUD ${totalMoney}</span>
-                    </div>
-                    <button
-                        className="pages__eventdetail_body_sideright_book"
-                        onClick={() => {
-                            if (eventDetails?.event_type === 'Music') {
-                                router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id, quantity: quantity } },
-                                    undefined,
-                                    { scroll: false },
-                                );
-                            } else if (eventDetails?.event_type === 'Dramatic') {
-                                router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE2.href, query: { id: id, quantity: quantity } },
-                                    undefined,
-                                    { scroll: false },
-                                );
-                            } else if (eventDetails?.event_type === 'Workshop') {
-                                router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE3.href, query: { id: id, quantity: quantity } },
-                                    undefined,
-                                    { scroll: false },
-                                );
-                            }
-                        }}
-                    >
-                        Book now
-                    </button>
                 </div>
             </div>
 
