@@ -1,144 +1,112 @@
-.components {
-    &__seattype2 {
-        background-color: black;
-        width: 100%;
-        height: 100vh;
+.components__seattype2 {
+    background-color: black;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 50px;
+
+    &-layout {
+        width: 60%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 50px;
+    }
 
-        &-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.25rem;
-            margin-bottom: 0.5rem;
-            margin-top: 3rem;
-            margin-left: 0;
-            margin-right: 0;
-            animation: marquee-right-to-left 10s linear infinite;
-            white-space: nowrap;
+    &-screen {
+        text-align: center;
+        font-size: 1.5rem;
+        margin: 20px;
+        color: #ffffff;
+    }
 
-            span {
-                font-size: 1.25rem;
-                color: white;
-            }
-        }
+    &-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        width: 100%;
+    }
 
-        &-screen {
-            height: 50px;
-            width: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            margin: 10px 0;
-            background-color: #ffffff;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
-            transform: rotateX(-45deg);
-        }
+    &-left, &-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Để căn giữa các ghế */
+        gap: 0.5rem;
+    }
 
-        &-stage {
-            height: 50px;
-            width: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            margin: 10px 0;
-            background-color: #ffffff;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
-            transform: rotateX(-45deg);
-        }
+    &-row {
+        display: flex;
+        justify-content: center; /* Canh giữa các hàng ghế */
+        align-items: center;
+        gap: 5px;
 
-        &-seattitle {
-            padding-top: 40px;
-            border-radius: 0.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        &-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; 
-            gap: 2rem;
-        }
-
-        &-column {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        &-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            min-height: 40px; 
-            
-            &-label {
-                width: 30px;
-                text-align: center;
-                color: white;
-            }
-
-            &-seats {
-                display: flex;
-                gap: 5px;
-            }
-
-            &--margin {
-                margin-top: 30px;
-            }
-        }
-
-        &-seat {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-
-            &.empty {
-                background-color: #1e293b;
-            }
-
-            &.selected {
-                background-color: green;
-                color: white;
-            }
-
-            &.ordered {
-                background-color: white;
-            }
-        }
-
-        &-info {
-            margin-top: 10px;
-            font-size: 1rem;
+        &-label {
+            width: 30px;
+            text-align: center;
             color: white;
-            font-weight: bold;
-            padding: 0.5rem 1rem;
-            border: 2px solid white;
-            border-radius: 5px;
+        }
+
+        &-seats {
+            display: flex;
+            gap: 5px;
+            border-radius: 50%; /* Hiệu ứng uốn cong cho từng hàng */
         }
     }
-}
 
-@keyframes marquee-right-to-left {
-    0% {
-        transform: translateX(100%);
+    &-seat {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%; /* Làm ghế có dạng tròn */
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+
+        &.available {
+            background-color: white;
+        }
+
+        &.selected {
+            background-color: green;
+            color: white;
+        }
+
+        &.ordered {
+            background-color: red;
+        }
     }
-    100% {
-        transform: translateX(-100%);
+
+    &-info {
+        width: 30%;
+        background-color: #1e1e1e;
+        padding: 20px;
+        border-radius: 8px;
+        color: white;
+
+        h2, p, ul {
+            color: white;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+
+            li {
+                margin-bottom: 10px;
+            }
+        }
+
+        &-btn {
+            background-color: green;
+            padding: 10px 20px;
+            color: white;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
     }
 }

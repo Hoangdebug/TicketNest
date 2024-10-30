@@ -21,7 +21,7 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
         ticketPrice: 0,
     });
 
-    const { seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, selectedSeat = [], orderedSeats, ticketPrice } = state;
+    const { eventDetails, seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, selectedSeat = [], orderedSeats, ticketPrice } = state;
 
     // Cập nhật số ghế bên trái và phải dựa vào seatDetails
     useEffect(() => {
@@ -71,17 +71,17 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
         dispatch(
             await fetchDetailsSeatType2ByEventId(id?.toString() ?? '', (res: ISeattype2DetailsApiRes | IErrorAPIRes | null) => {
                 if (res && 'success' in res && res.success && 'result' in res && Array.isArray(res.result) && res.result.length > 0) {
-                    const seat = res.result[0];  
+                    const seat = res.result[0];
                     console.log('Fetched Seat:', seat);
                     setState((prevState) => ({
                         ...prevState,
-                        seatDetails: seat, 
+                        seatDetails: seat,
                     }));
                 }
             })
         );
     };
-    
+
     const toggleSeat = (row: string, seatNum: number, area: 'left' | 'right') => {
         const seatId = `${area === 'left' ? 'L' : 'R'}${row}${seatNum}`; // Thêm tiền tố L cho bên trái và R cho bên phải
         if (orderedSeats?.includes(seatId)) return;
@@ -134,112 +134,101 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
         handleDetialsSeatType2();
     }, [selectedSeat, ticketPrice]);
 
-    /////
     return (
-        <div
-            style={{
-                backgroundColor: 'black',
-                width: '200%',
-                height: '200vh',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
-            <div>
-                <ul className="components__seattype2-seattitle">
-                    <li className="components__seattype2-row text-white">
-                        <div className="components__seattype2-seat empty"></div>
-                        <small className="font-thin text-xl">Empty</small>
-                    </li>
-                    <li className="components__seattype2-row">
-                        <div className="components__seattype2-seat selected"></div>
-                        <small className="font-thin text-xl text-white">Selected</small>
-                    </li>
-                    <li className="components__seattype2-row">
-                        <div className="components__seattype2-seat ordered"></div>
-                        <small className="font-thin text-xl text-white">Ordered</small>
-                    </li>
-                </ul>
-            </div>
-
-            <div className="components__seattype2-screen">Screen</div>
-
-            <div className="components__seattype2-container">
-                {/* Ghế bên trái */}
-                <div className="components__seattype2-column">
-                    {state.rowsLeft?.map((row, rowIndex) => (
-                        <div key={row} className="components__seattype2-row">
-                            <span className="components__seattype2-row-label">{row}</span>
-                            <div className="components__seattype2-row-seats">
-                                {numSeatOfRowLeft?.[rowIndex] &&
-                                    Array.from({ length: numSeatOfRowLeft[rowIndex] }).map((_, seatNum) => {
-                                        const seatId = `L${row}${seatNum + 1}`;
-                                        const isSelected = selectedSeat?.includes(seatId);
-                                        const isOrdered = orderedSeats?.includes(seatId);
-                                        const seatClass = `components__seattype2-seat ${
-                                            isSelected
+        <div className="components__seattype2">
+            <div className="components__seattype2-layout">
+                <div className="components__seattype2-screen">STAGE/SÂN KHẤU</div>
+                <div className="components__seattype2-container">
+                    {/* Ghế bên trái */}
+                    <div className="components__seattype2-left">
+                        {state.rowsLeft?.map((row, rowIndex) => (
+                            <div key={row} className="components__seattype2-row">
+                                <span className="components__seattype2-row-label">{row}</span>
+                                <div className="components__seattype2-row-seats">
+                                    {numSeatOfRowLeft?.[rowIndex] &&
+                                        Array.from({ length: numSeatOfRowLeft[rowIndex] }).map((_, seatNum) => {
+                                            const seatId = `L${row}${seatNum + 1}`;
+                                            const isSelected = selectedSeat?.includes(seatId);
+                                            const isOrdered = orderedSeats?.includes(seatId);
+                                            const seatClass = `components__seattype2-seat ${isSelected
                                                 ? 'selected'
                                                 : isOrdered
-                                                ? 'ordered'
-                                                : 'empty'
-                                        } components__seattype2-seat-left`;
-                                        return (
-                                            <div key={seatNum} className={seatClass} onClick={() => toggleSeat(row, seatNum + 1, 'left')}>
-                                                {isSelected && <div className="components__seattype2-seat-text-left">{seatId}</div>}
-                                            </div>
-                                        );
-                                    })}
+                                                    ? 'ordered'
+                                                    : 'available'
+                                                }`;
+                                            return (
+                                                <div key={seatNum} className={seatClass} onClick={() => toggleSeat(row, seatNum + 1, 'left')}>
+                                                    {isSelected && <div className="components__seattype2-seat-text">{seatId}</div>}
+                                                </div>
+                                            );
+                                        })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                <div className="components__seattype2-stage">Stage</div>
-
-                {/* Ghế bên phải */}
-                <div className="components__seattype2-column">
-                    {state.rowsRight?.map((row, rowIndex) => (
-                        <div key={row} className="components__seattype2-row">
-                            <span className="components__seattype2-row-label">{row}</span>
-                            <div className="components__seattype2-row-seats">
-                                {numSeatOfRowRight?.[rowIndex] &&
-                                    Array.from({ length: numSeatOfRowRight[rowIndex] }).map((_, seatNum) => {
-                                        const seatId = `R${row}${seatNum + 1}`;
-                                        const isSelected = selectedSeat?.includes(seatId);
-                                        const isOrdered = orderedSeats?.includes(seatId);
-                                        const seatClass = `components__seattype2-seat ${
-                                            isSelected
+                    {/* Ghế bên phải */}
+                    <div className="components__seattype2-right">
+                        {state.rowsRight?.map((row, rowIndex) => (
+                            <div key={row} className="components__seattype2-row">
+                                <span className="components__seattype2-row-label">{row}</span>
+                                <div className="components__seattype2-row-seats">
+                                    {numSeatOfRowRight?.[rowIndex] &&
+                                        Array.from({ length: numSeatOfRowRight[rowIndex] }).map((_, seatNum) => {
+                                            const seatId = `R${row}${seatNum + 1}`;
+                                            const isSelected = selectedSeat?.includes(seatId);
+                                            const isOrdered = orderedSeats?.includes(seatId);
+                                            const seatClass = `components__seattype2-seat ${isSelected
                                                 ? 'selected'
                                                 : isOrdered
-                                                ? 'ordered'
-                                                : 'empty'
-                                        } components__seattype2-seat-right`;
-                                        return (
-                                            <div key={seatNum} className={seatClass} onClick={() => toggleSeat(row, seatNum + 1, 'right')}>
-                                                {isSelected && <div className="components__seattype2-seat-text-right">{seatId}</div>}
-                                            </div>
-                                        );
-                                    })}
+                                                    ? 'ordered'
+                                                    : 'available'
+                                                }`;
+                                            return (
+                                                <div key={seatNum} className={seatClass} onClick={() => toggleSeat(row, seatNum + 1, 'right')}>
+                                                    {isSelected && <div className="components__seattype2-seat-text">{seatId}</div>}
+                                                </div>
+                                            );
+                                        })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
 
+            {/* Cột thông tin bên phải */}
             <div className="components__seattype2-info">
-                Bạn đang chọn ghế {selectedSeat.join(', ')} - Với giá: {ticketPrice.toLocaleString()} VND
+                <h2>{eventDetails?.name}</h2>
+                <p><strong>Date of event:</strong> {eventDetails?.day_start}</p>
+                <p><strong>Location:</strong> {eventDetails?.location}</p>
+                <p><strong>Ticket Price:</strong></p>
+                <ul>
+                    <li>Left Area: {seatDetails?.price?.[0]?.toLocaleString()} đ</li>
+                    <li>Right Area: {seatDetails?.price?.[1]?.toLocaleString()} đ</li>
+                </ul>
+
+                {/* Button */}
+                <div className="components__seattype2-info-btn">
+                    {selectedSeat.length === 0 ? (
+                        <button className="components__seattype2-info-btn-continue">Please Selected Seat</button>
+                    ) : (
+                        <>
+                            <p>Selected Seat : {selectedSeat.join(', ')}</p>
+                            <button onClick={() =>
+                                router.push(
+                                    {
+                                        pathname: routes.CLIENT.ORDER_PAGES.href,
+                                        query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
+                                    },
+                                    undefined,
+                                    { scroll: false },
+                                )
+                            } className="components__seattype2-info-btn-continue" >Continue - {ticketPrice.toLocaleString()} VND</button>
+                        </>
+                    )}
+                </div>
             </div>
-            <button
-                onClick={() =>
-                    router.push({
-                        pathname: routes.CLIENT.ORDER_PAGES.href,
-                        query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
-                    })
-                }
-            >
-                Tiếp tục
-            </button>
         </div>
     );
 };
