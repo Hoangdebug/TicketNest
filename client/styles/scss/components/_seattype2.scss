@@ -65,7 +65,7 @@
         &-container {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; 
             gap: 2rem;
         }
 
@@ -80,7 +80,8 @@
             justify-content: center;
             align-items: center;
             gap: 2rem;
-
+            min-height: 40px; 
+            
             &-label {
                 width: 30px;
                 text-align: center;
@@ -108,69 +109,16 @@
             transition: background-color 0.3s, color 0.3s;
 
             &.empty {
-                height: 30px;
-                width: 35px;
-                margin: 5px;
                 background-color: #1e293b;
-                border-radius: 0.75rem;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-
-            &.vip {
-                background-color: yellow;
-                color: black;
-                height: 30px;
-                width: 35px;
-                margin: 5px;
-                border-radius: 0.75rem;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
             }
 
             &.selected {
                 background-color: green;
                 color: white;
-                height: 30px;
-                width: 35px;
-                margin: 5px;
-                border-radius: 0.75rem;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
             }
 
             &.ordered {
                 background-color: white;
-                height: 30px;
-                width: 35px;
-                margin: 5px;
-                border-radius: 0.75rem;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-
-            &-left {
-                transform: rotate(90deg);
-            }
-
-            &-right {
-                transform: rotate(-90deg);
-            }
-
-            &-straight {
-                transform: none;
-            }
-
-            &-text-left {
-                transform: rotate(-90deg);
-            }
-
-            &-text-right {
-                transform: rotate(90deg);
-            }
-
-            &-text-straight {
-                transform: none;
             }
         }
 
