@@ -134,6 +134,7 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
         handleDetialsSeatType2();
     }, [selectedSeat, ticketPrice]);
 
+    /////
     return (
         <div
             style={{
