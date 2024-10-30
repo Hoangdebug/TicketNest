@@ -126,7 +126,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             setState((prevState) => ({
                 ...prevState,
                 eventAdd: {
-                    ...prevState.eventAdd ?? {},
+                    ...(prevState.eventAdd ?? {}),
                     price: [...(prevState.eventAdd?.price ?? []), 0],
                 },
             }));
@@ -139,7 +139,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             setState((prevState) => ({
                 ...prevState,
                 eventAdd: {
-                    ...prevState.eventAdd ?? {},
+                    ...(prevState.eventAdd ?? {}),
                     price: (prevState.eventAdd?.price ?? []).filter((_, i) => i !== index),
                 },
             }));
@@ -150,7 +150,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
         setState((prevState) => ({
             ...prevState,
             eventAdd: {
-                ...prevState.eventAdd ?? {},
+                ...(prevState.eventAdd ?? {}),
                 price: prevState.eventAdd?.price?.map((p, i) => (i === index ? Number(value) : p)) || [],
             },
         }));
@@ -162,7 +162,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             setState((prevState) => ({
                 ...prevState,
                 eventAdd: {
-                    ...prevState.eventAdd ?? {},
+                    ...(prevState.eventAdd ?? {}),
                     quantity: [...(prevState.eventAdd?.quantity ?? []), 0],
                 },
             }));
@@ -175,7 +175,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             setState((prevState) => ({
                 ...prevState,
                 eventAdd: {
-                    ...prevState.eventAdd ?? {},
+                    ...(prevState.eventAdd ?? {}),
                     quantity: (prevState.eventAdd?.quantity ?? []).filter((_, i) => i !== index),
                 },
             }));
@@ -204,7 +204,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             setState((prevState) => ({
                 ...prevState,
                 eventAdd: {
-                    ...prevState.eventAdd ?? {},
+                    ...(prevState.eventAdd ?? {}),
                     quantity: prevState.eventAdd?.quantity?.map((q, i) => (i === index ? newValue : q)) || [],
                 },
             }));
@@ -559,8 +559,9 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             </Validator>
                         </div>
                         <div
-                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                                }`}
+                            className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                            }`}
                         >
                             <Validator
                                 className="bases__width-percent--40 components__addevent_picker_from"
@@ -672,7 +673,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             isBlockSpecial={true}
                                             maxLength={10}
                                         />
-                                        {(eventAdd?.price?.length ?? 0) > (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
+                                        {(eventAdd?.price?.length ?? 0) >
+                                            (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
                                             <Button
                                                 buttonText="Remove"
                                                 onClick={() => handleRemoveTicketPrice(index)}
@@ -714,13 +716,12 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                                 maxLength={10}
                                             />
                                             <span className="ms-2">
-                                                Max: {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
+                                                Max:{' '}
+                                                {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
                                             </span>
                                         </div>
                                         {errorMessages[index] && (
-                                            <span style={{ color: 'red', fontSize: '20px' }}>
-                                                {errorMessages[index]}
-                                            </span>
+                                            <span style={{ color: 'red', fontSize: '20px' }}>{errorMessages[index]}</span>
                                         )}
                                     </div>
                                 ))}
@@ -735,7 +736,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 )}
                             </Validator>
                         </div>
-
                     </div>
                 </div>
                 <div className="d-flex flex-row-reverse gap-2">
