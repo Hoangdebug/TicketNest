@@ -47,12 +47,7 @@ const SeatType2Page: ISeatType2Page<ISeatType2PageProps> = () => {
 
     return (
         <>
-            <div className="components__seattype2">
-                <div className="components__seattype2-details">
-                    <span>Event: {eventDetails?.name}</span>
-                    <span>Location: {eventDetails?.location}</span>
-                    <span>Time: {formattedDayEnd}</span>
-                </div>
+            <div className="components__seattype2">                
                 <SeatType2 />
             </div>
         </>
