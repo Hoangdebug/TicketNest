@@ -126,6 +126,10 @@ const PAYMENT_SUCCESS_PAGE: IRouteConstant = {
     href: '/payment-success',
 };
 
+const TICKET_BOOKING_HISTORY_PAGE: IRouteConstant={
+    href: 'user/ticketHistory',
+};
+
 export const CLIENT = {
     LOGIN_PAGE: LOGIN,
     REGISTER_PAGE: REGISTER,
@@ -160,6 +164,7 @@ export const CLIENT = {
     PAYMENT_PAGE: PAYMENT_PAGE,
     PAYMENT_RETURN_PAGE: PAYMENT_RETURN_PAGE,
     PAYMENT_SUCCESS_PAGE: PAYMENT_SUCCESS_PAGE,
+    TICKET_BOOKING_HISTORY: TICKET_BOOKING_HISTORY_PAGE
 };
 
 const LOGIN_API: IRouteConstant = {

@@ -1,8 +1,11 @@
 .pages {
     &__register {
+        min-height: 100vh;
         display: flex;
-        flex-direction: row;
-
+        flex-direction: column;
+        justify-content: center;
+        background-image: url("../../../public/assets/bg/bg_register.svg");
+        background-size: cover;
         &-rightside {
             @media screen and (max-width: 768px) {
                 width: 100%;

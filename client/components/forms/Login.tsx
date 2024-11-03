@@ -7,7 +7,7 @@ import { enums, http, images, routes } from '@utils/constants';
 import router, { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { fetchLogin, setModal } from '@redux/actions';
-import { Img } from '..';
+import Img from '@components/commons/Img';
 
 const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
     const navigate = useRouter();
@@ -90,42 +90,43 @@ const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
     return (
         <div className="components__login">
             <div className="components__login-form p-4 ">
-                <h2 className="fw-bold text-center">Sign in</h2>
-                <div className="form-group">
-                    <label htmlFor="username">Mail</label>
+                <h2 className="fw-bold text-start text-uppercase bases__font--60">Sign in</h2>
+                <div className="components__login-input-container">
                     <Validator ref={emailValidatorRef}>
                         <input
                             type="email"
-                            className="form-control"
-                            id="username"
+                            className="components__login-input-field"
                             name="username"
                             value={email ?? ''}
                             onChange={(e) => handleOnChange('email', e.target.value)}
                             placeholder="Enter Mail"
                         />
+                        <label htmlFor="username" className='components__login-input-label bases__font--15'>Mail</label>
+                        <span className="components__login-input-highlight"></span>
                     </Validator>
                 </div>
-                <div className="form-group position-relative">
-                    <label htmlFor="password">
-                        Password
-                        <span className="text-danger">*</span>
-                    </label>
+                <div className="components__login-input-container position-relative">
+
                     <Validator ref={passwordValidatorRef}>
                         <input
                             type={showPassword ? 'text' : 'password'}
-                            className="form-control"
+                            className="components__login-input-field"
                             id="password"
                             name="password"
                             value={password ?? ''}
                             onChange={(e) => handleOnChange('password', e.target.value)}
                             placeholder="Enter password"
                         />
+                        <label htmlFor="password" className='components__login-input-label bases__font--15'>
+                            Password
+                        </label>
+                        <span className="components__login-input-highlight"></span>
                     </Validator>
                     {showPassword ? (
                         <RemoveRedEyeIcon
                             onClick={togglePasswordVisibility}
                             sx={{
-                                top: 30,
+                                top: 10,
                                 right: 7,
                                 position: 'absolute',
                                 cursor: 'pointer',
@@ -135,7 +136,7 @@ const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
                         <VisibilityOffIcon
                             onClick={togglePasswordVisibility}
                             sx={{
-                                top: 30,
+                                top: 10,
                                 right: 7,
                                 position: 'absolute',
                                 cursor: 'pointer',

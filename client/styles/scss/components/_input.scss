@@ -10,8 +10,8 @@
         background-clip: padding-box;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s;
         &:focus {
-            outline: unset !important;
-            border: 2px solid $color-blue !important;
+            outline: unset ;
+            border: 2px solid $color-blue;
         }
         &::placeholder {
             color: $color-blue-gray;

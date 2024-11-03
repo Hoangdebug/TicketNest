@@ -1,5 +1,5 @@
 import { LoginForm } from '@components/index';
-import { enums, images, routes } from '@utils/constants';
+import { enums, routes } from '@utils/constants';
 import { ILoginPage, ILoginPageProps } from '@interfaces/pages/login';
 import { authHelper } from '@utils/helpers';
 import { useEffect } from 'react';
@@ -32,11 +32,8 @@ const LoginPage: ILoginPage<ILoginPageProps> = () => {
     }, [token, profile, router]);
 
     return (
-        <div className="pages__login d-flex">
-            <div className="pages__login-leftSide">
-                <img className="pages__login-leftSide-logo" style={{ height: '100vh' }} src={images.LOGIN_LOGO} alt="" />
-            </div>
-            <div className="col-md-6 col-sm-12 pages__login-rightSide d-flex flex-column justify-content-center">
+        <div className="pages__login pt-5">
+            <div className="pages__login-rightSide d-flex flex-column justify-content-center">
                 <LoginForm />
             </div>
         </div>
