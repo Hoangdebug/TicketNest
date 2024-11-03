@@ -4,11 +4,11 @@ import { IRequestOrganizePage, IRequestOrganizePageProps } from '@interfaces/pag
 
 const RequestOrganizePage: IRequestOrganizePage<IRequestOrganizePageProps> = () => {
     return (
-        <div className="pages__login d-flex">
-            <div className="pages__login-leftSide">
-                <img className="pages__login-leftSide-logo" style={{ height: '100vh' }} src={images.LOGIN_LOGO} alt="" />
+        <div className="pages__organizerRequest d-flex">
+            <div className="pages__organizerRequest-leftSide">
+                <img className="pages__organizerRequest-leftSide-logo" style={{ height: '100vh' }} src={images.LOGIN_LOGO} alt="" />
             </div>
-            <div className="col-md-6 col-sm-12 pages__login-rightSide d-flex flex-column justify-content-center">
+            <div className="col-md-6 col-sm-12 d-flex flex-column justify-content-center">
                 <RequestOrganizerForm />
             </div>
         </div>

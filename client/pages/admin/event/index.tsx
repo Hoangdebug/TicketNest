@@ -7,6 +7,7 @@ import { ReduxStates } from '@redux/reducers';
 import { enums, http, images, routes } from '@utils/constants';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 
 const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPageProps> = () => {
@@ -287,7 +288,7 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
         <div className="pages__events row">
             <div className="col-md-11">
                 <h3 className="pb-3">Events</h3>
-                <Box className="p-3">
+                <Box className="p-3 bases__width110">
                     <div className="pages__events--header d-flex flex-row justify-content-between pb-5">
                         <div className="position-relative">
                             <Input
@@ -345,7 +346,7 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
                                         <h4>{item?.event_type}</h4>
                                     </div>
                                     <div>
-                                        <p className="m-0">{item?.createdAt ?? '--'}</p>
+                                        <p className="m-0">{moment(item?.createdAt ?? '--').format('DD/MM/YYYY HH:mm')}</p>
                                     </div>
                                 </div>
                                 <div className="">

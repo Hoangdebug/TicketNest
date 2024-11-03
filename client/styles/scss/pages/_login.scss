@@ -1,5 +1,10 @@
 .pages {
     &__login {
+        background-image: url("../../../public/assets/bg/bg-login.svg");
+        background-size: cover;
+        min-height: 100vh;
+        z-index: 1;
+        position: relative;
         &-leftSide {
             &-logo {
                 @media screen and (max-width: 768px) {

@@ -7,9 +7,9 @@ const EditUserProfilePage: IEditUserProfilePage<IEditUserProfilePageProps> = () 
     const { profile } = useSelector((states: ReduxStates) => states);
 
     return (
-        <div className="pages__login d-flex bases__padding--top120">
+        <div className="pages__edit-profile d-flex bases__padding--top120">
             {Object.keys(profile).length > 0 && (
-                <div className="col-md-6 col-sm-12 pages__login-rightSide d-flex flex-column justify-content-center">
+                <div className="col-md-6 col-sm-12 d-flex flex-column justify-content-center">
                     <EditUserProFileForm currentUser={profile} />
                 </div>
             )}

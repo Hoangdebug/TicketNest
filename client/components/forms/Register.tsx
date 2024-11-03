@@ -92,7 +92,7 @@ const RegisterForm: IRegisterComponent<IRegisterComponentProps> = () => {
     return (
         <div className="components__register ">
             <div className="components__register-form p-3">
-                <h2 className="fw-bold mb-4 text-center">Sign Up</h2>
+                <h2 className="fw-bold mb-4 text-start bases__font--40 text-uppercase">Sign Up</h2>
                 <div className="row">
                     <div className="col-md-6 gap-4 d-flex flex-column ">
                         <div className="form-group">

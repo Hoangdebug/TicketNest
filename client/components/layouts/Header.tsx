@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import CloseIcon from '@mui/icons-material/Close';
 import { ReduxStates } from '@redux/reducers';
+import Link from 'next/link';
 
 const Header: IHeaderComponent<IHeaderComponentProps> = (props) => {
     const { isShow } = props;
@@ -100,12 +101,15 @@ const Header: IHeaderComponent<IHeaderComponentProps> = (props) => {
                                 </a>
                                 {authHelper.isAuth() && (
                                     <div className="dropdown-content">
-                                        <a href={routes.CLIENT.EDIT_PROFILE_PAGE.href} style={{ fontSize: '15px' }}>
-                                            Edit profile
-                                        </a>
-                                        <a href={routes.CLIENT.REQUEST_ORGNIZE_PAGE.href} style={{ fontSize: '15px' }}>
+                                        <Link href={routes.CLIENT.EDIT_PROFILE_PAGE.href}>
+                                            Edit Profile
+                                        </Link>
+                                        <Link href={routes.CLIENT.REQUEST_ORGNIZE_PAGE.href}>
                                             Request organize
-                                        </a>
+                                        </Link>
+                                        <Link href={routes.CLIENT.TICKET_BOOKING_HISTORY.href}>
+                                            Ticket Booking History
+                                        </Link>
                                         <a onClick={handleLogout} style={{ fontSize: '15px', cursor: 'pointer' }}>
                                             Log out
                                         </a>

@@ -1,14 +1,62 @@
 .components {
     &__login {
+        position: relative;
+        z-index: 20;
         padding: 0px 121.5px;
         @media screen and (max-width: 768px) {
             padding: 0px;
         }
+        &-input-container{
+            position: relative;
+            margin: 20px;
+        }
+
+        &-input-label{
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 16px;
+            color: rgba(204, 204, 204, 0);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        &-input-highlight{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background-color: #007bff;
+            transition: all 0.3s ease;
+        }
+
+        &-input-field{
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid #ccc;
+            outline: none !important;
+            background-color: transparent;
+            &:focus + .components__login-input-label{
+                top: -20px;
+                font-size: 12px;
+                color: #007bff;
+            }
+            &:focus + .components__login-input-label + .components__login-input-highlight{
+                width: 100%;
+            }
+        }
+
         &-form {
             box-shadow: 0px 2px 10px 0px #00000033;
             display: flex;
             flex-direction: column;
             gap: 20px;
+            background: white;
+            border-radius: 10px;
             &-firstButton {
                 background-color: #4caf50 !important;
                 height: 48px;

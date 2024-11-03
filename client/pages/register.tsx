@@ -2,7 +2,7 @@ import RegisterForm from '@components/forms/Register';
 import { IRegisterPage, IRegisterPageProps } from '@interfaces/pages/register';
 import { ReduxStates } from '@redux/reducers';
 
-import { enums, images, routes } from '@utils/constants';
+import { enums, routes } from '@utils/constants';
 import { authHelper } from '@utils/helpers';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -15,7 +15,7 @@ const RegisterPage: IRegisterPage<IRegisterPageProps> = () => {
 
     useEffect(() => {
         if (token) {
-            switch (profile?.details?.type) {
+            switch (profile?.type) {
                 case enums.TYPES.ADMIN:
                     router.push(routes.CLIENT.ADMIN_PAGE.href, undefined, { scroll: false });
                     break;
@@ -33,11 +33,8 @@ const RegisterPage: IRegisterPage<IRegisterPageProps> = () => {
     }, [token, profile, router]);
 
     return (
-        <div className="pages__register d-flex">
-            <div className=" pages__register-leftside">
-                <img className="pages__register-leftside-logo" style={{ height: '100vh' }} src={images.LOGIN_LOGO} alt="" />
-            </div>
-            <div className="col-md-6 col-sm-12 pages__register-rightside d-flex flex-column justify-content-center">
+        <div className="pages__register pt-5">
+            <div className="pages__register-rightside d-flex flex-column justify-content-center">
                 <RegisterForm />
             </div>
         </div>

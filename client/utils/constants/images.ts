@@ -51,3 +51,4 @@ export const ICON_FILLTER_ALL_EVENT = '/assets/icons/adminIconUpdate/ic_allEvent
 export const ICON_FILLTER_NEW_EVENT = '/assets/icons/adminIconUpdate/ic_newEvent.svg';
 export const ICON_FILLTER_ON_GOING_EVENT = '/assets/icons/adminIconUpdate/ic_newEvent.svg';
 export const ICON_FILLTER_RESOLVED_EVENT = '/assets/icons/adminIconUpdate/ic_resolvedEvent.svg';
+export const BG_FORGOT_PASSWORD = '/assets/bg/bg_forgot-password.svg';
