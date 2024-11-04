@@ -24,9 +24,9 @@ export enum EVENTLOCATION {
 }
 
 export const EVENTLOCATION_IMAGE_URL: { [key in EVENTLOCATION]: string } = {
-    [EVENTLOCATION.LOCATIONA]: 'https://phongvu.vn/cong-nghe/wp-content/uploads/2024/07/Cong-cu-AI-nen-dung-1024x640.jpg',
-    [EVENTLOCATION.LOCATIONB]: 'https://example.com/path-to-locationB-image.jpg',
-    [EVENTLOCATION.LOCATIONC]: 'https://example.com/path-to-locationC-image.jpg',
+    [EVENTLOCATION.LOCATIONA]: 'https://storage.googleapis.com/dev-ixink-public-resource/1730723055519/SeatType1_00001_.png',
+    [EVENTLOCATION.LOCATIONB]: 'https://storage.googleapis.com/dev-ixink-public-resource/1730723202297/SeatType2_00001_.png',
+    [EVENTLOCATION.LOCATIONC]: 'https://storage.googleapis.com/dev-ixink-public-resource/1730723367158/SeatType3_00001_.png',
     [EVENTLOCATION.ANOTHER]: 'https://example.com/path-to-another-location-image.jpg',
 };
 
@@ -38,9 +38,9 @@ export const EVENTLOCATION_AREAS: { [key in EVENTLOCATION]: number } = {
 };
 
 export const TICKET_QUANTITY_LIMITS: { [key in EVENTLOCATION]: number[] } = {
-    [EVENTLOCATION.LOCATIONA]: [50, 60, 40],
-    [EVENTLOCATION.LOCATIONB]: [40, 60],
-    [EVENTLOCATION.LOCATIONC]: [35, 75],
+    [EVENTLOCATION.LOCATIONA]: [27, 150, 27],
+    [EVENTLOCATION.LOCATIONB]: [60, 60],
+    [EVENTLOCATION.LOCATIONC]: [130, 130],
     [EVENTLOCATION.ANOTHER]: [],
 };
 

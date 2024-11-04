@@ -180,6 +180,14 @@ export const detailsSeat = async (id: string) => {
     }
 };
 
+export const detailsSeatType3ByEventId = async (eventId: string) => {
+    try {
+        return await axios.get<ISeattype3DetailsApiRes>(`${routes.API.SEAT.href}/event/${eventId}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const detailsSeatType2ByEventId = async (eventId: string) => {
     try {
         return await axios.get<ISeattype2DetailsApiRes>(`${routes.API.SEAT.href}/event/${eventId}`);
