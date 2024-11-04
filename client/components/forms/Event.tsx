@@ -6,7 +6,7 @@ import { validateHelper } from '@utils/helpers';
 import Input from '@components/commons/Input';
 import DateTimePicker from '@components/commons/DateTimePicker';
 import { useDispatch } from 'react-redux';
-import { fetchAddEvent, fetchUpdateEvent, fetchUploadImagesEvent, fetchAddSeat } from '@redux/actions/api';
+import { fetchAddEvent, fetchUpdateEvent, fetchAddSeat } from '@redux/actions/api';
 import { enums, http, images, routes } from '@utils/constants';
 import Select from '@components/commons/Select';
 import Button from '@components/commons/Button';
@@ -164,19 +164,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 eventAdd: {
                     ...(prevState.eventAdd ?? {}),
                     quantity: [...(prevState.eventAdd?.quantity ?? []), 0],
-                },
-            }));
-        }
-    };
-
-    const handleRemoveTicketQuantity = (index: number) => {
-        const minQuantities = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
-        if ((eventAdd?.quantity?.length ?? 0) > minQuantities) {
-            setState((prevState) => ({
-                ...prevState,
-                eventAdd: {
-                    ...(prevState.eventAdd ?? {}),
-                    quantity: (prevState.eventAdd?.quantity ?? []).filter((_, i) => i !== index),
                 },
             }));
         }
@@ -388,25 +375,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
         return eventLocationOptions;
     };
 
-    const renderEventTicketOptions = () => {
-        const eventTicketOptions = [
-            {
-                value: enums.EVENTTICKET.BASE,
-                label: enums.EVENTTICKET.BASE,
-            },
-            {
-                value: enums.EVENTTICKET.MEDIUM,
-                label: enums.EVENTTICKET.MEDIUM,
-            },
-            {
-                value: enums.EVENTTICKET.LARGE,
-                label: enums.EVENTTICKET.LARGE,
-            },
-        ];
-
-        return eventTicketOptions;
-    };
-
     const handleValidateStartDateTime = () => {
         handleSetValidateDateTime(true);
         if (eventAdd?.day_start && !validateHelper.isDate(eventAdd?.day_start)) {
@@ -563,10 +531,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
                             }`}
                         >
-                            <Validator
-                                className="bases__width-percent--40 components__addevent_picker_from"
-                                ref={startDateTimeValidatorRef}
-                            >
+                            <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={startDateTimeValidatorRef}>
                                 <DateTimePicker
                                     value={eventAdd?.day_start}
                                     onBlur={() => handleValidateStartDateTime()}
@@ -577,16 +542,20 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     classNameTime="components__addevent_picker-time"
                                 />
                             </Validator>
+
                             <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
                                 ~
                             </span>
-                            <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={endDateTimeValidatorRef}>
+                            
+                            <Validator
+                                className="bases__width-percent--40 components__addevent_picker_from"
+                            >
                                 <DateTimePicker
                                     value={eventAdd?.day_end}
                                     onBlur={() => handleValidateEndDateTime()}
                                     onChange={(value: string) => handleOnChange('day_end', value)}
-                                    minDate={null}
-                                    minTime={null}
+                                    maxDate={null}
+                                    maxTime={null}
                                     classNameDate="components__addevent_picker-date"
                                     classNameTime="components__addevent_picker-time"
                                 />

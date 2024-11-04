@@ -5,6 +5,7 @@ import { http, images, routes } from '@utils/constants';
 import { useRouter } from 'next/router';
 import React, { createRef, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 const EventPageOrganizer: IEventListPage<IEventListPageProps> = () => {
     const router = useRouter();
@@ -48,6 +49,8 @@ const EventPageOrganizer: IEventListPage<IEventListPageProps> = () => {
 
         return {
             ...item,
+            day_end: moment(item.day_end).format("YYYY-MM-DD"),
+            day_start: moment(item.day_start).format("YYYY-MM-DD"),
             ...editBtn,
         };
     });
