@@ -147,11 +147,11 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
     return (
         <div className="components__seattype1-seat-map-container">
-            <h1 className="components__seattype2-title">Chọn vé</h1>
+            <h1 className="components__seattype2-title">Select ticket</h1>
             <div className="components__seattype1-seat-map-container-seat-information">
-                <div className="components__seattype1-status components__seattype1-status-available">Đang trống</div>
-                <div className="components__seattype1-status components__seattype1-status-selected">Đang chọn</div>
-                <div className="components__seattype1-status components__seattype1-status-unavailable">Không chọn được</div>
+                <div className="components__seattype1-status components__seattype1-status-available">Available</div>
+                <div className="components__seattype1-status components__seattype1-status-selected">Selected</div>
+                <div className="components__seattype1-status components__seattype1-status-unavailable">Not Available</div>
             </div>
 
             <div className="components__seattype1-seat-map">
@@ -171,7 +171,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                     ))}
                 </div>
 
-                <div className="components__seattype1-stage">STAGE/SÂN KHẤU</div>
+                <div className="components__seattype1-stage">STAGE</div>
 
                 <div className="components__seattype1-right-seats">
                     {rows.map((row, index) => (

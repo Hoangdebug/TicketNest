@@ -145,16 +145,16 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
 
     return (
         <div className="components__seattype2">
-            <h1 className="components__seattype2-title">Chọn vé</h1>
+            <h1 className="components__seattype2-title">Select ticket</h1>
             <div className="components__seattype2-details">
                 <span className="components__seattype2-legend">
-                    <span className="components__seattype2-legend-circle components__seattype2-available"></span> Đang trống
+                    <span className="components__seattype2-legend-circle components__seattype2-available"></span> Available
                 </span>
                 <span className="components__seattype2-legend">
-                    <span className="components__seattype2-legend-circle components__seattype2-selected"></span> Đang chọn
+                    <span className="components__seattype2-legend-circle components__seattype2-selected"></span> Selected
                 </span>
                 <span className="components__seattype2-legend">
-                    <span className="components__seattype2-legend-circle components__seattype2-unavailable"></span> Không chọn được
+                    <span className="components__seattype2-legend-circle components__seattype2-unavailable"></span> Not Available
                 </span>
             </div>
 

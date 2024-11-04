@@ -146,23 +146,24 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
     return (
         <div className="components__seattype3-body">
             <div className="components__seattype3-body-container">
+                <h1 className="components__seattype2-title">Select ticket</h1>
                 <div className="components__seattype3-seat-information">
                     <div className="components__seattype3-indicator">
                         <span className="components__seattype3-circle components__seattype3-circle-available"></span>
-                        <span>Đang trống</span>
+                        <span>Available</span>
                     </div>
                     <div className="components__seattype3-indicator">
                         <span className="components__seattype3-circle components__seattype3-circle-selected"></span>
-                        <span>Đang chọn</span>
+                        <span>Selected</span>
                     </div>
                     <div className="components__seattype3-indicator">
                         <span className="components__seattype3-circle components__seattype3-circle-unavailable"></span>
-                        <span>Không chọn được</span>
+                        <span>Not Available</span>
                     </div>
                 </div>
 
                 <div className="components__seattype3-stage-wrapper">
-                    <div className="components__seattype3-stage">STAGE / SÂN KHẤU</div>
+                    <div className="components__seattype3-stage">STAGE</div>
                 </div>
 
                 <div className="components__seattype3-layout-wrapper">
@@ -196,9 +197,8 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
 
                             <div className="components__seattype3-divider"></div>
 
-                            {/* Right Section */}
                             <div className="components__seattype3-right-section">
-                            {state.rowsLeft?.map((row, rowIndex) => (
+                                {state.rowsLeft?.map((row, rowIndex) => (
                                     <div key={row} className="components__seattype3-row">
                                         <span className="components__seattype3-row-label">{row}</span>
                                         <div className="components__seattype3-seats">
