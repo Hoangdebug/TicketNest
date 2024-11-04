@@ -144,8 +144,10 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
         handleDetialsEvent();
         handleDetialsSeatType1();
     }, [selectedSeat, ticketPrice]);
+
     return (
         <div className="components__seattype1-seat-map-container">
+            <h1 className="components__seattype2-title">Chọn vé</h1>
             <div className="components__seattype1-seat-map-container-seat-information">
                 <div className="components__seattype1-status components__seattype1-status-available">Đang trống</div>
                 <div className="components__seattype1-status components__seattype1-status-selected">Đang chọn</div>
@@ -154,12 +156,12 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
             <div className="components__seattype1-seat-map">
                 <div className="components__seattype1-left-seats">
-                    {rows.slice(0, numSeatOfRowLeft.length).map((row, index) => (
+                    {rows.map((row, index) => (
                         <div key={row} className="components__seattype1-seat-row">
-                            {Array.from({ length: numSeatOfRowLeft[index] }).map((_, seatNum) => (
+                            {Array.from({ length: numSeatOfRowLeft[index] || 0 }).map((_, seatNum) => (
                                 <div
                                     key={seatNum}
-                                    className="components__seattype1-seat components__seattype1-seat-left"
+                                    className={`components__seattype1-seat components__seattype1-seat-left ${selectedSeat.includes(`L${row}${seatNum + 1}`) ? 'selected' : ''}`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'left')}
                                 >
                                     {seatNum + 1}
@@ -172,12 +174,12 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                 <div className="components__seattype1-stage">STAGE/SÂN KHẤU</div>
 
                 <div className="components__seattype1-right-seats">
-                    {rows.slice(0, numSeatOfRowRight.length).map((row, index) => (
+                    {rows.map((row, index) => (
                         <div key={row} className="components__seattype1-seat-row">
-                            {Array.from({ length: numSeatOfRowRight[index] }).map((_, seatNum) => (
+                            {Array.from({ length: numSeatOfRowRight[index] || 0 }).map((_, seatNum) => (
                                 <div
                                     key={seatNum}
-                                    className="components__seattype1-seat components__seattype1-seat-right"
+                                    className={`components__seattype1-seat components__seattype1-seat-right ${selectedSeat.includes(`R${row}${seatNum + 1}`) ? 'selected' : ''}`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'right')}
                                 >
                                     {seatNum + 1}
@@ -194,7 +196,8 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                 {Array.from({ length: numSeatOfRowMiddle[index] || 0 }).map((_, seatNum) => (
                                     <div
                                         key={seatNum}
-                                        className="components__seattype1-seat components__seattype1-seat-middle"
+                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
+                                            }`}
                                         onClick={() => toggleSeat(row, seatNum + 1, 'middle')}
                                     >
                                         {seatNum + 1}
@@ -207,21 +210,23 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                     <div className="components__seattype1-right-middle-seats">
                         {rows.slice(Math.ceil(numSeatOfRowMiddle.length / 2), numSeatOfRowMiddle.length).map((row, index) => (
                             <div key={index} className="components__seattype1-seat-row">
-                                {Array.from({ length: numSeatOfRowMiddle[Math.ceil(numSeatOfRowMiddle.length / 2) + index] || 0 }).map(
-                                    (_, seatNum) => (
-                                        <div
-                                            key={seatNum}
-                                            className="components__seattype1-seat components__seattype1-seat-middle"
-                                            onClick={() => toggleSeat(row, seatNum + 1, 'middle')}
-                                        >
-                                            {seatNum + 1}
-                                        </div>
-                                    )
-                                )}
+                                {Array.from({
+                                    length: numSeatOfRowMiddle[Math.ceil(numSeatOfRowMiddle.length / 2) + index] || 0,
+                                }).map((_, seatNum) => (
+                                    <div
+                                        key={seatNum}
+                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
+                                            }`}
+                                        onClick={() => toggleSeat(row, seatNum + 1, 'middle')}
+                                    >
+                                        {seatNum + 1}
+                                    </div>
+                                ))}
                             </div>
                         ))}
                     </div>
                 </div>
+
 
                 <div className="components__seattype1-right-sidebar">
                     <h2 className="components__seattype1-right-sidebar-title">{eventDetails?.name}</h2>
@@ -243,12 +248,47 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                             <span className="components__seattype1-text">{eventDetails?.location}</span>
                         </div>
                         <h3>Pricing</h3>
-                        <div className="components__seattype1--color-details">
-                            <div className="components__seattype1-color-box components__seattype1-seat-left"></div> THƯỜNG
-                            <div className="components__seattype1-color-box components__seattype1-seat-right"></div> VIP
-                            <div className="components__seattype1-color-box components__seattype1-seat-middle"></div> PREMIUM
+                        <ul className="components__seattype1-event-info">
+                            <li>
+                                <div className="components__seattype1-price-detail components__seattype1-left-seat"></div>
+                                Left Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫
+                                </span>
+                            </li>
+                            <li>
+                                <div className="components__seattype1-price-detail components__seattype1-middle-seat"></div>
+                                Middle Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫
+                                </span>
+                            </li>
+                            <li>
+                                <div className="components__seattype1-price-detail components__seattype1-right-seat"></div>
+                                Right Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[2]?.toLocaleString()} ₫
+                                </span>
+                            </li>
+                        </ul>
+                        <div className="components__seattype2-info-btn">
+                            {selectedSeat.length === 0 ? (
+                                <button className="components__seattype2-info-btn-continue-disabled">Please select ticket</button>
+                            ) : (
+                                <>
+                                    <p>Selected Seat: {selectedSeat.join(', ')}</p>
+                                    <button
+                                        onClick={() =>
+                                            router.push(
+                                                {
+                                                    pathname: routes.CLIENT.ORDER_PAGES.href,
+                                                    query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
+                                                },
+                                                undefined,
+                                                { scroll: false }
+                                            )
+                                        }
+                                        className="components__seattype2-info-btn-continue"
+                                    >
+                                        Continue - {ticketPrice.toLocaleString()} VND
+                                    </button>
+                                </>
+                            )}
                         </div>
-                        <button className="components__seattype1-select-seat-btn">Vui lòng chọn vé</button>
                     </div>
                 </div>
             </div>

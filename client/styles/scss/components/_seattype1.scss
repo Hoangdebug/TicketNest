@@ -82,6 +82,7 @@
 
         &-left-seats {
             left: 20%;
+
             .components__seattype1-seat-left {
                 background-color: #add8e6;
             }
@@ -89,6 +90,7 @@
 
         &-right-seats {
             right: 20%;
+
             .components__seattype1-seat-right {
                 background-color: #90ee90;
             }
@@ -99,6 +101,7 @@
             justify-content: center;
             gap: 50px;
             margin-top: 20px;
+
             .components__seattype1-seat-middle {
                 background-color: #fffacd;
             }
@@ -131,6 +134,16 @@
                 background-color: red;
                 color: white;
             }
+
+            &.selected {
+                background-color: green; // Màu ghế khi được chọn
+            }
+        }
+
+        &-selected-seats {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #fff;
         }
 
         &-right-sidebar {
@@ -162,10 +175,21 @@
                 margin-top: 10px;
             }
 
+            &-color-details-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
             &-color-box {
-                width: 20px;
-                height: 20px;
-                border-radius: 4px;
+                width: 30px;
+                /* Độ rộng của biểu tượng */
+                height: 15px;
+                /* Độ cao của biểu tượng */
+                background-color: #ffcccc;
+                /* Màu nền của biểu tượng */
+                border-radius: 8px;
+                /* Bo góc của biểu tượng */
                 margin-right: 5px;
             }
 
@@ -183,6 +207,58 @@
                 &:hover {
                     background-color: #555;
                 }
+            }
+        }
+
+        &-event-info {
+            background-color: #333;
+
+            h2 {
+                font-size: 25px;
+                margin-bottom: 10px;
+            }
+
+            p {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+                font-size: 20px;
+            }
+
+            ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+            li {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+                font-size: 18px;
+            }
+
+            .components__seattype1-price-detail {
+                display: inline-block;
+                width: 15px;
+                height: 15px;
+                border-radius: 3px;
+                margin-right: 8px;
+            }
+
+            .components__seattype1-left-seat {
+                background-color: #add8e6; // Màu cho Left Area
+            }
+
+            .components__seattype1-middle-seat {
+                background-color: #fffacd; // Màu cho Middle Area
+            }
+
+            .components__seattype1-right-seat {
+                background-color: #90ee90; // Màu cho Right Area
+            }
+
+            .components__seattype1-price-green {
+                color: #32cd32;
             }
         }
     }

@@ -63,12 +63,6 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
     return (
         <>
             <div className="components__seattype1">
-                <div className="components__seattype1-details">
-                    <span>Event: {eventDetails?.name}</span>
-                    <span>Location: {eventDetails?.location}</span>
-                    <span>Time: {formattedDayEnd}</span>
-                    <span>Ghế: {formattedSeatDetails}</span>
-                </div>
                 <div className="components__order-form-and-ticket-info">
                     <div className="components__order-form-container">
                         <h2 className="components__order-form-title">Question Table</h2>
