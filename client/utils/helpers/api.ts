@@ -188,6 +188,14 @@ export const detailsSeatType2ByEventId = async (eventId: string) => {
     }
 };
 
+export const detailsSeatType1ByEventId = async (eventId: string) => {
+    try {
+        return await axios.get<ISeattype1DetailsApiRes>(`${routes.API.SEAT.href}/event/${eventId}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const requestOrganizer = async (data: IRequestOrganizeDataAPI) => {
     try {
         return await axios.post<IRequestOrganizeAPIRes>(`${routes.API.REQUEST_ORGANIZER.href}`, data);
