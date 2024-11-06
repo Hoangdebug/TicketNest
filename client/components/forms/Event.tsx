@@ -64,6 +64,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             eventAdd: {
                 ...prevState.eventAdd,
                 [field]: value,
+                
             },
         }));
     };
@@ -79,6 +80,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 day_end: event?.day_end ?? '',
                 event_type: event?.event_type ?? enums.EVENTTYPE.MUSIC,
                 location: event?.location ?? enums.EVENTLOCATION.LOCATIONA,
+                ticket_type: event?.ticket_type ?? [''],
                 price: event?.price ?? [0],
                 quantity: event?.quantity ?? [0],
                 ticket_number: event?.ticket_number ?? enums.EVENTTICKET.BASE,
@@ -90,20 +92,24 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     const handleLocationChange = (value: string) => {
         let newPrices = eventAdd?.price || [];
         let newQuantities = eventAdd?.quantity || [];
-
+        let newTicketType = eventAdd?.ticket_type || [];
         switch (value) {
             case enums.EVENTLOCATION.LOCATIONA:
                 newPrices = newPrices.slice(0, 3);
                 newQuantities = newQuantities.slice(0, 3);
+                newTicketType = newTicketType.slice(0, 3);
                 while (newPrices.length < 3) newPrices.push(0);
                 while (newQuantities.length < 3) newQuantities.push(0);
+                while (newTicketType.length < 3) newTicketType.push('');
                 break;
             case enums.EVENTLOCATION.LOCATIONB:
             case enums.EVENTLOCATION.LOCATIONC:
                 newPrices = newPrices.slice(0, 2);
                 newQuantities = newQuantities.slice(0, 2);
+                newTicketType = newTicketType.slice(0, 2);
                 while (newPrices.length < 2) newPrices.push(0);
                 while (newQuantities.length < 2) newQuantities.push(0);
+                while (newTicketType.length < 2) newTicketType.push('');
                 break;
             default:
                 break;
@@ -115,6 +121,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 ...prevState.eventAdd,
                 location: value,
                 price: newPrices,
+                ticket_type: newTicketType,
                 quantity: newQuantities,
             },
         }));
@@ -152,6 +159,16 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             eventAdd: {
                 ...(prevState.eventAdd ?? {}),
                 price: prevState.eventAdd?.price?.map((p, i) => (i === index ? Number(value) : p)) || [],
+            },
+        }));
+    };
+
+    const handleOnChangeTicketType = (index: number, value: string | number) => {
+        setState((prevState) => ({
+            ...prevState,
+            eventAdd: {
+                ...(prevState.eventAdd ?? {}),
+                ticket_type: prevState.eventAdd?.ticket_type?.map((p, i) => (i === index ? String(value) : p)) || [],
             },
         }));
     };
@@ -626,6 +643,37 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             )}
                         </div>
                         <div className="form-group">
+                            <label htmlFor="ticketType" className="pb-2">
+                                Name Ticket Type<span className="text-danger">*</span>
+                            </label>
+                            <Validator ref={ticketTypeValidatorRef}>
+                                {(eventAdd?.ticket_type ?? []).map((price, index) => (
+                                    <div key={index} className="d-flex align-items-center mb-2">
+                                        <Input
+                                            value={price}
+                                            type="text"
+                                            onChange={(value: string) => handleOnChangeTicketType(index, value)}
+                                            id={`ticketType${index}`}
+                                            name={`ticketType${index}`}
+                                            placeholder={`Enter Ticket Type ${index + 1}`}
+                                            isBlockSpecial={true}
+                                            maxLength={10}
+                                        />
+                                        {(eventAdd?.price?.length ?? 0) >
+                                            (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
+                                            <Button
+                                                buttonText="Remove"
+                                                onClick={() => handleRemoveTicketPrice(index)}
+                                                background="red"
+                                                fontSize="14"
+                                                className="ms-2"
+                                            />
+                                        )}
+                                    </div>
+                                ))}                                
+                            </Validator>
+                        </div>
+                        <div className="form-group">
                             <label htmlFor="ticketPrice" className="pb-2">
                                 Ticket Prices<span className="text-danger">*</span>
                             </label>
@@ -652,17 +700,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                                 className="ms-2"
                                             />
                                         )}
-                                    </div>
-                                ))}
-                                {(eventAdd?.price?.length ?? 0) < (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
-                                    <Button
-                                        buttonText="Add Price"
-                                        onClick={handleAddTicketPrice}
-                                        background="blue"
-                                        fontSize="14"
-                                        className="mt-2"
-                                    />
-                                )}
+                                    </div>                                    
+                                ))}                                
                             </Validator>
                         </div>
 
@@ -693,16 +732,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             <span style={{ color: 'red', fontSize: '20px' }}>{errorMessages[index]}</span>
                                         )}
                                     </div>
-                                ))}
-                                {(eventAdd?.quantity?.length ?? 0) < (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
-                                    <Button
-                                        buttonText="Add Quantity"
-                                        onClick={handleAddTicketQuantity}
-                                        background="blue"
-                                        fontSize="14"
-                                        className="mt-2"
-                                    />
-                                )}
+                                ))}                               
                             </Validator>
                         </div>
                     </div>
