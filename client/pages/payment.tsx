@@ -183,9 +183,9 @@ const Payment = () => {
                         <span className="popup-modal-close" onClick={handleClose}>
                             &times;
                         </span>
-                        <h2>Hết thời gian giữ vé!</h2>
-                        <p>Đã hết thời gian giữ vé. Vui lòng đặt lại vé mới.</p>
-                        <button onClick={handleClose}>Đặt vé mới</button>
+                        <h2>Ticket hold time has expired!</h2>
+                        <p>The ticket holding period has expired. Please rebook a new ticket.</p>
+                        <button onClick={handleClose}>Book new ticket</button>
                     </div>
                 </div>
             )}
