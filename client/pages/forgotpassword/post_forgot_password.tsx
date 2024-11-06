@@ -6,7 +6,12 @@ const PostForgotPasswordPage: IPostForgotPasswordPage<IPostForgotPasswordPagePro
     return (
         <div className="pages__postForgotPassword d-flex ">
             <div className="pages__postForgotPassword-leftSide ">
-                <img className="pages__postForgotPassword-leftSide-logo" style={{ height: '100vh' }} src={images.BG_FORGOT_PASSWORD} alt="" />
+                <img
+                    className="pages__postForgotPassword-leftSide-logo"
+                    style={{ height: '100vh' }}
+                    src={images.BG_FORGOT_PASSWORD}
+                    alt=""
+                />
             </div>
             <div className="col-md-6 col-sm-12 pages__postForgotPassword-rightSide ">
                 <img

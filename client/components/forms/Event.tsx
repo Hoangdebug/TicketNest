@@ -14,7 +14,6 @@ import Img from '@components/commons/Img';
 import { setModal } from '@redux/actions';
 import axios from 'axios';
 
-//theanh318 add thanh cong
 const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     const { event } = props;
 
@@ -64,7 +63,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             eventAdd: {
                 ...prevState.eventAdd,
                 [field]: value,
-
             },
         }));
     };
@@ -617,8 +615,9 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             </Validator>
                         </div>
                         <div
-                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                                }`}
+                            className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                            }`}
                         >
                             <label htmlFor="location" className="pb-2">
                                 Day start<span className="text-danger">*</span>
@@ -641,9 +640,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             <label htmlFor="location" className="pb-2">
                                 Day end<span className="text-danger">*</span>
                             </label>
-                            <Validator
-                                className="bases__width-percent--40 components__addevent_picker_from"
-                            >
+                            <Validator className="bases__width-percent--40 components__addevent_picker_from">
                                 <DateTimePicker
                                     value={eventAdd?.day_end}
                                     onBlur={() => handleValidateEndDateTime()}
@@ -736,7 +733,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             isBlockSpecial={true}
                                             maxLength={10}
                                         />
-                                        {(eventAdd?.location === enums.EVENTLOCATION.ANOTHER) && (
+                                        {eventAdd?.location === enums.EVENTLOCATION.ANOTHER && (
                                             <Button
                                                 buttonText="Remove"
                                                 onClick={() => handleRemoveTicketType(index)}
@@ -747,7 +744,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                         )}
                                     </div>
                                 ))}
-                                {(eventAdd?.location === enums.EVENTLOCATION.ANOTHER) && (
+                                {eventAdd?.location === enums.EVENTLOCATION.ANOTHER && (
                                     <Button
                                         buttonText="Add Ticket Type"
                                         onClick={handleAddTicketType}
@@ -775,9 +772,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             isBlockSpecial={true}
                                             maxLength={10}
                                         />
-                                        <span className="ms-2">
-                                            Ticket Type: {`${index + 1}`}
-                                        </span>
+                                        <span className="ms-2">Ticket Type: {`${index + 1}`}</span>
                                     </div>
                                 ))}
                             </Validator>
@@ -802,7 +797,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                                 maxLength={10}
                                             />
                                             <span className="ms-2">
-                                                Max: {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
+                                                Max:{' '}
+                                                {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
                                             </span>
                                         </div>
                                         {errorMessages[index] && (

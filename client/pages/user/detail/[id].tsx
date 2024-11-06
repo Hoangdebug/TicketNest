@@ -33,9 +33,9 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         replyId: null,
         listComments: [],
         isValidate: true,
-        replyComments: [],
+        listReplyComments: [],
     });
-    const { eventDetails, event, comment, replyId, listComments, replyComments } = state;
+    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt } = state;
 
     const [quantity, setQuantity] = useState(0);
 
@@ -49,6 +49,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
     const commentValidatorRef = createRef<IValidatorComponentHandle>();
+    const replyCommentValidatorRef = createRef<IValidatorComponentHandle>();
 
     const totalMoney = quantity * (eventDetails?.price as any);
     const slicedEvents = event?.slice(0, 4);
@@ -142,7 +143,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     const data = (res as ICommentListDataAPIRes).result;
                     setState((prevState) => ({
                         ...prevState,
-                        replyComments: data,
+                        listReplyComments: data,
                     }));
                 }
             }),
@@ -192,7 +193,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const handleFetchReplyComment = async (idComment: string) => {
         let validate = state.isValidate;
 
-        const validator = [{ ref: commentValidatorRef, value: comment, message: 'Enter your comment' }];
+        const validator = [{ ref: replyCommentValidatorRef, value: replyCommemt, message: 'Enter your comment' }];
 
         validator.forEach(({ ref, value, message }) => {
             ref.current?.onValidateMessage('');
@@ -207,14 +208,14 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 await fetchReplyComment(
                     id?.toString() ?? '',
                     idComment ?? '',
-                    { comment },
+                    { replyCommemt },
                     (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
                         if (res?.code === http.SUCCESS_CODE) {
                             setState((prevState) => ({
                                 ...prevState,
-                                comment: '',
+                                replyCommemt: '',
                             }));
-                            handleFetchListComment();
+                            handleFetchListReplyComments(idComment);
                         } else {
                             setModal({
                                 isShow: true,
@@ -264,7 +265,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                         onClick={() => {
                             if (eventDetails?.location === 'Location A') {
                                 router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id} },
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id } },
                                     undefined,
                                     { scroll: false },
                                 );
@@ -316,7 +317,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
 
             <div className="p-4">
                 <div>
-                    <h2>Leave a Comment</h2>
+                    <h2>Comment</h2>
                     <Validator ref={commentValidatorRef}>
                         <Input
                             className=""
@@ -356,21 +357,23 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
 
                             {replyId === item._id && (
                                 <div className="reply-form pt-4">
-                                    <Input
-                                        type="textarea"
-                                        value={comment ?? ''}
-                                        onChange={(value: string) => handleOnChange('comment', value)}
-                                        placeholder="Enter your reply..."
-                                    />
+                                    <Validator ref={replyCommentValidatorRef}>
+                                        <Input
+                                            type="textarea"
+                                            value={replyCommemt ?? ''}
+                                            onChange={(value: string) => handleOnChange('replyCommemt', value)}
+                                            placeholder="Enter your reply..."
+                                        />
+                                    </Validator>
                                     <div className="d-flex justify-content-end pt-3">
-                                        <Button buttonText="Submit" onClick={() => handleFetchReplyComment(item._id ?? '')} />
+                                        <Button buttonText="Send" onClick={() => handleFetchReplyComment(item._id ?? '')} />
                                     </div>
                                 </div>
                             )}
 
                             {replyId === item._id && (
                                 <div className="reply-list pt-3 pl-3">
-                                    {replyComments?.map((reply, replyIndex) => (
+                                    {listReplyComments?.map((reply, replyIndex) => (
                                         <div key={replyIndex} className="reply-comment p-2 border-top bases__margin--left90">
                                             <div className="d-flex justify-content-between align-items-center">
                                                 <div className="pages__eventdetail_comment_infor_user">

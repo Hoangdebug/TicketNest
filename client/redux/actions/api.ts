@@ -368,7 +368,6 @@ export const fetchAddEvent = (data: IEventDataApi = { ticket_type: [] }, isLoad:
     };
 };
 
-
 export const fetchAddSeat = (data: ISeatType2DataAPI = { ticket_type: [] }, isLoad: boolean = true): any => {
     return async (dispatch: Dispatch): Promise<ISeattype2DataApiRes | IErrorAPIRes | null> => {
         if (isLoad) {
@@ -387,7 +386,7 @@ export const fetchAddSeat = (data: ISeatType2DataAPI = { ticket_type: [] }, isLo
             if (axios.isAxiosError(err)) {
                 const res = err.response;
                 if (res && res.data) {
-                    return res.data; 
+                    return res.data;
                 }
             }
             return { code: 500, mes: err instanceof Error ? err.message : 'An unknown error occurred' };
@@ -896,6 +895,32 @@ export const fetchListReplyComment = async (
 
         try {
             const res = await apiHelper.listReplyCommemt(eid, commentId);
+            if (callBack) {
+                callBack(res?.data);
+            }
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
+            }
+        }
+
+        if (isLoad) {
+            dispatch(setLoader(false));
+        }
+    };
+};
+
+export const fetchListOrder = async (callBack?: (result: IOrderDataApiRes | IErrorAPIRes | null) => void, isLoad: boolean = true) => {
+    return async (dispatch: Dispatch) => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res = await apiHelper.orderList();
             if (callBack) {
                 callBack(res?.data);
             }

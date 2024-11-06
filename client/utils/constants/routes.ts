@@ -126,7 +126,7 @@ const PAYMENT_SUCCESS_PAGE: IRouteConstant = {
     href: '/payment-success',
 };
 
-const TICKET_BOOKING_HISTORY_PAGE: IRouteConstant={
+const TICKET_BOOKING_HISTORY_PAGE: IRouteConstant = {
     href: 'user/ticketHistory',
 };
 
@@ -164,7 +164,7 @@ export const CLIENT = {
     PAYMENT_PAGE: PAYMENT_PAGE,
     PAYMENT_RETURN_PAGE: PAYMENT_RETURN_PAGE,
     PAYMENT_SUCCESS_PAGE: PAYMENT_SUCCESS_PAGE,
-    TICKET_BOOKING_HISTORY: TICKET_BOOKING_HISTORY_PAGE
+    TICKET_BOOKING_HISTORY: TICKET_BOOKING_HISTORY_PAGE,
 };
 
 const LOGIN_API: IRouteConstant = {
@@ -246,6 +246,10 @@ const OTP_VERIFY_FORGOTPASS_API: IRouteConstant = {
 const COMMENT_API: IRouteConstant = {
     href: 'comment',
 };
+
+const ORDER_API: IRouteConstant = {
+    href: 'order',
+};
 export const API = {
     LOGIN: LOGIN_API,
     REGISTER: REGISTER_API,
@@ -270,4 +274,7 @@ export const API = {
     ADMIN_UPDATE_ORGANIZER: ADMIN_UPDATE_ORGANIZER_API,
     ADMIN_CREATE_ACCOUNT_BY_ADMIN: ADMIN_CREATE_ACCOUNT_BY_ADMIN_API,
     ADMIN_UPDATE_STATUS_EVENT: ADMIN_UPDATE_STATUS_EVENT_API,
+
+    // order
+    ORDER: ORDER_API,
 };

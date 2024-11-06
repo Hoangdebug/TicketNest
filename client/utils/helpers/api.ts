@@ -283,3 +283,11 @@ export const listReplyCommemt = async (eid: string, idComment: string) => {
         throw err;
     }
 };
+
+export const orderList = async () => {
+    try {
+        return await axios.get<IOrderDataApiRes>(`${routes.API.ORDER.href}`);
+    } catch (err) {
+        throw err;
+    }
+};

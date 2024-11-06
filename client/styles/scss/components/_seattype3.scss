@@ -88,7 +88,7 @@
             height: auto;
             position: relative;
             border-radius: 50px 50px 50px 50px;
-            clip-path: path("M0,80C300,150,700,150,1000,80C1300,10,1700,10,2000,80L2000,500L0,500Z");
+            clip-path: path('M0,80C300,150,700,150,1000,80C1300,10,1700,10,2000,80L2000,500L0,500Z');
         }
 
         &-sections {
@@ -177,7 +177,6 @@
                 background-color: red;
                 color: white;
             }
-
         }
 
         &-event-information {

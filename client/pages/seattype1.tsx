@@ -47,7 +47,7 @@ const SeatType1Page: ISeatType1Page<ISeatType1PageProps> = () => {
 
     return (
         <>
-            <div className="components__seattype1">                
+            <div className="components__seattype1">
                 <SeatType1 />
             </div>
         </>
