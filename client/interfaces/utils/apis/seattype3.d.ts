@@ -4,7 +4,7 @@ interface ISeatType3DataAPI {
         _id?: string;
         name?: string;
     };
-    status?: 'all' | enums.SeatStatus.ACCEPTED | enums.SeatStatus.CANCELLED | enums.SeatStatus.PENDING | undefined;
+    ticket_type?: string[];
     location?: string;
     price?: number[];
     quantity?: number[];

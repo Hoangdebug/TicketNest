@@ -172,7 +172,7 @@ const Payment = () => {
                         <p>Total: {ticketPrice}</p>
                     </div>
                     <button className="components__payment-paymentSection-payButton" disabled={isDisabled} onClick={handlePayment}>
-                        Paymen
+                        Payment
                     </button>
                 </div>
             </div>

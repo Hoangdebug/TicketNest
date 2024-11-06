@@ -271,7 +271,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
 
         let errorMessage = '';
         if (newValue > maxQuantity) {
-            errorMessage = `Giới hạn chỉ là ${maxQuantity}`;
+            errorMessage = `Max is ${maxQuantity}`;
         }
 
         setErrorMessages((prevMessages) => {
@@ -348,7 +348,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                     },
                 }));
 
-                // Show success modal
                 dispatch(
                     setModal({
                         isShow: true,
@@ -497,7 +496,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     };
 
     const handleSubmitAddEvent = async (): Promise<string | null> => {
-        console.log('Event data being sent:', eventAdd);  // Kiểm tra dữ liệu event trước khi gửi
+        console.log('Event data being sent:', eventAdd);
 
         const res: IEventDataApiRes | IErrorAPIRes | null = await dispatch(fetchAddEvent(eventAdd ?? {}));
 
@@ -512,7 +511,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                     ticket_type: eventAdd?.ticket_type,
                 };
 
-                // Kiểm tra dữ liệu seat trước khi gửi
                 console.log('Seat data being sent:', seatAdd);
 
                 const seatRes = await dispatch(fetchAddSeat(seatAdd));
@@ -520,7 +518,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 if (seatRes?.code === http.SUCCESS_CODE) {
                     router.push(routes.CLIENT.ORGANIZER_LIST_EVENT.href, undefined, { scroll: false });
                 } else {
-                    // Thêm thông báo khi tạo ghế thất bại
                     alert('Error while creating seat: ' + seatRes?.mes);
                 }
             }
@@ -623,6 +620,9 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
                                 }`}
                         >
+                            <label htmlFor="location" className="pb-2">
+                                Day start<span className="text-danger">*</span>
+                            </label>
                             <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={startDateTimeValidatorRef}>
                                 <DateTimePicker
                                     value={eventAdd?.day_start}
@@ -638,7 +638,9 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
                                 ~
                             </span>
-
+                            <label htmlFor="location" className="pb-2">
+                                Day end<span className="text-danger">*</span>
+                            </label>
                             <Validator
                                 className="bases__width-percent--40 components__addevent_picker_from"
                             >
@@ -730,7 +732,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             onChange={(value: string) => handleOnChangeTicketType(index, value)}
                                             id={`ticketType${index}`}
                                             name={`ticketType${index}`}
-                                            placeholder={`Enter Ticket Type ${index + 1}`}
+                                            placeholder={`Enter Name Ticket Type ${index + 1}`}
                                             isBlockSpecial={true}
                                             maxLength={10}
                                         />
@@ -773,10 +775,11 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             isBlockSpecial={true}
                                             maxLength={10}
                                         />
-                                        {/* Xóa nút Remove */}
+                                        <span className="ms-2">
+                                            Ticket Type: {`${index + 1}`}
+                                        </span>
                                     </div>
                                 ))}
-                                {/* Xóa nút Add */}
                             </Validator>
                         </div>
 
@@ -801,14 +804,12 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             <span className="ms-2">
                                                 Max: {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
                                             </span>
-                                            {/* Xóa nút Remove */}
                                         </div>
                                         {errorMessages[index] && (
                                             <span style={{ color: 'red', fontSize: '20px' }}>{errorMessages[index]}</span>
                                         )}
                                     </div>
                                 ))}
-                                {/* Xóa nút Add */}
                             </Validator>
                         </div>
                     </div>

@@ -5,7 +5,7 @@ interface ISeatType1Component<P = {}> extends IBaseComp<P> {}
 interface ISeatType1ComponentState {
     eventDetails?: IEventDataApi;
     event?: IEventDataApi[];
-    seatDetails?: ISeatType2DataAPI;
+    seatDetails?: ISeatType1DataAPI;
     rows?: string[];
     numSeatOfRowLeft?: number[];
     numSeatOfRowRight?: number[];
