@@ -64,7 +64,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             eventAdd: {
                 ...prevState.eventAdd,
                 [field]: value,
-                
+
             },
         }));
     };
@@ -128,28 +128,102 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     };
 
     const handleAddTicketPrice = () => {
-        const maxPrices = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
-        if ((eventAdd?.price?.length ?? 0) < maxPrices) {
-            setState((prevState) => ({
-                ...prevState,
-                eventAdd: {
-                    ...(prevState.eventAdd ?? {}),
-                    price: [...(prevState.eventAdd?.price ?? []), 0],
-                },
-            }));
+        if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
+            const maxPrices = 3;
+            if ((eventAdd?.price?.length ?? 0) < maxPrices) {
+                setState((prevState) => ({
+                    ...prevState,
+                    eventAdd: {
+                        ...(prevState.eventAdd ?? {}),
+                        price: [...(prevState.eventAdd?.price ?? []), 0],
+                    },
+                }));
+            }
+        }
+    };
+
+    const handleAddTicketType = () => {
+        if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
+            const maxType = 3;
+
+            if ((eventAdd?.ticket_type?.length ?? 0) < maxType) {
+                setState((prevState) => {
+                    const updatedTicketTypes = [...(prevState.eventAdd?.ticket_type ?? ['']), ''];
+                    const updatedPrices = [...(prevState.eventAdd?.price ?? [])];
+                    const updatedQuantities = [...(prevState.eventAdd?.quantity ?? [])];
+
+                    if (updatedPrices.length < updatedTicketTypes.length) {
+                        updatedPrices.push(0);
+                    }
+                    if (updatedQuantities.length < updatedTicketTypes.length) {
+                        updatedQuantities.push(0);
+                    }
+
+                    return {
+                        ...prevState,
+                        eventAdd: {
+                            ...(prevState.eventAdd ?? {}),
+                            ticket_type: updatedTicketTypes,
+                            price: updatedPrices,
+                            quantity: updatedQuantities,
+                        },
+                    };
+                });
+            }
         }
     };
 
     const handleRemoveTicketPrice = (index: number) => {
-        const minPrices = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
-        if ((eventAdd?.price?.length ?? 0) > minPrices) {
-            setState((prevState) => ({
-                ...prevState,
-                eventAdd: {
-                    ...(prevState.eventAdd ?? {}),
-                    price: (prevState.eventAdd?.price ?? []).filter((_, i) => i !== index),
-                },
-            }));
+        if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
+            const minPrices = 1;
+            if ((eventAdd?.price?.length ?? 0) > minPrices) {
+                setState((prevState) => ({
+                    ...prevState,
+                    eventAdd: {
+                        ...(prevState.eventAdd ?? {}),
+                        price: (prevState.eventAdd?.price ?? []).filter((_, i) => i !== index),
+                    },
+                }));
+            }
+        }
+    };
+
+    const handleRemoveTicketQuantity = (index: number) => {
+        if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
+            const minQuantities = 1;
+            if ((eventAdd?.quantity?.length ?? 0) > minQuantities) {
+                setState((prevState) => ({
+                    ...prevState,
+                    eventAdd: {
+                        ...(prevState.eventAdd ?? {}),
+                        quantity: (prevState.eventAdd?.quantity ?? []).filter((_, i) => i !== index),
+                    },
+                }));
+            }
+        }
+    };
+
+    const handleRemoveTicketType = (index: number) => {
+        if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
+            const minType = 1;
+
+            if ((eventAdd?.ticket_type?.length ?? 0) > minType) {
+                setState((prevState) => {
+                    const updatedTicketTypes = (prevState.eventAdd?.ticket_type ?? []).filter((_, i) => i !== index);
+                    const updatedPrices = (prevState.eventAdd?.price ?? []).filter((_, i) => i !== index);
+                    const updatedQuantities = (prevState.eventAdd?.quantity ?? []).filter((_, i) => i !== index);
+
+                    return {
+                        ...prevState,
+                        eventAdd: {
+                            ...(prevState.eventAdd ?? {}),
+                            ticket_type: updatedTicketTypes,
+                            price: updatedPrices,
+                            quantity: updatedQuantities,
+                        },
+                    };
+                });
+            }
         }
     };
 
@@ -174,15 +248,17 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     };
 
     const handleAddTicketQuantity = () => {
-        const maxQuantities = eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2;
-        if ((eventAdd?.quantity?.length ?? 0) < maxQuantities) {
-            setState((prevState) => ({
-                ...prevState,
-                eventAdd: {
-                    ...(prevState.eventAdd ?? {}),
-                    quantity: [...(prevState.eventAdd?.quantity ?? []), 0],
-                },
-            }));
+        if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
+            const maxQuantities = 3;
+            if ((eventAdd?.quantity?.length ?? 0) < maxQuantities) {
+                setState((prevState) => ({
+                    ...prevState,
+                    eventAdd: {
+                        ...(prevState.eventAdd ?? {}),
+                        quantity: [...(prevState.eventAdd?.quantity ?? []), 0],
+                    },
+                }));
+            }
         }
     };
 
@@ -422,25 +498,25 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
 
     const handleSubmitAddEvent = async (): Promise<string | null> => {
         console.log('Event data being sent:', eventAdd);  // Kiểm tra dữ liệu event trước khi gửi
-    
+
         const res: IEventDataApiRes | IErrorAPIRes | null = await dispatch(fetchAddEvent(eventAdd ?? {}));
-    
+
         if (res?.code === http.SUCCESS_CODE) {
             const eventId = res.result?._id ?? null;
-    
+
             if (eventId) {
                 const seatAdd: ISeatType2DataAPI = {
                     location: eventAdd?.location,
-                    price: eventAdd?.price,    // Gửi lên mảng price
-                    quantity: eventAdd?.quantity,  // Gửi lên mảng quantity
-                    status: enums.SeatStatus.PENDING,
+                    price: eventAdd?.price,
+                    quantity: eventAdd?.quantity,
+                    ticket_type: eventAdd?.ticket_type,
                 };
-    
+
                 // Kiểm tra dữ liệu seat trước khi gửi
                 console.log('Seat data being sent:', seatAdd);
-    
+
                 const seatRes = await dispatch(fetchAddSeat(seatAdd));
-    
+
                 if (seatRes?.code === http.SUCCESS_CODE) {
                     router.push(routes.CLIENT.ORGANIZER_LIST_EVENT.href, undefined, { scroll: false });
                 } else {
@@ -544,9 +620,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             </Validator>
                         </div>
                         <div
-                            className={`w-100 d-flex flex-wrap components__addevent_picker ${
-                                !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                            }`}
+                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                                }`}
                         >
                             <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={startDateTimeValidatorRef}>
                                 <DateTimePicker
@@ -563,7 +638,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
                                 ~
                             </span>
-                            
+
                             <Validator
                                 className="bases__width-percent--40 components__addevent_picker_from"
                             >
@@ -659,18 +734,26 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             isBlockSpecial={true}
                                             maxLength={10}
                                         />
-                                        {(eventAdd?.price?.length ?? 0) >
-                                            (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
+                                        {(eventAdd?.location === enums.EVENTLOCATION.ANOTHER) && (
                                             <Button
                                                 buttonText="Remove"
-                                                onClick={() => handleRemoveTicketPrice(index)}
+                                                onClick={() => handleRemoveTicketType(index)}
                                                 background="red"
                                                 fontSize="14"
                                                 className="ms-2"
                                             />
                                         )}
                                     </div>
-                                ))}                                
+                                ))}
+                                {(eventAdd?.location === enums.EVENTLOCATION.ANOTHER) && (
+                                    <Button
+                                        buttonText="Add Ticket Type"
+                                        onClick={handleAddTicketType}
+                                        background="blue"
+                                        fontSize="14"
+                                        className="mt-2"
+                                    />
+                                )}
                             </Validator>
                         </div>
                         <div className="form-group">
@@ -690,18 +773,10 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             isBlockSpecial={true}
                                             maxLength={10}
                                         />
-                                        {(eventAdd?.price?.length ?? 0) >
-                                            (eventAdd?.location === enums.EVENTLOCATION.LOCATIONA ? 3 : 2) && (
-                                            <Button
-                                                buttonText="Remove"
-                                                onClick={() => handleRemoveTicketPrice(index)}
-                                                background="red"
-                                                fontSize="14"
-                                                className="ms-2"
-                                            />
-                                        )}
-                                    </div>                                    
-                                ))}                                
+                                        {/* Xóa nút Remove */}
+                                    </div>
+                                ))}
+                                {/* Xóa nút Add */}
                             </Validator>
                         </div>
 
@@ -724,15 +799,16 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                                 maxLength={10}
                                             />
                                             <span className="ms-2">
-                                                Max:{' '}
-                                                {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
+                                                Max: {enums.TICKET_QUANTITY_LIMITS[eventAdd?.location as enums.EVENTLOCATION]?.[index] ?? 'N/A'}
                                             </span>
+                                            {/* Xóa nút Remove */}
                                         </div>
                                         {errorMessages[index] && (
                                             <span style={{ color: 'red', fontSize: '20px' }}>{errorMessages[index]}</span>
                                         )}
                                     </div>
-                                ))}                               
+                                ))}
+                                {/* Xóa nút Add */}
                             </Validator>
                         </div>
                     </div>
