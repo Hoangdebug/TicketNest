@@ -246,12 +246,12 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                     <ul>
                         <li>
                             <span className="components__seattype2-price-detail components__seattype2-vip"></span>
-                            Left Area:{' '}
+                            {eventDetails?.ticket_type?.[0]?.toLocaleString()}:{' '}
                             <span className="components__seattype2-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫</span>
                         </li>
                         <li>
                             <span className="components__seattype2-price-detail components__seattype2-regular"></span>
-                            Right Area:{' '}
+                            {eventDetails?.ticket_type?.[1]?.toLocaleString()}:{' '}
                             <span className="components__seattype2-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫</span>
                         </li>
                     </ul>

@@ -39,8 +39,8 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
             const leftSeats = Array.from({ length: leftRows }, () => leftColumns).concat(leftExtraSeats > 0 ? [leftExtraSeats] : []);
             const rightSeats = Array.from({ length: rightRows }, () => rightColumns).concat(rightExtraSeats > 0 ? [rightExtraSeats] : []);
 
-            const filteredRowsLeft = rows.slice(0, leftSeats.length);
-            const filteredRowsRight = rows.slice(0, rightSeats.length);
+            const filteredRowsLeft = rows?.slice(0, leftSeats.length);
+            const filteredRowsRight = rows?.slice(0, rightSeats.length);
 
             setState((prevState) => ({
                 ...prevState,
@@ -254,12 +254,12 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                             <ul className="components__seattype1-event-info">
                                 <li>
                                     <div className="components__seattype1-price-detail components__seattype1-left-seat"></div>
-                                    Left Area - &nbsp;
+                                    {eventDetails?.ticket_type?.[0]?.toLocaleString()} - &nbsp;
                                     <span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫</span>
                                 </li>
                                 <li>
                                     <div className="components__seattype1-price-detail components__seattype1-middle-seat"></div>
-                                    Right Area - &nbsp;
+                                    {eventDetails?.ticket_type?.[1]?.toLocaleString()} - &nbsp;
                                     <span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫</span>
                                 </li>
                             </ul>

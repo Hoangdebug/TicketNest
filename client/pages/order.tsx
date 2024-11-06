@@ -130,7 +130,7 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                                 )
                             }
                         >
-                            Tiếp tục
+                            Continue
                         </button>
                     </div>
                 </div>

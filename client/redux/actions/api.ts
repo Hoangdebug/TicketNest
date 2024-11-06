@@ -341,14 +341,18 @@ export const fetchRequestOrganizer = async (
     };
 };
 
-export const fetchAddEvent = (data: IEventDataApi, isLoad: boolean = true): any => {
+export const fetchAddEvent = (data: IEventDataApi = { ticket_type: [] }, isLoad: boolean = true): any => {
     return async (dispatch: Dispatch): Promise<IEventDataApiRes | IErrorAPIRes | null> => {
         if (isLoad) {
             dispatch(setLoader(true));
         }
+        const validatedData = {
+            ...data,
+            ticket_type: data.ticket_type ?? [],
+        };
 
         try {
-            const res: AxiosResponse<IEventDataApiRes> = await apiHelper.addEvent(data);
+            const res: AxiosResponse<IEventDataApiRes> = await apiHelper.addEvent(validatedData);
             return res.data;
         } catch (err) {
             if (!(err instanceof Error)) {
@@ -364,25 +368,27 @@ export const fetchAddEvent = (data: IEventDataApi, isLoad: boolean = true): any 
     };
 };
 
-export const fetchAddSeat = (data: ISeatType2DataAPI, isLoad: boolean = true): any => {
+export const fetchAddSeat = (data: ISeatType2DataAPI = { ticket_type: [] }, isLoad: boolean = true): any => {
     return async (dispatch: Dispatch): Promise<ISeattype2DataApiRes | IErrorAPIRes | null> => {
         if (isLoad) {
             dispatch(setLoader(true));
         }
 
+        const validatedData = {
+            ...data,
+            ticket_type: data.ticket_type ?? [],
+        };
+
         try {
-            const res: AxiosResponse<ISeattype2DataApiRes> = await apiHelper.addSeat(data);
+            const res: AxiosResponse<ISeattype2DataApiRes> = await apiHelper.addSeat(validatedData);
             return res.data;
         } catch (err) {
-            // Kiểm tra nếu lỗi là AxiosError
             if (axios.isAxiosError(err)) {
                 const res = err.response;
                 if (res && res.data) {
-                    return res.data; // Trả về data từ response nếu tồn tại
+                    return res.data;
                 }
             }
-
-            // Xử lý các lỗi khác (nếu không phải lỗi Axios)
             return { code: 500, mes: err instanceof Error ? err.message : 'An unknown error occurred' };
         } finally {
             if (isLoad) {
