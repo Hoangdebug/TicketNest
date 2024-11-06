@@ -21,8 +21,17 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
         ticketPrice: 0,
     });
 
-    const { eventDetails, seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, numSeatOfRowMiddle, selectedSeat, orderedSeats, ticketPrice } = state;
-
+    const {
+        eventDetails,
+        seatDetails,
+        rows,
+        numSeatOfRowLeft,
+        numSeatOfRowRight,
+        numSeatOfRowMiddle,
+        selectedSeat,
+        orderedSeats,
+        ticketPrice,
+    } = state;
 
     useEffect(() => {
         if (seatDetails?.quantity) {
@@ -43,7 +52,9 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
             const leftSeats = Array.from({ length: leftRows }, () => leftColumns).concat(leftExtraSeats > 0 ? [leftExtraSeats] : []);
             const rightSeats = Array.from({ length: rightRows }, () => rightColumns).concat(rightExtraSeats > 0 ? [rightExtraSeats] : []);
-            const middleSeats = Array.from({ length: middleRows }, () => middleColumns).concat(middleExtraSeats > 0 ? [middleExtraSeats] : []);
+            const middleSeats = Array.from({ length: middleRows }, () => middleColumns).concat(
+                middleExtraSeats > 0 ? [middleExtraSeats] : [],
+            );
 
             setState((prevState) => ({
                 ...prevState,
@@ -107,7 +118,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                         seatDetails: seat,
                     }));
                 }
-            })
+            }),
         );
     };
 
@@ -161,7 +172,9 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                             {Array.from({ length: numSeatOfRowLeft[index] || 0 }).map((_, seatNum) => (
                                 <div
                                     key={seatNum}
-                                    className={`components__seattype1-seat components__seattype1-seat-left ${selectedSeat.includes(`L${row}${seatNum + 1}`) ? 'selected' : ''}`}
+                                    className={`components__seattype1-seat components__seattype1-seat-left ${
+                                        selectedSeat.includes(`L${row}${seatNum + 1}`) ? 'selected' : ''
+                                    }`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'left')}
                                 >
                                     {seatNum + 1}
@@ -179,7 +192,9 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                             {Array.from({ length: numSeatOfRowRight[index] || 0 }).map((_, seatNum) => (
                                 <div
                                     key={seatNum}
-                                    className={`components__seattype1-seat components__seattype1-seat-right ${selectedSeat.includes(`R${row}${seatNum + 1}`) ? 'selected' : ''}`}
+                                    className={`components__seattype1-seat components__seattype1-seat-right ${
+                                        selectedSeat.includes(`R${row}${seatNum + 1}`) ? 'selected' : ''
+                                    }`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'right')}
                                 >
                                     {seatNum + 1}
@@ -196,8 +211,9 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                 {Array.from({ length: numSeatOfRowMiddle[index] || 0 }).map((_, seatNum) => (
                                     <div
                                         key={seatNum}
-                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
-                                            }`}
+                                        className={`components__seattype1-seat components__seattype1-seat-middle ${
+                                            selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
+                                        }`}
                                         onClick={() => toggleSeat(row, seatNum + 1, 'middle')}
                                     >
                                         {seatNum + 1}
@@ -215,8 +231,9 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                 }).map((_, seatNum) => (
                                     <div
                                         key={seatNum}
-                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
-                                            }`}
+                                        className={`components__seattype1-seat components__seattype1-seat-middle ${
+                                            selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
+                                        }`}
                                         onClick={() => toggleSeat(row, seatNum + 1, 'middle')}
                                     >
                                         {seatNum + 1}
@@ -227,21 +244,21 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                     </div>
                 </div>
 
-
                 <div className="components__seattype1-right-sidebar">
                     <h2 className="components__seattype1-right-sidebar-title">{eventDetails?.name}</h2>
                     <div className="components__seattype1-event-details">
                         <div className="components__seattype1-detail-item">
                             <span className="components__seattype1-icon">📅 Date of event:</span>&nbsp;
-                            {eventDetails?.day_start && new Intl.DateTimeFormat('en-GB', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false,
-                                timeZone: 'UTC',
-                            }).format(new Date(eventDetails.day_start))}
+                            {eventDetails?.day_start &&
+                                new Intl.DateTimeFormat('en-GB', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false,
+                                    timeZone: 'UTC',
+                                }).format(new Date(eventDetails.day_start))}
                         </div>
                         <div className="components__seattype1-detail-item">
                             <span className="components__seattype1-icon">📍 Location:</span>&nbsp;
@@ -251,18 +268,18 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                         <ul className="components__seattype1-event-info">
                             <li>
                                 <div className="components__seattype1-price-detail components__seattype1-left-seat"></div>
-                                Left Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫
-                                </span>
+                                Left Area - &nbsp;
+                                <span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫</span>
                             </li>
                             <li>
                                 <div className="components__seattype1-price-detail components__seattype1-middle-seat"></div>
-                                Middle Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫
-                                </span>
+                                Middle Area - &nbsp;
+                                <span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫</span>
                             </li>
                             <li>
                                 <div className="components__seattype1-price-detail components__seattype1-right-seat"></div>
-                                Right Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[2]?.toLocaleString()} ₫
-                                </span>
+                                Right Area - &nbsp;
+                                <span className="components__seattype1-price-green">{seatDetails?.price?.[2]?.toLocaleString()} ₫</span>
                             </li>
                         </ul>
                         <div className="components__seattype2-info-btn">
@@ -279,7 +296,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                                     query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
                                                 },
                                                 undefined,
-                                                { scroll: false }
+                                                { scroll: false },
                                             )
                                         }
                                         className="components__seattype2-info-btn-continue"

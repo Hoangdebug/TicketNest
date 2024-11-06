@@ -101,12 +101,13 @@ const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
                             onChange={(e) => handleOnChange('email', e.target.value)}
                             placeholder="Enter Mail"
                         />
-                        <label htmlFor="username" className='components__login-input-label bases__font--15'>Mail</label>
+                        <label htmlFor="username" className="components__login-input-label bases__font--15">
+                            Mail
+                        </label>
                         <span className="components__login-input-highlight"></span>
                     </Validator>
                 </div>
                 <div className="components__login-input-container position-relative">
-
                     <Validator ref={passwordValidatorRef}>
                         <input
                             type={showPassword ? 'text' : 'password'}
@@ -117,7 +118,7 @@ const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
                             onChange={(e) => handleOnChange('password', e.target.value)}
                             placeholder="Enter password"
                         />
-                        <label htmlFor="password" className='components__login-input-label bases__font--15'>
+                        <label htmlFor="password" className="components__login-input-label bases__font--15">
                             Password
                         </label>
                         <span className="components__login-input-highlight"></span>

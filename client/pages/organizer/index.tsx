@@ -49,8 +49,8 @@ const EventPageOrganizer: IEventListPage<IEventListPageProps> = () => {
 
         return {
             ...item,
-            day_end: moment(item.day_end).format("YYYY-MM-DD"),
-            day_start: moment(item.day_start).format("YYYY-MM-DD"),
+            day_end: moment(item.day_end).format('YYYY-MM-DD'),
+            day_start: moment(item.day_start).format('YYYY-MM-DD'),
             ...editBtn,
         };
     });

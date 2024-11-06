@@ -906,3 +906,29 @@ export const fetchListReplyComment = async (
         }
     };
 };
+
+export const fetchListOrder = async (callBack?: (result: IOrderDataApiRes | IErrorAPIRes | null) => void, isLoad: boolean = true) => {
+    return async (dispatch: Dispatch) => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res = await apiHelper.orderList();
+            if (callBack) {
+                callBack(res?.data);
+            }
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
+            }
+        }
+
+        if (isLoad) {
+            dispatch(setLoader(false));
+        }
+    };
+};

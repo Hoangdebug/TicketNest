@@ -1,7 +1,6 @@
 import { createRef, useState } from 'react';
 import Validator from '@components/commons/Validator';
 import { validateHelper } from '@utils/helpers';
-import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { fetchEditUserProfile, setModal } from '@redux/actions';
 import Input from '@components/commons/Input';
@@ -12,7 +11,6 @@ import Img from '@components/commons/Img';
 const EditUserProFileForm: IEditUserProfileComponent<IEditUserProfileComponentProps> = (props) => {
     const { currentUser } = props;
     const dispatch = useDispatch();
-    const router = useRouter();
 
     const [state, setState] = useState<IEditUserProfileComponentState>(() => {
         let previewUrl = '';
@@ -92,6 +90,19 @@ const EditUserProFileForm: IEditUserProfileComponent<IEditUserProfileComponentPr
                             images: upload,
                         },
                     }));
+                    dispatch(
+                        setModal({
+                            isShow: true,
+                            content: (
+                                <>
+                                    <div className="text-center bases__margin--bottom31">
+                                        <Img src={images.ICON_SUCCESS} className="bases__width--90 bases__height--75" />
+                                    </div>
+                                    <div className="bases__text--bold bases__font--14 text-center">Upload avatar successfully!</div>
+                                </>
+                            ),
+                        }),
+                    );
                 } else {
                     dispatch(
                         setModal({
@@ -136,21 +147,22 @@ const EditUserProFileForm: IEditUserProfileComponent<IEditUserProfileComponentPr
         if (isValidate) {
             dispatch(
                 await fetchEditUserProfile(curentProfile ?? {}, (result: IEditUserProfileAPIRes | IErrorAPIRes | null) => {
-                    setState((prevState) => ({
-                        ...prevState,
-                    }));
                     if (result?.code === http.SUCCESS_CODE) {
-                        setModal({
-                            isShow: true,
-                            content: (
-                                <>
-                                    <div className="text-center bases__margin--bottom31">
-                                        <Img src={images.ICON_SUCCESS} className="bases__width--90 bases__height--75" />
-                                    </div>
-                                    <div className="bases__text--bold bases__font--14 text-center">Profile updated successfully!</div>
-                                </>
-                            ),
-                        });
+                        dispatch(
+                            setModal({
+                                isShow: true,
+                                content: (
+                                    <>
+                                        <div className="text-center bases__margin--bottom31">
+                                            <Img src={images.ICON_SUCCESS} className="bases__width--90 bases__height--75" />
+                                        </div>
+                                        <div className="bases__text--bold bases__font--14 text-center">
+                                            Upload your information successfully!
+                                        </div>
+                                    </>
+                                ),
+                            }),
+                        );
                     }
                 }),
             );

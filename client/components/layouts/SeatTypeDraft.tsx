@@ -104,8 +104,12 @@ return (
             {/* Event Info Section */}
             <div className="components__seattype2-event-info">
                 <h2>Nhà Hát Kịch IDECAF: MÁ ƠI ÚT ĐÂI!</h2>
-                <p><strong>Thời gian:</strong> 18:00, 3 November, 2024</p>
-                <p><strong>Địa điểm:</strong> Nhà Hát Kịch IDECAF</p>
+                <p>
+                    <strong>Thời gian:</strong> 18:00, 3 November, 2024
+                </p>
+                <p>
+                    <strong>Địa điểm:</strong> Nhà Hát Kịch IDECAF
+                </p>
                 <h3>Pricing</h3>
                 <ul>
                     <li>Hạng VIP: 270.000 ₫</li>

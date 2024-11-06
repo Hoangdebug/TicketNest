@@ -77,7 +77,7 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                         seatDetails: seat,
                     }));
                 }
-            })
+            }),
         );
     };
 
@@ -171,12 +171,13 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                             const seatId = `L${row}${seatNum + 1}`;
                                             const isSelected = selectedSeat?.includes(seatId);
                                             const isOrdered = orderedSeats?.includes(seatId);
-                                            const seatClass = `components__seattype2-seat ${isSelected
-                                                ? 'components__seattype2-selected'
-                                                : isOrdered
+                                            const seatClass = `components__seattype2-seat ${
+                                                isSelected
+                                                    ? 'components__seattype2-selected'
+                                                    : isOrdered
                                                     ? 'components__seattype2-unavailable'
                                                     : 'available'
-                                                }`;
+                                            }`;
                                             return (
                                                 <div
                                                     key={seatNum}
@@ -198,12 +199,13 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                             const seatId = `R${row}${seatNum + 1}`;
                                             const isSelected = selectedSeat?.includes(seatId);
                                             const isOrdered = orderedSeats?.includes(seatId);
-                                            const seatClass = `components__seattype2-seat ${isSelected
-                                                ? 'components__seattype2-selected'
-                                                : isOrdered
+                                            const seatClass = `components__seattype2-seat ${
+                                                isSelected
+                                                    ? 'components__seattype2-selected'
+                                                    : isOrdered
                                                     ? 'components__seattype2-unavailable'
                                                     : 'available'
-                                                }`;
+                                            }`;
                                             return (
                                                 <div
                                                     key={seatNum}
@@ -224,15 +226,16 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                     <p>
                         <span className="components__seattype2-icon-calendar">&#128197;</span>
                         <strong>Date of event:</strong>&nbsp;
-                        {eventDetails?.day_start && new Intl.DateTimeFormat('en-GB', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false,
-                            timeZone: 'UTC',
-                        }).format(new Date(eventDetails.day_start))}
+                        {eventDetails?.day_start &&
+                            new Intl.DateTimeFormat('en-GB', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false,
+                                timeZone: 'UTC',
+                            }).format(new Date(eventDetails.day_start))}
                     </p>
                     <p>
                         <span className="components__seattype2-icon-location">&#128205;</span>
@@ -266,7 +269,7 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                                 query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
                                             },
                                             undefined,
-                                            { scroll: false }
+                                            { scroll: false },
                                         )
                                     }
                                     className="components__seattype2-info-btn-continue"

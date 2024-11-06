@@ -404,26 +404,26 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     };
 
     const handleSubmitAddEvent = async (): Promise<string | null> => {
-        console.log('Event data being sent:', eventAdd);  // Kiểm tra dữ liệu event trước khi gửi
-    
+        console.log('Event data being sent:', eventAdd); // Kiểm tra dữ liệu event trước khi gửi
+
         const res: IEventDataApiRes | IErrorAPIRes | null = await dispatch(fetchAddEvent(eventAdd ?? {}));
-    
+
         if (res?.code === http.SUCCESS_CODE) {
             const eventId = res.result?._id ?? null;
-    
+
             if (eventId) {
                 const seatAdd: ISeatType2DataAPI = {
                     location: eventAdd?.location,
-                    price: eventAdd?.price,    // Gửi lên mảng price
-                    quantity: eventAdd?.quantity,  // Gửi lên mảng quantity
+                    price: eventAdd?.price, // Gửi lên mảng price
+                    quantity: eventAdd?.quantity, // Gửi lên mảng quantity
                     status: enums.SeatStatus.PENDING,
                 };
-    
+
                 // Kiểm tra dữ liệu seat trước khi gửi
                 console.log('Seat data being sent:', seatAdd);
-    
+
                 const seatRes = await dispatch(fetchAddSeat(seatAdd));
-    
+
                 if (seatRes?.code === http.SUCCESS_CODE) {
                     router.push(routes.CLIENT.ORGANIZER_LIST_EVENT.href, undefined, { scroll: false });
                 } else {
@@ -546,10 +546,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
                                 ~
                             </span>
-                            
-                            <Validator
-                                className="bases__width-percent--40 components__addevent_picker_from"
-                            >
+
+                            <Validator className="bases__width-percent--40 components__addevent_picker_from">
                                 <DateTimePicker
                                     value={eventAdd?.day_end}
                                     onBlur={() => handleValidateEndDateTime()}

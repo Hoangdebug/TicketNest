@@ -5,6 +5,7 @@ interface ICommentDataAPI {
     parentComment?: string;
     comment?: string;
     createdAt?: string;
+    replyCommemt?: string;
 }
 
 interface ICommentDataAPIRes extends IBaseAPIRes {

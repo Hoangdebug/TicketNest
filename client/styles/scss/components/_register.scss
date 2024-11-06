@@ -3,7 +3,7 @@
         padding: 0px 110.5px;
         display: flex;
         justify-content: end;
-        
+
         @media screen and (max-width: 768px) {
             padding: 0px;
         }
@@ -16,9 +16,9 @@
             border-radius: 10px;
             max-width: 50%;
         }
-        button[type="button"]{
+        button[type='button'] {
             transition: color 0.5s ease-in-out, text-decoration 0.5s ease-in-out;
-            &:hover{
+            &:hover {
                 text-decoration: underline;
                 color: black !important;
             }

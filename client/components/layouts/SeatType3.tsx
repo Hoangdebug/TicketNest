@@ -77,7 +77,7 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                         seatDetails: seat,
                     }));
                 }
-            })
+            }),
         );
     };
 
@@ -182,8 +182,11 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                                                     return (
                                                         <span
                                                             key={`${row}-${seatNum}`}
-                                                            className={`components__seattype3-seat ${isSelected ? 'components__seattype3-seat-selected' : 'components__seattype3-seat-available'
-                                                                }`}
+                                                            className={`components__seattype3-seat ${
+                                                                isSelected
+                                                                    ? 'components__seattype3-seat-selected'
+                                                                    : 'components__seattype3-seat-available'
+                                                            }`}
                                                             onClick={() => toggleSeat(row, seatNum, 'left')}
                                                         >
                                                             {seatNum}
@@ -210,8 +213,11 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                                                     return (
                                                         <span
                                                             key={`${row}-${seatNum}`}
-                                                            className={`components__seattype3-seat ${isSelected ? 'components__seattype3-seat-selected' : 'components__seattype3-seat-available'
-                                                                }`}
+                                                            className={`components__seattype3-seat ${
+                                                                isSelected
+                                                                    ? 'components__seattype3-seat-selected'
+                                                                    : 'components__seattype3-seat-available'
+                                                            }`}
                                                             onClick={() => toggleSeat(row, seatNum, 'right')}
                                                         >
                                                             {seatNum}
@@ -231,28 +237,30 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                             <span>📍</span> {eventDetails?.location}
                         </div>
                         <div className="components__seattype3-event-location">
-                            <span>📅</span>Date of event: {eventDetails?.day_start && new Intl.DateTimeFormat('en-GB', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: false,
-                                timeZone: 'UTC',
-                            }).format(new Date(eventDetails.day_start))}
+                            <span>📅</span>Date of event:{' '}
+                            {eventDetails?.day_start &&
+                                new Intl.DateTimeFormat('en-GB', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false,
+                                    timeZone: 'UTC',
+                                }).format(new Date(eventDetails.day_start))}
                         </div>
                         <div className="components__seattype3-pricing">
                             <h3>Pricing</h3>
                             <ul className="components__seattype1-event-info">
                                 <li>
                                     <div className="components__seattype1-price-detail components__seattype1-left-seat"></div>
-                                    Left Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫
-                                    </span>
+                                    Left Area - &nbsp;
+                                    <span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫</span>
                                 </li>
                                 <li>
                                     <div className="components__seattype1-price-detail components__seattype1-middle-seat"></div>
-                                    Right Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫
-                                    </span>
+                                    Right Area - &nbsp;
+                                    <span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫</span>
                                 </li>
                             </ul>
                         </div>
@@ -270,7 +278,7 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                                                     query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
                                                 },
                                                 undefined,
-                                                { scroll: false }
+                                                { scroll: false },
                                             )
                                         }
                                         className="components__seattype2-info-btn-continue"
