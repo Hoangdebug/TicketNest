@@ -251,17 +251,17 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                         <ul className="components__seattype1-event-info">
                             <li>
                                 <div className="components__seattype1-price-detail components__seattype1-left-seat"></div>
-                                Left Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫
+                                {eventDetails?.ticket_type?.[0]?.toLocaleString()} - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[0]?.toLocaleString()} ₫
                                 </span>
                             </li>
                             <li>
                                 <div className="components__seattype1-price-detail components__seattype1-middle-seat"></div>
-                                Middle Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫
+                                {eventDetails?.ticket_type?.[1]?.toLocaleString()} - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[1]?.toLocaleString()} ₫
                                 </span>
                             </li>
                             <li>
                                 <div className="components__seattype1-price-detail components__seattype1-right-seat"></div>
-                                Right Area - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[2]?.toLocaleString()} ₫
+                                {eventDetails?.ticket_type?.[2]?.toLocaleString()} - &nbsp;<span className="components__seattype1-price-green">{seatDetails?.price?.[2]?.toLocaleString()} ₫
                                 </span>
                             </li>
                         </ul>
