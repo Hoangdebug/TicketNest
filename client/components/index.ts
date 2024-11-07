@@ -15,6 +15,7 @@ import RequestOrganizerForm from './forms/RequestOrganizer';
 import SeatType1 from './layouts/SeatType1';
 import SeatType2 from './layouts/SeatType2';
 import SeatType3 from './layouts/SeatType3';
+import SeatAnother from './layouts/';
 
 export {
     Button,
