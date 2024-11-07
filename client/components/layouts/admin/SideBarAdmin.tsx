@@ -46,6 +46,10 @@ const AdminSidebarComponents: IAdminSideBarComponents<IAdminSideBarComponentsPro
                               title: 'Ban User',
                               href: routes.CLIENT.ADMIN_LIST_CUSTOMER_BAN_PAGE.href,
                           },
+                          {
+                              title: 'Order List',
+                              href: routes.CLIENT.ORDER_ADMIN_MANAGER.href,
+                          },
                       ],
                   },
               ]

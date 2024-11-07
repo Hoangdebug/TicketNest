@@ -130,6 +130,10 @@ const TICKET_BOOKING_HISTORY_PAGE: IRouteConstant = {
     href: '/ticketHistory',
 };
 
+const ORDER_ADMIN_MANAGER_PAGE: IRouteConstant = {
+    href: '/admin/customer/orderList',
+};
+
 export const CLIENT = {
     LOGIN_PAGE: LOGIN,
     REGISTER_PAGE: REGISTER,
@@ -165,6 +169,7 @@ export const CLIENT = {
     PAYMENT_RETURN_PAGE: PAYMENT_RETURN_PAGE,
     PAYMENT_SUCCESS_PAGE: PAYMENT_SUCCESS_PAGE,
     TICKET_BOOKING_HISTORY: TICKET_BOOKING_HISTORY_PAGE,
+    ORDER_ADMIN_MANAGER: ORDER_ADMIN_MANAGER_PAGE,
 };
 
 const LOGIN_API: IRouteConstant = {

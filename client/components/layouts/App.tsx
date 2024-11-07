@@ -68,6 +68,7 @@ const App: IAppComponent<IAppComponentProps> = (props) => {
         routes.CLIENT.ADMIN_LIST_CUSTOMER_REQUEST_PAGE.href,
         routes.CLIENT.ADMIN_MANAGER_EVENT_PAGE.href,
         routes.CLIENT.ADMIN_CREATE_ACCOUNT_PAGE.href,
+        routes.CLIENT.ORDER_ADMIN_MANAGER.href,
         routes.CLIENT.OTP_VERIFY_PAGE.href,
     ];
     useEffect(() => {
