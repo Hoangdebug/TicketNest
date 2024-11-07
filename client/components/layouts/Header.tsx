@@ -62,11 +62,6 @@ const Header: IHeaderComponent<IHeaderComponentProps> = (props) => {
             class: 'position-relative hover-link',
         },
         {
-            title: 'Ticket',
-            href: '#1',
-            class: 'position-relative hover-link',
-        },
-        {
             title: 'Contact',
             href: routes.CLIENT.CONTACT_PAGE.href,
             class: 'position-relative hover-link',

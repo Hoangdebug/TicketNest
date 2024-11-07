@@ -1,4 +1,18 @@
 .pages {
     &__ticket-booking-history {
+        &-card {
+            width: 100%;
+            background-color: #f2f3f7;
+            border-radius: 0.75em;
+            cursor: pointer;
+            transition: ease 0.2s;
+            box-shadow: 1em 1em 1em #d8dae0b1, -0.75em -0.75em 1em #ffffff;
+            border: 1.5px solid #f2f3f7;
+            margin-bottom: 10px;
+            &:hover {
+                background-color: #d3ddf1;
+                border: 1.5px solid #1677ff;
+            }
+        }
     }
 }
