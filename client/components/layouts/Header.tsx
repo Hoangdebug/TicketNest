@@ -49,6 +49,7 @@ const Header: IHeaderComponent<IHeaderComponentProps> = (props) => {
 
     const handleLogout = () => {
         dispatch(fetchLogout());
+        router.push(routes.CLIENT.LOGIN_PAGE.href, undefined, { scroll: false });
     };
     const data = [
         {
