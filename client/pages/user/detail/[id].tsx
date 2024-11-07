@@ -277,7 +277,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                 );
                             } else if (eventDetails?.location === 'Location C' || eventDetails?.location === 'ANOTHER') {
                                 router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE3.href, query: { id: id } },
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_ANOTHER.href, query: { id: id } },
                                     undefined,
                                     { scroll: false },
                                 );

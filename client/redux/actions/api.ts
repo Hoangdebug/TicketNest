@@ -548,6 +548,36 @@ export const fetchDetailsSeat = async (
     };
 };
 
+export const fetchDetailsSeatAnotherByEventId = async (
+    eventId: string,
+    callBack?: (result: ISeatanotherDetailsApiRes | IErrorAPIRes | null) => void,
+    isLoad: boolean = true,
+) => {
+    return async (dispatch: Dispatch) => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res = await apiHelper.detailsSeatAnotherByEventId(eventId);
+            if (callBack) {
+                callBack(res?.data);
+            }
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
+            }
+        }
+
+        if (isLoad) {
+            dispatch(setLoader(false));
+        }
+    };
+};
+
 export const fetchDetailsSeatType3ByEventId = async (
     eventId: string,
     callBack?: (result: ISeattype3DetailsApiRes | IErrorAPIRes | null) => void,
