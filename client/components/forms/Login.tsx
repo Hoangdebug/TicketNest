@@ -77,9 +77,9 @@ const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
                         );
                     } else if (res?.code === http.SUCCESS_CODE) {
                         if (isAdmin === enums.TYPES.USER) {
-                            router.push(routes.CLIENT.HOME_PAGE.href);
+                            router.push(routes.CLIENT.HOME_PAGE.href, undefined, { scroll: false });
                         } else {
-                            router.push(routes.CLIENT.ADMIN_PAGE.href);
+                            router.push(routes.CLIENT.ADMIN_PAGE.href, undefined, { scroll: false });
                         }
                     }
                 }),

@@ -1,13 +1,13 @@
 const HOME: IRouteConstant = {
-    href: '/',
+    href: '/home',
 };
 
 const LOGIN: IRouteConstant = {
-    href: '/login',
+    href: '/auth/login',
 };
 
 const REGISTER: IRouteConstant = {
-    href: '/register',
+    href: '/auth/register',
 };
 
 const FORGOT_PASSWORD: IRouteConstant = {
@@ -27,11 +27,11 @@ const CHANGE_PASSWORD_SUCCESS: IRouteConstant = {
 };
 
 const OTP_VERIFY: IRouteConstant = {
-    href: '/otpverify',
+    href: '/auth/otpverify',
 };
 
 const REGISTERSUCCESS: IRouteConstant = {
-    href: '/registersuccess',
+    href: '/auth/registersuccess',
 };
 
 const EVENT_DETAILS_PAGES: IRouteConstant = {
@@ -39,15 +39,15 @@ const EVENT_DETAILS_PAGES: IRouteConstant = {
 };
 
 const EVENT_DETAILS_PAGES_ORDER_TYPE1: IRouteConstant = {
-    href: '/seattype1',
+    href: '/user/seat/seattype1',
 };
 
 const EVENT_DETAILS_PAGES_ORDER_TYPE2: IRouteConstant = {
-    href: '/seattype2',
+    href: '/user/seat/seattype2',
 };
 
 const EVENT_DETAILS_PAGES_ORDER_TYPE3: IRouteConstant = {
-    href: '/seattype3',
+    href: '/user/seat/seattype3',
 };
 
 const EVENT_DETAILS_PAGES_ORDER_ANOTHER: IRouteConstant = {
@@ -102,18 +102,18 @@ const ADMIN_CREATE_ACCOUNT: IRouteConstant = {
 };
 
 const ABOUT_US: IRouteConstant = {
-    href: '/about',
+    href: '/home/about',
 };
 
 const EDITPROFILE: IRouteConstant = {
-    href: '/editprofile',
+    href: '/user/profile/editprofile',
 };
 
 const REQUESTORGANIZE: IRouteConstant = {
-    href: '/requestorganize',
+    href: '/user/requestOrganizer/requestorganize',
 };
 const CONTACT: IRouteConstant = {
-    href: '/contact',
+    href: '/home/contact',
 };
 
 const ORDER_PAGE: IRouteConstant = {
@@ -121,13 +121,13 @@ const ORDER_PAGE: IRouteConstant = {
 };
 
 const PAYMENT_PAGE: IRouteConstant = {
-    href: '/payment',
+    href: '/user/payment/payment',
 };
 const PAYMENT_RETURN_PAGE: IRouteConstant = {
-    href: '/payment-return',
+    href: '/user/payment/payment-return',
 };
 const PAYMENT_SUCCESS_PAGE: IRouteConstant = {
-    href: '/payment-success',
+    href: '/user/payment/payment-success',
 };
 
 const TICKET_BOOKING_HISTORY_PAGE: IRouteConstant = {
