@@ -127,7 +127,7 @@ const PAYMENT_SUCCESS_PAGE: IRouteConstant = {
 };
 
 const TICKET_BOOKING_HISTORY_PAGE: IRouteConstant = {
-    href: 'user/ticketHistory',
+    href: '/ticketHistory',
 };
 
 export const CLIENT = {
