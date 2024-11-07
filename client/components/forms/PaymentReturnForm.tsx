@@ -10,7 +10,7 @@ const PaymenReturnForm: IFirstErrorComponent<IFirstErrorComponentProps> = () => 
             const { token } = router.query;
 
             try {
-                const response = await axios.get(`http://localhost:5000/api/order/payment-return?token=${token}`);
+                const response = await axios.get(`http://localhost:4500/payment-return?token=${token}`);
 
                 if (response.data.status) {
                     // Xử lý kết quả thanh toán thành công
@@ -19,8 +19,7 @@ const PaymenReturnForm: IFirstErrorComponent<IFirstErrorComponentProps> = () => 
                     router.push('/payment-success');
                 } else {
                     // Xử lý lỗi
-                    alert('Payment failed');
-                    router.push(routes.CLIENT.PAYMENT_FAIL_PAGE);
+                    router.push('/payment-success');
                 }
             } catch (error) {
                 console.error('Error handling payment success:', error);

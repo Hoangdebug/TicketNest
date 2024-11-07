@@ -138,6 +138,9 @@ const ORDER_ADMIN_MANAGER_PAGE: IRouteConstant = {
     href: '/admin/customer/orderList',
 };
 
+const PAYMENT_FAIL_PAGE: IRouteConstant = {
+    href: 'home/',
+};
 export const CLIENT = {
     LOGIN_PAGE: LOGIN,
     REGISTER_PAGE: REGISTER,
@@ -175,6 +178,7 @@ export const CLIENT = {
     PAYMENT_SUCCESS_PAGE: PAYMENT_SUCCESS_PAGE,
     TICKET_BOOKING_HISTORY: TICKET_BOOKING_HISTORY_PAGE,
     ORDER_ADMIN_MANAGER: ORDER_ADMIN_MANAGER_PAGE,
+    PAYMENT_FAIL_PAGE: PAYMENT_FAIL_PAGE,
 };
 
 const LOGIN_API: IRouteConstant = {
