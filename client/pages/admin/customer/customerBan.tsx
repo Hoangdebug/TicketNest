@@ -201,7 +201,6 @@ const CustomerBanList: IAdminCustomerBanPage<IAdminCustomerBanPageProps> = () =>
     return (
         <div className="row pt-3">
             <div className="pages__organizer-table col-md-12">
-                <h3 className="pb-3">Users</h3>
                 {customers && customers.length > 0 ? (
                     <Box className="p-3">
                         <h2 className="fw-bold mb-4 text-start">Customer List Ban</h2>

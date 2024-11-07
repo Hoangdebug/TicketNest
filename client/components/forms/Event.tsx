@@ -614,7 +614,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 }`}
                         >
                             <label htmlFor="location" className="pb-2">
-                                Day start<span className="text-danger">*</span>
+                                Start Date<span className="text-danger">*</span>
                             </label>
                             <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={startDateTimeValidatorRef}>
                                 <DateTimePicker
@@ -628,11 +628,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 />
                             </Validator>
 
-                            <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
-                                ~
-                            </span>
                             <label htmlFor="location" className="pb-2">
-                                Day end<span className="text-danger">*</span>
+                                End Date<span className="text-danger">*</span>
                             </label>
                             <Validator className="bases__width-percent--40 components__addevent_picker_from">
                                 <DateTimePicker
@@ -700,7 +697,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     options={renderEventLocationOptions()}
                                 />
                             </Validator>
-                            {eventAdd?.location && (
+                            {eventAdd?.location && eventAdd.location !== 'ANOTHER' && (
                                 <div className="mt-3">
                                     <img
                                         src={enums.EVENTLOCATION_IMAGE_URL[eventAdd.location as enums.EVENTLOCATION]}

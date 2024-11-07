@@ -98,7 +98,7 @@ const Header: IHeaderComponent<IHeaderComponentProps> = (props) => {
                                 {authHelper.isAuth() && (
                                     <div className="dropdown-content">
                                         <Link href={routes.CLIENT.EDIT_PROFILE_PAGE.href}>Edit Profile</Link>
-                                        <Link href={routes.CLIENT.REQUEST_ORGNIZE_PAGE.href}>Request organize</Link>
+                                        <Link href={routes.CLIENT.REQUEST_ORGNIZE_PAGE.href}>Request organizer</Link>
                                         <Link href={routes.CLIENT.TICKET_BOOKING_HISTORY.href}>Ticket Booking History</Link>
                                         <a onClick={handleLogout} style={{ fontSize: '15px', cursor: 'pointer' }}>
                                             Log out

@@ -42,7 +42,6 @@ const CustomerListPageAdmin: IAdminCustomerPage<IAdminCustomerPageProps> = () =>
 
     return (
         <div className="pages__listCustomer pt-3">
-            <h3 className="pb-3">Users</h3>
             {customers && customers.length > 0 ? (
                 <Box className=" pages__listCustomer-rightSide justify-content-center col-md-12 p-3">
                     <h2 className="fw-bold mb-4 text-start">Customer List</h2>

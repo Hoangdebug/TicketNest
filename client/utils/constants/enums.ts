@@ -57,13 +57,13 @@ export enum STATUS_ORGANIZER_REQUEST {
 }
 
 export enum EventStatus {
-    CANCELLED = 'Cancelled',
+    CANCELLED = 'Cancel',
     PENDING = 'Pending',
-    ACCEPTED = 'Successed',
+    ACCEPTED = 'Accept',
 }
 
 export enum SeatStatus {
-    CANCELLED = 'Cancelled',
+    CANCELLED = 'Cancel',
     PENDING = 'Pending',
-    ACCEPTED = 'Successed',
+    ACCEPTED = 'Accept',
 }
