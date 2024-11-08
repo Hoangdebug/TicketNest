@@ -19,11 +19,22 @@ const SeatAnother: ISeatAnotherComponent<ISeatAnotherComponentProps> = () => {
         selectedSeat: [],
         orderedSeats: [],
         ticketPrice: 0,
-        quantities: [], 
+        quantities: [],
         totalAmount: 0,
     });
 
-    const { eventDetails, seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, selectedSeat = [], orderedSeats, ticketPrice, quantities, totalAmount } = state;
+    const {
+        eventDetails,
+        seatDetails,
+        rows,
+        numSeatOfRowLeft,
+        numSeatOfRowRight,
+        selectedSeat = [],
+        orderedSeats,
+        ticketPrice,
+        quantities,
+        totalAmount,
+    } = state;
 
     useEffect(() => {
         if (seatDetails?.quantity && seatDetails?.price) {
@@ -99,7 +110,6 @@ const SeatAnother: ISeatAnotherComponent<ISeatAnotherComponentProps> = () => {
         }));
     };
 
-
     useEffect(() => {
         const savedSeats = localStorage.getItem('selectedSeats');
         const savedPrice = localStorage.getItem('ticketPrice');
@@ -147,10 +157,7 @@ const SeatAnother: ISeatAnotherComponent<ISeatAnotherComponentProps> = () => {
                                     <p>{eventDetails?.price?.[index]?.toLocaleString()} đ</p>
                                 </div>
                                 <div className="components__seatanother-quantity-control">
-                                    <button
-                                        onClick={() => handleQuantityChange(index, -1)}
-                                        disabled={(quantities[index] || 0) <= 0}
-                                    >
+                                    <button onClick={() => handleQuantityChange(index, -1)} disabled={(quantities[index] || 0) <= 0}>
                                         -
                                     </button>
                                     <input type="text" value={quantities[index] || 0} readOnly />
@@ -162,22 +169,29 @@ const SeatAnother: ISeatAnotherComponent<ISeatAnotherComponentProps> = () => {
                 </div>
                 <div className="components__seatanother-right-section">
                     <h2>{eventDetails?.name}</h2>
-                    <p><strong>Time:</strong> {eventDetails?.day_start &&
-                        new Intl.DateTimeFormat('en-GB', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            hour12: false,
-                            timeZone: 'UTC',
-                        }).format(new Date(eventDetails.day_start))}</p>
+                    <p>
+                        <strong>Time:</strong>{' '}
+                        {eventDetails?.day_start &&
+                            new Intl.DateTimeFormat('en-GB', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false,
+                                timeZone: 'UTC',
+                            }).format(new Date(eventDetails.day_start))}
+                    </p>
 
-                    <p><strong>Location:</strong> {eventDetails?.location}</p>
+                    <p>
+                        <strong>Location:</strong> {eventDetails?.location}
+                    </p>
                     <div className="components__seatanother-pricing-summary">
                         <h2>Pricing</h2>
                         {eventDetails?.ticket_type?.map((_, index) => (
-                            <p key={index}>{eventDetails?.ticket_type?.[index]?.toLocaleString()}: {eventDetails?.price?.[index]?.toLocaleString()} đ</p>
+                            <p key={index}>
+                                {eventDetails?.ticket_type?.[index]?.toLocaleString()}: {eventDetails?.price?.[index]?.toLocaleString()} đ
+                            </p>
                         ))}
                     </div>
                     <div className="components__seatanother-total">
