@@ -226,7 +226,7 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
             setModal({
                 isShow: true,
                 content: (
-                    <>                        
+                    <>
                         <div className="bases__text--bold bases__font--14 text-center">Do You Want To Accept This Event?</div>
                         <div className="pt-3">
                             <Select

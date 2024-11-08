@@ -102,7 +102,7 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                 },
                 undefined,
                 { scroll: false },
-            )
+            );
         }
     };
 
@@ -160,10 +160,7 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                             <label className="components__order-ticket-label">The money of {seatCount} seat</label>
                             <span className="components__order-ticket-value">{ticketPrice} đ</span>
                         </div>
-                        <button
-                            className="components__order-form-button"
-                            onClick={handleSubmit}
-                        >
+                        <button className="components__order-form-button" onClick={handleSubmit}>
                             Continue
                         </button>
                     </div>
