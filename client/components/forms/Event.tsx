@@ -512,7 +512,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 console.log('Seat data being sent:', seatAdd);
 
                 router.push(routes.CLIENT.ORGANIZER_LIST_EVENT.href, undefined, { scroll: false });
-
             }
             return eventId;
         } else if (res?.code === http.ERROR_EXCEPTION_CODE) {
@@ -610,11 +609,11 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             </Validator>
                         </div>
                         <div
-                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                                }`}
-                        >
+                            className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                            }`}>
                             <label htmlFor="location" className="pb-2">
-                                Day start<span className="text-danger">*</span>
+                                Start Date<span className="text-danger">*</span>
                             </label>
                             <Validator className="bases__width-percent--40 components__addevent_picker_to" ref={startDateTimeValidatorRef}>
                                 <DateTimePicker
@@ -627,12 +626,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     classNameTime="components__addevent_picker-time"
                                 />
                             </Validator>
-
-                            <span className="bases__padding--horizontal10 d-flex align-items-center bases__font--14 components__addevent_picker-center-text">
-                                ~
-                            </span>
                             <label htmlFor="location" className="pb-2">
-                                Day end<span className="text-danger">*</span>
+                                End Date<span className="text-danger">*</span>
                             </label>
                             <Validator className="bases__width-percent--40 components__addevent_picker_from">
                                 <DateTimePicker
@@ -654,8 +649,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 {!previewUrl && (
                                     <label
                                         htmlFor="avatar"
-                                        style={{ cursor: 'pointer', padding: '70px', border: '1px solid #ffbdbd', borderRadius: '10px' }}
-                                    >
+                                        style={{ cursor: 'pointer', padding: '70px', border: '1px solid #ffbdbd', borderRadius: '10px' }}>
                                         <img src={images.ICON_FILE_UPLOAD} alt="" />
                                     </label>
                                 )}
@@ -678,8 +672,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             <button
                                                 type="button"
                                                 className="btn btn-danger btn-sm position-absolute top-0 end-0"
-                                                onClick={handleDeleteAvatar}
-                                            >
+                                                onClick={handleDeleteAvatar}>
                                                 X
                                             </button>
                                         </div>
@@ -700,7 +693,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     options={renderEventLocationOptions()}
                                 />
                             </Validator>
-                            {eventAdd?.location && (
+                            {eventAdd?.location && eventAdd.location !== 'ANOTHER' && (
                                 <div className="mt-3">
                                     <img
                                         src={enums.EVENTLOCATION_IMAGE_URL[eventAdd.location as enums.EVENTLOCATION]}

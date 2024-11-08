@@ -4,7 +4,9 @@ import { http, routes } from '@utils/constants';
 import { authHelper } from '@utils/helpers';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
+import { validateHelper } from '@utils/helpers';
+import Validator from '@components/commons/Validator';
 import { fetchDetailsEvent } from '@redux/actions/api';
 import moment from 'moment';
 
@@ -25,6 +27,10 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
     const [yourName, setYourName] = useState('');
     const [yourEmail, setYourEmail] = useState('');
     const [yourPhone, setYourPhone] = useState('');
+
+    const yourNameValidatorRef = createRef<IValidatorComponentHandle>();
+    const yourEmailValidatorRef = createRef<IValidatorComponentHandle>();
+    const yourPhoneValidatorRef = createRef<IValidatorComponentHandle>();
 
     const handleDetialsEvent = async () => {
         dispatch(
@@ -60,35 +66,77 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
     const formattedSeatDetails = parsedSeatDetails.join(', ');
     const seatCount = parsedSeatDetails.length;
 
+    const handleSubmit = async () => {
+        let isValidate = true;
+        const validator = [
+            { ref: yourNameValidatorRef, value: yourName, message: 'Name Is Not Empty!' },
+            { ref: yourEmailValidatorRef, value: yourEmail, message: 'Email Is Not Empty!' },
+            { ref: yourPhoneValidatorRef, value: yourPhone, message: 'Phone Is Not Empty!' },
+        ];
+        validator.forEach(({ ref, value, message }) => {
+            ref.current?.onValidateMessage('');
+            if (validateHelper.isEmpty(String(value ?? ''))) {
+                ref.current?.onValidateMessage(message);
+                isValidate = false;
+            } else if (validateHelper.isCharacters(String(value ?? ''))) {
+                ref.current?.onValidateMessage(`Your ${message} Cannot Be Less Than 2 Characters`);
+                isValidate = false;
+            }
+        });
+        if (isValidate) {
+            router.push(
+                {
+                    pathname: routes.CLIENT.PAYMENT_PAGE.href,
+                    query: {
+                        id,
+                        seatCount,
+                        seatDetails,
+                        ticketPrice,
+                        yourName,
+                        yourEmail,
+                        yourPhone,
+                    },
+                },
+                undefined,
+                { scroll: false },
+            );
+        }
+    };
+
     return (
         <>
             <div className="components__seattype1">
                 <div className="components__order-form-and-ticket-info">
                     <div className="components__order-form-container">
-                        <h2 className="components__order-form-title">Question Table</h2>
+                        <h2 className="components__order-form-title">Customer Information</h2>{' '}
                         <form>
-                            <label className="components__order-form-label">Your Name?</label>
-                            <input
-                                className="components__order-form-input"
-                                value={yourName}
-                                onChange={(e) => setYourName(e.target.value)}
-                            />
-
-                            <label className="components__order-form-label">Your email?</label>
-                            <input
-                                className="components__order-form-input"
-                                value={yourEmail}
-                                onChange={(e) => setYourEmail(e.target.value)}
-                            />
-
+                            <label className="components__order-form-label">Your Name</label>
+                            <Validator ref={yourNameValidatorRef}>
+                                <input
+                                    type="textarea"
+                                    className="components__order-form-input"
+                                    value={yourName}
+                                    onChange={(e) => setYourName(e.target.value)}
+                                />
+                            </Validator>
+                            <label className="components__order-form-label">Your email</label>
+                            <Validator ref={yourEmailValidatorRef}>
+                                <input
+                                    className="components__order-form-input"
+                                    value={yourEmail}
+                                    onChange={(e) => setYourEmail(e.target.value)}
+                                />
+                            </Validator>
                             <label className="components__order-form-label" htmlFor="phone">
                                 Your Phone
                             </label>
-                            <input
-                                className="components__order-form-input"
-                                value={yourPhone}
-                                onChange={(e) => setYourPhone(e.target.value)}
-                            />
+                            <Validator ref={yourPhoneValidatorRef}>
+                                <input
+                                    className="components__order-form-input"
+                                    value={yourPhone}
+                                    onChange={(e) => setYourPhone(e.target.value)}
+                                />
+                            </Validator>
                         </form>
                     </div>
                     <div className="components__order-ticket-info">
@@ -109,27 +157,7 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                             <label className="components__order-ticket-label">The money of {seatCount} seat</label>
                             <span className="components__order-ticket-value">{ticketPrice} đ</span>
                         </div>
-                        <button
-                            className="components__order-form-button"
-                            onClick={() =>
-                                router.push(
-                                    {
-                                        pathname: routes.CLIENT.PAYMENT_PAGE.href,
-                                        query: {
-                                            id,
-                                            seatCount,
-                                            seatDetails,
-                                            ticketPrice,
-                                            yourName,
-                                            yourEmail,
-                                            yourPhone,
-                                        },
-                                    },
-                                    undefined,
-                                    { scroll: false },
-                                )
-                            }
-                        >
+                        <button className="components__order-form-button" onClick={handleSubmit}>
                             Continue
                         </button>
                     </div>

@@ -270,7 +270,6 @@ const CustomerRequestPage: ICustomerRequestPage<ICustomerRequestPageProps> = () 
     };
     return (
         <div className="pages__custommerRequest row pt-3">
-            <h3 className="pb-3">Users</h3>
             {customers && customers.length > 0 ? (
                 <Box className="col-md-12 p-3">
                     <h2 className="fw-bold mb-4 text-start ">Customer Request Organizer</h2>
