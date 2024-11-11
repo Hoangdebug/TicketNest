@@ -9,11 +9,13 @@ import { SlCalender } from 'react-icons/sl';
 import { useDispatch } from 'react-redux';
 import {
     fetchCreateComment,
+    fetchDeleteComment,
     fetchDetailsEvent,
     fetchListComment,
     fetchListEvent,
     fetchListReplyComment,
     fetchReplyComment,
+    fetchUpdateComment,
 } from '@redux/actions/api';
 import { enums, http, images, routes } from '@utils/constants';
 import Countdown from '@components/commons/Countdown';
@@ -62,6 +64,12 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         handleDetialsEvent();
         handleFetchListEvents();
         handleFetchListComment();
+    }, []);
+
+    useEffect(() => {
+        setState((prevState) => ({
+            ...prevState,
+        }));
     }, []);
 
     useEffect(() => {
@@ -132,6 +140,85 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                         listComments: dataCommentFilter,
                     }));
                 }
+            }),
+        );
+    };
+
+    const handleDeleteComment = async (idComment: string) => {
+        dispatch(
+            await fetchDeleteComment(idComment, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
+                if (res && res.code === http.SUCCESS_CODE) {
+                    console.log(res);
+                    handleFetchListComment();
+                    handleFetchListReplyComments(idComment);
+                    dispatch(
+                        setModal({
+                            isShow: false,
+                        }),
+                    );
+                }
+            }),
+        );
+    };
+
+    const handleFetchUpdateComment = async (idComment: string) => {
+        let validate = state.isValidate;
+
+        const validator = [{ ref: commentValidatorRef, value: comment, message: 'Enter your comment' }];
+
+        validator.forEach(({ ref, value, message }) => {
+            ref.current?.onValidateMessage('');
+            if (validateHelper.isEmpty(String(value ?? ''))) {
+                ref.current?.onValidateMessage(message);
+                validate = false;
+            }
+        });
+
+        if (validate) {
+            dispatch(
+                await fetchUpdateComment(id?.toString() ?? idComment, { comment }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
+                    if (res?.code === http.SUCCESS_CODE) {
+                        setState((prevState) => ({
+                            ...prevState,
+                            comment: '',
+                        }));
+                        handleFetchListComment();
+                    } else {
+                        setModal({
+                            isShow: true,
+                            content: (
+                                <>
+                                    <div className="text-center bases__margin--bottom31">
+                                        <Img src={images.ICON_TIMES} className="bases__width--90 bases__height--75" />
+                                    </div>
+                                    <div className="bases__text--bold bases__font--14 text-center">Error while you add new comment!!!</div>
+                                </>
+                            ),
+                        });
+                    }
+                }),
+            );
+        }
+    };
+
+    const hanldeEditComment = (id: string) => {
+        console.log(id);
+        dispatch(
+            setModal({
+                isShow: true,
+                content: (
+                    <>
+                        <div className="text-center bases__margin--bottom31">
+                            <Img src={images.ICON_TIMES} className="bases__width--90 bases__height--75" />
+                        </div>
+                        <div className="bases__text--bold bases__font--14 text-center">Do you want to delete this comment !!</div>
+                    </>
+                ),
+                button: (
+                    <>
+                        <Button startIcon={images.ICON_DELETE} background="red" onClick={() => handleDeleteComment(id)} />
+                    </>
+                ),
             }),
         );
     };
@@ -337,22 +424,27 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 {listComments?.map((item, index) => (
                     <div key={index}>
                         <div className="pages__eventdetail_comment p-3">
-                            <div className="pages__eventdetail_comment_infor">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div className="pages__eventdetail_comment_infor_user">
-                                        <Img src={(item?.userId?.images as '') || images.ICON_USER} />
-                                        <h4>{item?.userId?.username}</h4>
+                            {item.isDeleted ? (
+                                <div>{item.comment}</div>
+                            ) : (
+                                <div className="pages__eventdetail_comment_infor">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="pages__eventdetail_comment_infor_user">
+                                            <Img src={(item?.userId?.images as '') || images.ICON_USER} />
+                                            <h4>{item?.userId?.username}</h4>
+                                        </div>
+                                        <div className="pages__eventdetail_comment_time bases__width26 text-end">
+                                            {moment(item?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
+                                        </div>
                                     </div>
-                                    <div className="pages__eventdetail_comment_time bases__width26 text-end">
-                                        {moment(item?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
+                                    <div className="pages__eventdetail_comment_infor_content">
+                                        <p>{item?.comment}</p>
                                     </div>
                                 </div>
-                                <div className="pages__eventdetail_comment_infor_content">
-                                    <p>{item?.comment}</p>
-                                </div>
-                            </div>
-                            <div className="pages__eventdetail_comment_time d-flex justify-content-end">
+                            )}
+                            <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
                                 <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
+                                <Button buttonText="Edit" startIcon="" onClick={() => hanldeEditComment(item?._id ?? '')} />
                             </div>
 
                             {replyId === item._id && (
@@ -386,6 +478,14 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                             </div>
                                             <div className="reply-comment-content">
                                                 <p>{reply?.comment}</p>
+                                            </div>
+
+                                            <div className="d-flex justify-content-end">
+                                                <Button
+                                                    buttonText="Edit"
+                                                    startIcon=""
+                                                    onClick={() => hanldeEditComment(reply?._id ?? '')}
+                                                />
                                             </div>
                                         </div>
                                     ))}

@@ -284,6 +284,22 @@ export const replyCommemt = async (eid: string, idComment: string, data: ICommen
     }
 };
 
+export const deleteComment = async (idComment: string) => {
+    try {
+        return await axios.delete<ICommentDataAPIRes>(`${routes.API.COMMENT.href}/${idComment}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const editComment = async (idComment: string, data: ICommentDataAPI) => {
+    try {
+        return await axios.put<ICommentDataAPIRes>(`${routes.API.COMMENT.href}/${idComment}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const listReplyCommemt = async (eid: string, idComment: string) => {
     try {
         return await axios.get<ICommentListDataAPIRes>(`${routes.API.COMMENT.href}/reply/${eid}/${idComment}`);

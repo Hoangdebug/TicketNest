@@ -6,6 +6,7 @@ interface ICommentDataAPI {
     comment?: string;
     createdAt?: string;
     replyCommemt?: string;
+    isDeleted?: boolean;
 }
 
 interface ICommentDataAPIRes extends IBaseAPIRes {
