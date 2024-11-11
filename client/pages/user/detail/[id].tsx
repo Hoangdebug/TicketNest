@@ -6,7 +6,7 @@ import { IoMdShare } from 'react-icons/io';
 import { CiHeart } from 'react-icons/ci';
 import { MdOutlinePeople } from 'react-icons/md';
 import { SlCalender } from 'react-icons/sl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchCreateComment,
     fetchDeleteComment,
@@ -24,11 +24,13 @@ import { Button, Img, Input } from '@components/index';
 import Validator from '@components/commons/Validator';
 import { validateHelper } from '@utils/helpers';
 import { setModal } from '@redux/actions';
+import { ReduxStates } from '@redux/reducers';
 
 const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const router = useRouter();
     const { id } = router.query;
     const dispatch = useDispatch();
+    const { profile } = useSelector((states: ReduxStates) => states);
     const [state, setState] = useState<IEventDetailPageState>({
         eventDetails: undefined,
         event: [],
@@ -201,7 +203,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
 
-    const hanldeEditComment = (id: string) => {
+    const hanldeEditComment = (id: string, userId: string) => {
         console.log(id);
         dispatch(
             setModal({
@@ -444,7 +446,13 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             )}
                             <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
                                 <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
-                                <Button buttonText="Edit" startIcon="" onClick={() => hanldeEditComment(item?._id ?? '')} />
+                                {item?.userId?._id === profile?._id && (
+                                    <Button
+                                        buttonText="Edit"
+                                        startIcon=""
+                                        onClick={() => hanldeEditComment(item?._id ?? '', item?.userId?._id ?? '')}
+                                    />
+                                )}
                             </div>
 
                             {replyId === item._id && (
@@ -481,11 +489,13 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                             </div>
 
                                             <div className="d-flex justify-content-end">
-                                                <Button
-                                                    buttonText="Edit"
-                                                    startIcon=""
-                                                    onClick={() => hanldeEditComment(reply?._id ?? '')}
-                                                />
+                                                {reply?.userId?._id === profile?._id && (
+                                                    <Button
+                                                        buttonText="Edit"
+                                                        startIcon=""
+                                                        onClick={() => hanldeEditComment(reply?._id ?? '', reply?.userId?._id ?? '')}
+                                                    />
+                                                )}
                                             </div>
                                         </div>
                                     ))}
