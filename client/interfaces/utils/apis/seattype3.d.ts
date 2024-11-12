@@ -8,6 +8,7 @@ interface ISeatType3DataAPI {
     location?: string;
     price?: number[];
     quantity?: number[];
+    ordered_seat?: string[];
 }
 
 interface ISeattype3DetailsApiRes extends IBaseAPIRes {

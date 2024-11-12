@@ -12,7 +12,7 @@ import moment from 'moment';
 
 const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
     const router = useRouter();
-    const { id, seatDetails, ticketPrice } = router.query;
+    const { id, seatId, seatDetails, ticketPrice } = router.query;
     const token = authHelper.accessToken();
     const dispatch = useDispatch();
 
@@ -92,6 +92,7 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                     query: {
                         id,
                         seatCount,
+                        seatId,
                         seatDetails,
                         ticketPrice,
                         yourName,

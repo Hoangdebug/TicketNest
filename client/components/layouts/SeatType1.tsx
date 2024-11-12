@@ -8,17 +8,16 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { id } = router.query;
-
-    const [state, setState] = useState({
+    
+    const [state, setState] = useState<ISeatType1ComponentState>({
         eventDetails: undefined,
         seatDetails: undefined,
         rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', "K", "L", "M", "N"],
         numSeatOfRowLeft: [],
         numSeatOfRowRight: [],
-        numSeatOfRowMiddleLeft: [], // Add this
+        numSeatOfRowMiddleLeft: [],
         numSeatOfRowMiddleRight: [],
         selectedSeat: [],
-        orderedSeats: ['L-A3', 'R-B2', 'ML-A8', 'MR-A12'],
         ticketPrice: 0,
     });
 
@@ -31,7 +30,6 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
         numSeatOfRowMiddleLeft,
         numSeatOfRowMiddleRight,
         selectedSeat,
-        orderedSeats,
         ticketPrice,
     } = state;
 
@@ -76,7 +74,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
     const toggleSeat = (row, seatNum, area) => {
         const seatId = `${area === 'left' ? 'L-' : area === 'right' ? 'R-' : area === 'middle left' ? 'ML-' : 'MR-'}${row}${seatNum}`;
-        if (orderedSeats?.includes(seatId)) return;
+        if (seatDetails?.ordered_seat?.includes(seatId)) return;
 
         setState((prev) => {
             let newSelectedSeats = [...(prev.selectedSeat ?? [])];
@@ -188,7 +186,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                             {Array.from({ length: numSeatOfRowLeft[index] || 0 }).map((_, seatNum) => (
                                 <div
                                     key={seatNum}
-                                    className={`components__seattype1-seat components__seattype1-seat-left ${orderedSeats.includes(`L-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''
+                                    className={`components__seattype1-seat components__seattype1-seat-left ${seatDetails?.ordered_seat?.includes(`L-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''
                                         } ${selectedSeat.includes(`L-${row}${seatNum + 1}`) ? 'selected' : ''
                                         }`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'left')}
@@ -208,7 +206,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                             {Array.from({ length: numSeatOfRowRight[index] || 0 }).map((_, seatNum) => (
                                 <div
                                     key={seatNum}
-                                    className={`components__seattype1-seat components__seattype1-seat-right ${orderedSeats.includes(`R-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''
+                                    className={`components__seattype1-seat components__seattype1-seat-right ${seatDetails?.ordered_seat?.includes(`R-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''
                                         } ${selectedSeat.includes(`R-${row}${seatNum + 1}`) ? 'selected' : ''
                                         }`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'right')}
@@ -228,7 +226,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                 {Array.from({ length: numSeatOfRowMiddleLeft[index] || 0 }).map((_, seatNum) => (
                                     <div
                                         key={seatNum}
-                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`ML-${row}${seatNum + 1}`) ? 'selected' : ''} ${orderedSeats.includes(`ML-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''}`}
+                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`ML-${row}${seatNum + 1}`) ? 'selected' : ''} ${seatDetails?.ordered_seat?.includes(`ML-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''}`}
                                         onClick={() => toggleSeat(row, seatNum + 1, 'middle left')}
                                     >
                                         {seatNum + 1}
@@ -245,7 +243,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                 {Array.from({ length: numSeatOfRowMiddleRight[index] || 0 }).map((_, seatNum) => (
                                     <div
                                         key={seatNum}
-                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`MR-${row}${seatNum + 11}`) ? 'selected' : ''} ${orderedSeats.includes(`MR-${row}${seatNum + 11}`) ? 'components__seattype1-status-unavailable' : ''}`}
+                                        className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`MR-${row}${seatNum + 11}`) ? 'selected' : ''} ${seatDetails?.ordered_seat?.includes(`MR-${row}${seatNum + 11}`) ? 'components__seattype1-status-unavailable' : ''}`}
                                         onClick={() => toggleSeat(row, seatNum + 11, 'middle right')}
                                     >
                                         {seatNum + 11}
@@ -307,7 +305,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                             router.push(
                                                 {
                                                     pathname: routes.CLIENT.ORDER_PAGES.href,
-                                                    query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
+                                                    query: { id: id, seatId: seatDetails?._id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
                                                 },
                                                 undefined,
                                                 { scroll: false },

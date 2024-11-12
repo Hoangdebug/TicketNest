@@ -133,6 +133,15 @@ export const addEvent = async (data: IEventDataApi) => {
         throw err;
     }
 };
+
+export const updateOrderSeat = async (seatId: string, data: { new_ordered_seat: string[] }) => {
+    try {
+        return await axios.put<ISeattype2DataApiRes>(`${routes.API.SEAT.href}/update-order/${seatId}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const addSeat = async (data: ISeatType2DataAPI) => {
     try {
         return await axios.post<ISeattype2DataApiRes>(`${routes.API.SEAT.href}`, data);
