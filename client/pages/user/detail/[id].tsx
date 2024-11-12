@@ -203,8 +203,26 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
 
-    const hanldeEditComment = (id: string, userId: string) => {
-        console.log(id);
+    const hanldeEditcomment = (id: string) => {
+        dispatch(
+            setModal({
+                isShow: true,
+                content: (
+                    <>
+                        <div className="bases__text--bold bases__font--14 text-center">Do you want to edit this comment !!</div>
+                    </>
+                ),
+                button: (
+                    <div className="d-flex gap-1 flex-row">
+                        <Button startIcon={images.ICON_DELETE} background="red" onClick={() => hanldeDeleteComments(id)} />
+                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(id)} />
+                    </div>
+                ),
+            }),
+        );
+    };
+
+    const hanldeDeleteComments = (id: string) => {
         dispatch(
             setModal({
                 isShow: true,
@@ -218,7 +236,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 ),
                 button: (
                     <>
-                        <Button startIcon={images.ICON_DELETE} background="red" onClick={() => handleDeleteComment(id)} />
+                        <Button buttonText="OK" background="red" onClick={() => handleDeleteComment(id)} />
                     </>
                 ),
             }),
@@ -390,7 +408,6 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     <div className="pages__eventdetail_body_sideleft_description">
                         <h2>About This Event</h2>
                         <p>{eventDetails?.description}</p>
-                        <p>{eventDetails?.description}</p>
                         <ul>
                             <li>Name: {eventDetails?.name}</li>
                             <li>Location: {eventDetails?.location}</li>
@@ -398,7 +415,6 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <li>Quantity: {eventDetails?.quantity}</li>
                             <li>Start Date: {eventDetails?.day_start}</li>
                             <li>End Date: {eventDetails?.day_end}</li>
-                            {/* Thêm các thuộc tính khác bạn muốn in ra */}
                         </ul>
                     </div>
                 </div>
@@ -447,11 +463,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
                                 <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
                                 {item?.userId?._id === profile?._id && (
-                                    <Button
-                                        buttonText="Edit"
-                                        startIcon=""
-                                        onClick={() => hanldeEditComment(item?._id ?? '', item?.userId?._id ?? '')}
-                                    />
+                                    <Button buttonText="Edit" startIcon="" onClick={() => hanldeEditcomment(item?._id ?? '')} />
                                 )}
                             </div>
 
@@ -493,7 +505,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                                     <Button
                                                         buttonText="Edit"
                                                         startIcon=""
-                                                        onClick={() => hanldeEditComment(reply?._id ?? '', reply?.userId?._id ?? '')}
+                                                        onClick={() => hanldeEditcomment(reply?._id ?? '')}
                                                     />
                                                 )}
                                             </div>
