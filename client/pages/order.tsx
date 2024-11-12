@@ -22,7 +22,6 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
     });
 
     const { eventDetails, event } = state;
-    const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
 
     const [yourName, setYourName] = useState('');
     const [yourEmail, setYourEmail] = useState('');

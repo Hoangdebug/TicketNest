@@ -24,7 +24,7 @@ const Payment = () => {
     const [showPopup, setShowPopup] = useState(false);
 
     const { eventDetails, event } = state;
-    const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
+    const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
 
     const handleDetailsEvent = async () => {
         dispatch(
@@ -133,7 +133,7 @@ const Payment = () => {
                 <h1>{eventDetails?.name}</h1>
                 <p>{eventDetails?.event_type}</p>
                 <p>{eventDetails?.location}</p>
-                <p>{formattedDayEnd}</p>
+                <p>{formattedDayEvent}</p>
             </div>
             <div className="components__payment-timer">
                 <span>Complete your booking within</span>

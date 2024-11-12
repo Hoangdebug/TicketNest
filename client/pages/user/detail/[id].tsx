@@ -59,8 +59,9 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const slicedEvents = event?.slice(0, 4);
     const formattedDayStart = moment(eventDetails?.day_start).format('MMM DD, YYYY HH:mm:ss');
     const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
-    const dayStart = moment(formattedDayEnd).format('DD');
-    const monthStart = moment(formattedDayEnd).format('MMM');
+    const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
+    const dayStart = moment(formattedDayEvent).format('DD');
+    const monthStart = moment(formattedDayEvent).format('MMM');
 
     useEffect(() => {
         handleDetialsEvent();
@@ -343,6 +344,8 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             {formattedDayStart}
                             <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
                             {formattedDayEnd}
+                            <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
+                            {formattedDayEvent}
                         </p>
                     </div>
                 </div>
@@ -398,6 +401,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <li>Quantity: {eventDetails?.quantity}</li>
                             <li>Start Date: {eventDetails?.day_start}</li>
                             <li>End Date: {eventDetails?.day_end}</li>
+                            <li>Event Date: {eventDetails?.day_event}</li>
                             {/* Thêm các thuộc tính khác bạn muốn in ra */}
                         </ul>
                     </div>
@@ -523,7 +527,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <h3>{events?.name}</h3>
                             <div className="pages__eventdetail_relate_list_card_infor">
                                 <p className="pages__eventdetail_relate_list_card_infor_price">{events?.price} $</p>
-                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEnd}</p>
+                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEvent}</p>
                             </div>
                         </div>
                     ))}

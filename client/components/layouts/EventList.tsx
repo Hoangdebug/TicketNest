@@ -27,6 +27,7 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
 
     const formattedDayStart = moment(dataEvent?.[0]?.day_start).format('MMM DD, YYYY');
     const formattedDayEnd = moment(dataEvent?.[0]?.day_end).format('MMM DD, YYYY');
+    const formattedDayEvent = moment(dataEvent?.[0]?.day_event).format('MMM DD, YYYY');
     const listTypeSearch = [
         { title: 'All', query: 'All' },
         { title: 'Music', query: 'Music' },
@@ -86,6 +87,10 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                                         <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
                                             <WatchLaterIcon />
                                             <p className="m-0">{formattedDayEnd}</p>
+                                        </span>
+                                        <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
+                                            <WatchLaterIcon />
+                                            <p className="m-0">{formattedDayEvent}</p>
                                         </span>
                                     </div>
                                 </div>
