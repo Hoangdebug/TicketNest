@@ -1,16 +1,18 @@
-import { createRef, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import Validator from '@components/commons/Validator';
 import { validateHelper } from '@utils/helpers';
 import { http, routes } from '@utils/constants';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchRequestOrganizer } from '@redux/actions/api';
 import Button from '@components/commons/Button';
 import Input from '@components/commons/Input';
+import { ReduxStates } from '@redux/reducers';
 
 const RequestOrganizerForm: IRequestOrganizerComponent<IRequestOrganizerComponentProps> = () => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const { profile } = useSelector((states: ReduxStates) => states);
 
     const [state, setState] = useState<IRequestOrganizerComponentState>({
         organizer: {
@@ -27,6 +29,18 @@ const RequestOrganizerForm: IRequestOrganizerComponent<IRequestOrganizerComponen
     const descriptionValidatorRef = createRef<IValidatorComponentHandle>();
     const contactEmailValidatorRef = createRef<IValidatorComponentHandle>();
     const contactPhoneValidatorRef = createRef<IValidatorComponentHandle>();
+
+    useEffect(() => {
+        setState((prevState) => ({
+            ...prevState,
+            organizer: {
+                name: profile?.username,
+                description: '',
+                contact_email: profile?.email,
+                contact_phone: profile?.phone,
+            },
+        }));
+    }, []);
 
     const handleOnChange = (field: string, value: string | null) => {
         setState((prevState) => ({

@@ -1,50 +1,44 @@
 import { ISeatType1Page, ISeatType1PageProps } from '@interfaces/pages/seattype1';
 import { IEventDetailPageState } from '@interfaces/pages/eventdetail';
 import { http, routes } from '@utils/constants';
-import { authHelper } from '@utils/helpers';
+import { authHelper, validateHelper } from '@utils/helpers';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createRef, useEffect, useState } from 'react';
 import { fetchDetailsEvent } from '@redux/actions/api';
-import { validateHelper } from '@utils/helpers';
 import Validator from '@components/commons/Validator';
 import moment from 'moment';
+import { ReduxStates } from '@redux/reducers';
+import { Input } from '@components/index';
 
 const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
     const router = useRouter();
     const { id, seatDetails, ticketPrice } = router.query;
     const token = authHelper.accessToken();
     const dispatch = useDispatch();
+    const { profile } = useSelector((states: ReduxStates) => states);
 
     const [state, setState] = useState<IEventDetailPageState>({
         eventDetails: undefined,
-        event: [],
     });
 
-    const { eventDetails, event } = state;
+    const { eventDetails, customer } = state;
     const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
-
-    const [yourName, setYourName] = useState('');
-    const [yourEmail, setYourEmail] = useState('');
-    const [yourPhone, setYourPhone] = useState('');
 
     const yourNameValidatorRef = createRef<IValidatorComponentHandle>();
     const yourEmailValidatorRef = createRef<IValidatorComponentHandle>();
     const yourPhoneValidatorRef = createRef<IValidatorComponentHandle>();
 
-    const handleDetialsEvent = async () => {
-        dispatch(
-            await fetchDetailsEvent(id?.toString() ?? '', (res: IEventDataApiRes | IErrorAPIRes | null) => {
-                if (res && res.code === http.SUCCESS_CODE) {
-                    const event = (res as IEventDataApiRes).result;
-                    setState((prevState) => ({
-                        ...prevState,
-                        eventDetails: event,
-                    }));
-                }
-            }),
-        );
-    };
+    useEffect(() => {
+        setState((prevState) => ({
+            ...prevState,
+            customer: {
+                username: profile?.username ?? '',
+                email: profile?.email ?? '',
+                phone: profile?.phone ?? '',
+            },
+        }));
+    }, []);
 
     useEffect(() => {
         if (!token) {
@@ -52,6 +46,29 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
         }
         handleDetialsEvent();
     }, []);
+
+    const handleOnChange = (field: string, value: string | boolean | null) => {
+        setState((prevState) => ({
+            customer: {
+                ...prevState.customer,
+                [field]: value,
+            },
+        }));
+    };
+
+    const handleDetialsEvent = async () => {
+        dispatch(
+            await fetchDetailsEvent(id?.toString() ?? '', (res: IEventDetailsApiRes | IErrorAPIRes | null) => {
+                if (res && res.code === http.SUCCESS_CODE) {
+                    const dataDetail = (res as IEventDetailsApiRes).result;
+                    setState((prevState) => ({
+                        ...prevState,
+                        eventDetails: dataDetail,
+                    }));
+                }
+            }),
+        );
+    };
 
     let parsedSeatDetails: string[] = [];
 
@@ -70,9 +87,9 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
         let isValidate = true;
 
         const validator = [
-            { ref: yourNameValidatorRef, value: yourName, message: 'Name Is Not Empty!' },
-            { ref: yourEmailValidatorRef, value: yourEmail, message: 'Email Is Not Empty!' },
-            { ref: yourPhoneValidatorRef, value: yourPhone, message: 'Phone Is Not Empty!' },
+            { ref: yourNameValidatorRef, value: customer?.username, message: 'Name Is Not Empty!' },
+            { ref: yourEmailValidatorRef, value: customer?.email, message: 'Email Is Not Empty!' },
+            { ref: yourPhoneValidatorRef, value: customer?.phone, message: 'Phone Is Not Empty!' },
         ];
 
         validator.forEach(({ ref, value, message }) => {
@@ -95,9 +112,9 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                         seatCount,
                         seatDetails,
                         ticketPrice,
-                        yourName,
-                        yourEmail,
-                        yourPhone,
+                        username: customer?.username ?? '',
+                        email: customer?.email ?? '',
+                        phone: customer?.phone ?? '',
                     },
                 },
                 undefined,
@@ -115,29 +132,31 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                         <form>
                             <label className="components__order-form-label">Your Name</label>
                             <Validator ref={yourNameValidatorRef}>
-                                <input
-                                    type="textarea"
+                                <Input
                                     className="components__order-form-input"
-                                    value={yourName}
-                                    onChange={(e) => setYourName(e.target.value)}
+                                    value={customer?.username ?? ''}
+                                    onChange={(value: string) => handleOnChange('username', value)}
                                 />
                             </Validator>
                             <label className="components__order-form-label">Your email</label>
                             <Validator ref={yourEmailValidatorRef}>
-                                <input
+                                <Input
                                     className="components__order-form-input"
-                                    value={yourEmail}
-                                    onChange={(e) => setYourEmail(e.target.value)}
+                                    value={customer?.email ?? ''}
+                                    onChange={(value: string) => handleOnChange('email', value)}
                                 />
                             </Validator>
                             <label className="components__order-form-label" htmlFor="phone">
                                 Your Phone
                             </label>
                             <Validator ref={yourPhoneValidatorRef}>
-                                <input
+                                <Input
                                     className="components__order-form-input"
-                                    value={yourPhone}
-                                    onChange={(e) => setYourPhone(e.target.value)}
+                                    value={customer?.phone ?? ''}
+                                    onChange={(value: string) => handleOnChange('phone', value)}
+                                    isBlockSpecial={true}
+                                    type="signed-number"
+                                    maxLength={10}
                                 />
                             </Validator>
                         </form>
