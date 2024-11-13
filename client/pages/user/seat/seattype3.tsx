@@ -21,6 +21,7 @@ const SeatType3Page: ISeatType3Page<ISeatType3PageProps> = () => {
     });
 
     const { eventDetails, event } = state;
+    const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
 
     const handleDetailsEvent = async () => {
         dispatch(

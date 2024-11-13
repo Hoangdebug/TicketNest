@@ -13,14 +13,15 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
         eventDetails: undefined,
         event: [],
         seatDetails: undefined,
-        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O'],
+        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
         numSeatOfRowLeft: [],
         numSeatOfRowRight: [],
         selectedSeat: [],
+        orderedSeats: [],
         ticketPrice: 0,
     });
 
-    const { eventDetails, seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, selectedSeat = [], ticketPrice } = state;
+    const { eventDetails, seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, selectedSeat = [], orderedSeats, ticketPrice } = state;
 
     useEffect(() => {
         if (seatDetails?.quantity && seatDetails?.price) {
@@ -81,8 +82,8 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
     };
 
     const toggleSeat = (row: string, seatNum: number, area: 'left' | 'right') => {
-        const seatId = `${area === 'left' ? 'L-' : 'R-'}${row}${seatNum}`;
-        if (seatDetails?.ordered_seat?.includes(seatId)) return;
+        const seatId = `${area === 'left' ? 'L' : 'R'}${row}${seatNum}`;
+        if (orderedSeats?.includes(seatId)) return;
 
         setState((prev) => {
             let newSelectedSeats = [...(prev.selectedSeat ?? [])];
@@ -176,18 +177,16 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                                             {numSeatOfRowLeft?.[rowIndex] &&
                                                 Array.from({ length: numSeatOfRowLeft[rowIndex] }).map((_, index) => {
                                                     const seatNum = index * 2 + 1;
-                                                    const seatId = `L-${row}${seatNum}`;
+                                                    const seatId = `L${row}${seatNum}`;
                                                     const isSelected = selectedSeat.includes(seatId);
-                                                    const isOrdered = seatDetails?.ordered_seat?.includes(seatId);
                                                     return (
                                                         <span
                                                             key={`${row}-${seatNum}`}
-                                                            className={`components__seattype3-seat ${isSelected
+                                                            className={`components__seattype3-seat ${
+                                                                isSelected
                                                                     ? 'components__seattype3-seat-selected'
-                                                                    : isOrdered
-                                                                        ? 'components__seattype3-seat-not-available'
-                                                                        : 'components__seattype3-seat-available'
-                                                                }`}
+                                                                    : 'components__seattype3-seat-available'
+                                                            }`}
                                                             onClick={() => toggleSeat(row, seatNum, 'left')}
                                                         >
                                                             {seatNum}
@@ -202,25 +201,23 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                             <div className="components__seattype3-divider"></div>
 
                             <div className="components__seattype3-right-section">
-                                {state.rowsRight?.map((row, rowIndex) => (
+                                {state.rowsLeft?.map((row, rowIndex) => (
                                     <div key={row} className="components__seattype3-row">
                                         <span className="components__seattype3-row-label">{row}</span>
                                         <div className="components__seattype3-seats">
-                                            {numSeatOfRowRight?.[rowIndex] &&
-                                                Array.from({ length: numSeatOfRowRight[rowIndex] }).map((_, index) => {
-                                                    const seatNum = index * 2 + 2;
-                                                    const seatId = `R-${row}${seatNum}`;
+                                            {numSeatOfRowLeft?.[rowIndex] &&
+                                                Array.from({ length: numSeatOfRowLeft[rowIndex] }).map((_, index) => {
+                                                    const seatNum = index * 2 + 1;
+                                                    const seatId = `R${row}${seatNum}`;
                                                     const isSelected = selectedSeat.includes(seatId);
-                                                    const isOrdered = seatDetails?.ordered_seat?.includes(seatId);
                                                     return (
                                                         <span
                                                             key={`${row}-${seatNum}`}
-                                                            className={`components__seattype3-seat ${isSelected
-                                                                ? 'components__seattype3-seat-selected'
-                                                                : isOrdered
-                                                                    ? 'components__seattype3-seat-not-available'
+                                                            className={`components__seattype3-seat ${
+                                                                isSelected
+                                                                    ? 'components__seattype3-seat-selected'
                                                                     : 'components__seattype3-seat-available'
-                                                                }`}
+                                                            }`}
                                                             onClick={() => toggleSeat(row, seatNum, 'right')}
                                                         >
                                                             {seatNum}

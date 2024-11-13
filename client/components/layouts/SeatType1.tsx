@@ -12,12 +12,12 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
     const [state, setState] = useState<ISeatType1ComponentState>({
         eventDetails: undefined,
         seatDetails: undefined,
-        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', "K", "L", "M", "N"],
+        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
         numSeatOfRowLeft: [],
         numSeatOfRowRight: [],
-        numSeatOfRowMiddleLeft: [],
-        numSeatOfRowMiddleRight: [],
+        numSeatOfRowMiddle: [],
         selectedSeat: [],
+        orderedSeats: [],
         ticketPrice: 0,
     });
 
@@ -27,9 +27,9 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
         rows,
         numSeatOfRowLeft,
         numSeatOfRowRight,
-        numSeatOfRowMiddleLeft,
-        numSeatOfRowMiddleRight,
+        numSeatOfRowMiddle,
         selectedSeat,
+        orderedSeats,
         ticketPrice,
     } = state;
 
@@ -39,7 +39,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
             const leftColumns = 3;
             const rightColumns = 3;
-            const middleColumns = 20;
+            const middleColumns = 10;
 
             const leftRows = Math.floor(leftQuantity / leftColumns);
             const leftExtraSeats = leftQuantity % leftColumns;
@@ -52,29 +52,22 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
             const leftSeats = Array.from({ length: leftRows }, () => leftColumns).concat(leftExtraSeats > 0 ? [leftExtraSeats] : []);
             const rightSeats = Array.from({ length: rightRows }, () => rightColumns).concat(rightExtraSeats > 0 ? [rightExtraSeats] : []);
-
             const middleSeats = Array.from({ length: middleRows }, () => middleColumns).concat(
-                middleExtraSeats > 0 ? [middleExtraSeats] : []
+                middleExtraSeats > 0 ? [middleExtraSeats] : [],
             );
-
-            const middleSeatsLeft = middleSeats.map(row => Math.min(row, 10));
-            const middleSeatsRight = middleSeats.map(row => Math.min(row - 10, 10));
 
             setState((prevState) => ({
                 ...prevState,
                 numSeatOfRowLeft: leftSeats,
                 numSeatOfRowRight: rightSeats,
-                numSeatOfRowMiddleLeft: middleSeatsLeft,
-                numSeatOfRowMiddleRight: middleSeatsRight,
+                numSeatOfRowMiddle: middleSeats,
             }));
         }
     }, [seatDetails]);
 
-
-
     const toggleSeat = (row, seatNum, area) => {
-        const seatId = `${area === 'left' ? 'L-' : area === 'right' ? 'R-' : area === 'middle left' ? 'ML-' : 'MR-'}${row}${seatNum}`;
-        if (seatDetails?.ordered_seat?.includes(seatId)) return;
+        const seatId = `${area === 'left' ? 'L' : area === 'right' ? 'R' : 'M'}${row}${seatNum}`;
+        if (orderedSeats?.includes(seatId)) return;
 
         setState((prev) => {
             let newSelectedSeats = [...(prev.selectedSeat ?? [])];
@@ -88,6 +81,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
             } else if (area === 'right') {
                 seatPrice = seatDetails?.price?.[2];
             }
+
 
             const isSeatSelected = newSelectedSeats.includes(seatId);
 
@@ -214,6 +208,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                             } ${selectedSeat.includes(`R-${row}${seatNum + 1}`) ? 'selected' : ''
                                             }`}
                                         onClick={() => toggleSeat(row, seatNum + 1, 'right')}
+
                                     >
                                         {seatNum + 1}
                                     </div>
@@ -315,6 +310,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                                 {
                                                     pathname: routes.CLIENT.ORDER_PAGES.href,
                                                     query: { id: id, seatId: seatDetails?._id, seatDetails: selectedSeat, ticketPrice: ticketPrice },
+
                                                 },
                                                 undefined,
                                                 { scroll: false },

@@ -6,8 +6,13 @@ interface IOrderDataApi {
     description?: string;
     customer?: IEditUserProfileDataAPI;
     event?: IEventDataApi;
+    paymentUrl?: string;
 }
 
 interface IOrderDataApiRes extends IBaseAPIRes {
     result?: IOrderDataApi[];
+}
+
+interface ICreateorderDataApiRes extends IBaseAPIRes {
+    result?: IOrderDataApi;
 }

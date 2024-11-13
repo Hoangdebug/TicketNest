@@ -23,8 +23,8 @@ const Payment = () => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
 
-    const { eventDetails, event } = state;
-    const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
+    const { eventDetails, event, payment } = state;
+    const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
 
     const handleDetailsEvent = async () => {
         dispatch(
@@ -138,13 +138,55 @@ const Payment = () => {
         }
     };
 
+    // const handlePayment = async () => {
+    //     try {
+    //         const token = getCookie('token');
+
+    //         if (!token) {
+    //             console.error('Token not found in cookies');
+    //             return;
+    //         }
+
+    //         const selectedPaymentMethod = (document.querySelector('input[name="payment"]:checked') as HTMLInputElement)?.value;
+
+    //         const response = await axios.post(
+    //             `http://localhost:5000/api/order/${id}`,
+    //             {
+    //                 seatcode: formattedSeatDetails,
+    //                 totalmoney: ticketPrice,
+    //                 paymentCode: selectedPaymentMethod,
+    //             },
+    //             {
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             },
+    //         );
+
+    //         const data = response.data;
+    //         if (data.status === true) {
+    //             const paymentUrl = data.paymentUrl;
+    //             if (paymentUrl) {
+    //                 window.open(paymentUrl, '_blank');
+    //             } else {
+    //                 console.error('Payment URL is missing');
+    //             }
+    //         } else {
+    //             console.error('Failed to create order', data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error during payment', error);
+    //     }
+    // };
+
     return (
         <div className="components__payment">
             <div className="components__payment-header">
                 <h1>{eventDetails?.name}</h1>
                 <p>{eventDetails?.event_type}</p>
                 <p>{eventDetails?.location}</p>
-                <p>{formattedDayEvent}</p>
+                <p>{formattedDayEnd}</p>
             </div>
             <div className="components__payment-timer">
                 <span>Complete your booking within</span>
@@ -182,7 +224,7 @@ const Payment = () => {
                         <p>Subtotal: {ticketPrice}</p>
                         <p>Total: {ticketPrice}</p>
                     </div>
-                    <button className="components__payment-paymentSection-payButton" disabled={isDisabled} onClick={handlePayment}>
+                    <button className="components__payment-paymentSection-payButton" disabled={isDisabled} onClick={handlePaymentRequest}>
                         Payment
                     </button>
                 </div>

@@ -39,7 +39,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         isValidate: true,
         listReplyComments: [],
     });
-    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt } = state;
+    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt, updateComments } = state;
 
     const [quantity, setQuantity] = useState(0);
 
@@ -81,10 +81,10 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     }, [replyId]);
 
-    const handleOnChange = (feild: string, value: string | null) => {
-        setState((prev) => ({
-            ...prev,
-            [feild]: value,
+    const handleOnChange = (field: string, value: string) => {
+        setState((prevState) => ({
+            ...prevState,
+            [field]: value,
         }));
     };
 
@@ -167,7 +167,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const handleFetchUpdateComment = async (idComment: string) => {
         let validate = state.isValidate;
 
-        const validator = [{ ref: commentValidatorRef, value: comment, message: 'Enter your comment' }];
+        const validator = [{ ref: commentValidatorRef, value: updateComments, message: 'Enter your comment' }];
 
         validator.forEach(({ ref, value, message }) => {
             ref.current?.onValidateMessage('');
@@ -179,7 +179,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
 
         if (validate) {
             dispatch(
-                await fetchUpdateComment(id?.toString() ?? idComment, { comment }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
+                await fetchUpdateComment(idComment, { comment: updateComments }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
                     if (res?.code === http.SUCCESS_CODE) {
                         setState((prevState) => ({
                             ...prevState,
@@ -204,7 +204,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
 
-    const hanldeEditcomment = (id: string) => {
+    const hanldeEditcomment = (id: string, commentParent: string) => {
         dispatch(
             setModal({
                 isShow: true,
@@ -216,7 +216,37 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 button: (
                     <div className="d-flex gap-1 flex-row">
                         <Button startIcon={images.ICON_DELETE} background="red" onClick={() => hanldeDeleteComments(id)} />
-                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(id)} />
+                        <Button buttonText="Update" background="green" onClick={() => handleEditReply(id, commentParent)} />
+                    </div>
+                ),
+            }),
+        );
+    };
+
+    const handleEditReply = (replyId: string, initialContent: string) => {
+        console.log(initialContent);
+        setState((prevState) => ({
+            ...prevState,
+            replyId,
+            updateComments: initialContent,
+        }));
+
+        dispatch(
+            setModal({
+                isShow: true,
+                content: (
+                    <div>
+                        <Input
+                            type="textarea"
+                            value={initialContent ?? ''}
+                            onChange={(value: string) => handleOnChange('initialContent', value)}
+                            placeholder="Enter your reply..."
+                        />
+                    </div>
+                ),
+                button: (
+                    <div className="d-flex gap-1 flex-row">
+                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(replyId)} />
                     </div>
                 ),
             }),
@@ -352,16 +382,19 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     <div className="pages__eventdetail_headers-content">
                         <div className="pages__eventdetail_headers-details">
                             <h1>{eventDetails?.name}</h1>
-                            <p className="pages__eventdetail_headers-time">📅{eventDetails?.day_event &&
-                                new Intl.DateTimeFormat('en-GB', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    hour12: false,
-                                    timeZone: 'UTC',
-                                }).format(new Date(eventDetails.day_event))}</p>
+                            <p className="pages__eventdetail_headers-time">
+                                📅
+                                {eventDetails?.day_event &&
+                                    new Intl.DateTimeFormat('en-GB', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: false,
+                                        timeZone: 'UTC',
+                                    }).format(new Date(eventDetails.day_event))}
+                            </p>
                             <p className="pages__eventdetail_headers-location">📍{eventDetails?.location}</p>
                             <div className="pages__eventdetail_headers-line-separator"></div>
                             <div className="pages__eventdetail_headers-ticket-price">
@@ -394,7 +427,6 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                                 { scroll: false },
                                             );
                                         }
-
                                     }}
                                 >
                                     Book now
@@ -403,7 +435,8 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                         </div>
 
                         <div className="pages__eventdetail_headers-image">
-                            <Img src={eventDetails?.images as string} />                        </div>
+                            <Img src={eventDetails?.images as string} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -459,7 +492,11 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
                                 <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
                                 {item?.userId?._id === profile?._id && (
-                                    <Button buttonText="Edit" startIcon="" onClick={() => hanldeEditcomment(item?._id ?? '')} />
+                                    <Button
+                                        buttonText="Edit"
+                                        startIcon=""
+                                        onClick={() => hanldeEditcomment(item?._id ?? '', item?.comment ?? '')}
+                                    />
                                 )}
                             </div>
 
@@ -501,7 +538,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                                     <Button
                                                         buttonText="Edit"
                                                         startIcon=""
-                                                        onClick={() => hanldeEditcomment(reply?._id ?? '')}
+                                                        onClick={() => hanldeEditcomment(reply?._id ?? '', reply?.comment ?? '')}
                                                     />
                                                 )}
                                             </div>
