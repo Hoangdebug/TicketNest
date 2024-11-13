@@ -398,11 +398,7 @@ export const fetchAddSeat = (data: ISeatType2DataAPI = { ticket_type: [] }, isLo
     };
 };
 
-export const fetchUpdateOrderSeat = (
-    seatId: string,
-    newOrderedSeat: string[],
-    isLoad: boolean = true
-): any => {
+export const fetchUpdateOrderSeat = (seatId: string, newOrderedSeat: string[], isLoad: boolean = true): any => {
     return async (dispatch: Dispatch): Promise<ISeattype2DataApiRes | IErrorAPIRes | null> => {
         if (isLoad) {
             dispatch(setLoader(true));

@@ -182,12 +182,13 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                                                     return (
                                                         <span
                                                             key={`${row}-${seatNum}`}
-                                                            className={`components__seattype3-seat ${isSelected
+                                                            className={`components__seattype3-seat ${
+                                                                isSelected
                                                                     ? 'components__seattype3-seat-selected'
                                                                     : isOrdered
-                                                                        ? 'components__seattype3-seat-not-available'
-                                                                        : 'components__seattype3-seat-available'
-                                                                }`}
+                                                                    ? 'components__seattype3-seat-not-available'
+                                                                    : 'components__seattype3-seat-available'
+                                                            }`}
                                                             onClick={() => toggleSeat(row, seatNum, 'left')}
                                                         >
                                                             {seatNum}
@@ -215,12 +216,13 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                                                     return (
                                                         <span
                                                             key={`${row}-${seatNum}`}
-                                                            className={`components__seattype3-seat ${isSelected
-                                                                ? 'components__seattype3-seat-selected'
-                                                                : isOrdered
+                                                            className={`components__seattype3-seat ${
+                                                                isSelected
+                                                                    ? 'components__seattype3-seat-selected'
+                                                                    : isOrdered
                                                                     ? 'components__seattype3-seat-not-available'
                                                                     : 'components__seattype3-seat-available'
-                                                                }`}
+                                                            }`}
                                                             onClick={() => toggleSeat(row, seatNum, 'right')}
                                                         >
                                                             {seatNum}
