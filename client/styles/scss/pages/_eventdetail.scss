@@ -1,72 +1,92 @@
 .pages {
     background-color: #f5f5f5;
+
     &__eventdetail {
         padding-top: 150px;
 
         &_headers {
-            display: flex;
-            justify-content: center;
-            &_sideleft {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                height: 100%;
-                width: 100px;
-                text-align: center;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                overflow: hidden;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            padding: 0;
+            color: white;
 
-                h4 {
-                    margin: 0;
-                    padding: 5px 0;
-
-                    &:first-child {
-                        background-color: #4caf50;
-                        color: #fff;
-                        padding: 10px 38px;
-                        font-size: 1.2em;
-                        font-weight: bold;
-                    }
-
-                    &:last-child {
-                        font-size: 1.5em;
-                        font-weight: bold;
-                        background-color: #fff;
-                        color: #000;
-                        padding: 20px 0;
-                    }
-                }
+            &-container {
+                width: 100%;
+                max-width: 1200px;
+                margin: 0 auto;
             }
 
-            &_sideright {
+            &-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                background-color: #0e0e0e;
+            }
+
+            &-logo img {
+                width: 150px;
+            }
+
+            &-content {
+                display: flex;
+                justify-content: space-between;
+                padding: 20px;
+                border-radius: 50px 50px 50px 50px;
+                background-color: #635e5e;
+                margin-top: 20px;
+            }
+
+            &-details {
+                max-width: 500px;
+                text-align: left;
+            }
+
+            &-details h1 {
+                font-size: 2.5rem;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            &-time,
+            &-location {
+                font-size: 1.2rem;
+                margin: 10px 0;
+            }
+
+            &-line-separator {
+                height: 1px;
+                background-color: white;
+                margin-top: 200px;
+            }
+
+            &-ticket-price {
+                margin-top: 20px;
+                font-size: 1.5rem;
+            }
+
+            &-ticket-price span {
+                font-weight: bold;
+            }
+
+            &-book-now {
+                background-color: #1cbf1f;
+                color: white;
+                padding: 10px 20px;
+                font-size: 1.2rem;
+                border: none;
+                cursor: pointer;
                 margin-top: 10px;
-                margin-left: 40px;
+                width: 100%;
+                border-radius: 50px 50px 50px 50px;
+            }
 
-                &_param {
-                    display: flex;
-                    align-items: center;
-                    gap: 5px;
-                    svg {
-                        font-size: 1.5em;
-                        color: #999;
-                    }
+            &-book-now:hover {
+                background-color: #17a717;
+            }
 
-                    p {
-                        margin: 0;
-                        display: inline;
-                        color: #999;
-                    }
-
-                    &_separator {
-                        margin: 0 10px;
-                        font-size: 1em;
-                        color: #999;
-                    }
-                }
+            &-image img {
+                width: auto;
+                height: 470px;
             }
         }
 
@@ -92,6 +112,7 @@
                     justify-content: center;
                     margin: 20px 0;
                     gap: 5px;
+
                     button {
                         width: 100px;
                         height: 32px;
@@ -129,6 +150,7 @@
                     .save-button {
                         background-color: red;
                         color: white;
+
                         &:hover {
                             opacity: 0.85;
                             transform: translateY(-4px);
@@ -183,16 +205,19 @@
                     display: flex;
                     justify-content: space-between;
                     margin-bottom: 20px;
+
                     &_item {
                         text-align: center;
                         background-color: #95d03a;
                         padding: 10px;
                         border-radius: 5px;
+
                         &_value {
                             display: block;
                             font-size: 24px;
                             color: white;
                         }
+
                         &_label {
                             display: block;
                             font-size: 12px;
@@ -203,15 +228,18 @@
 
                 &_infor {
                     margin-bottom: 20px;
+
                     &_item {
                         display: flex;
                         flex-direction: column;
                         gap: 20px;
+
                         &_sec {
                             display: flex;
                             align-items: flex;
                             margin-bottom: 10px;
                             gap: 10px;
+
                             &_icon {
                                 font-size: 24px;
                                 color: #4caf50;
@@ -222,17 +250,20 @@
                                 align-items: center;
                                 justify-content: center;
                             }
+
                             &_label {
                                 display: block;
                                 font-size: 12px;
                                 color: #333;
                             }
+
                             &_value {
                                 display: block;
                                 font-size: 14px;
                                 color: #333;
                                 font-weight: bold;
                             }
+
                             &_link {
                                 font-size: 12px;
                                 color: #333;
@@ -247,6 +278,7 @@
                     margin-bottom: 10px;
                     display: flex;
                     justify-content: space-around;
+
                     &_price {
                         margin-top: 10px;
                         font-size: 14px;
@@ -261,6 +293,7 @@
                         margin-top: 10px;
                         display: flex;
                         gap: 5px;
+
                         &_decrease,
                         &_increase {
                             width: 24px;
@@ -321,6 +354,7 @@
 
         &_relate {
             padding-top: 50px;
+
             h2 {
                 font-size: 24px;
                 margin-bottom: 20px;
@@ -379,14 +413,17 @@
                 }
             }
         }
+
         &_comment {
             background-color: white;
             box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+
             &_infor {
                 &_user {
                     display: flex;
                     align-items: center;
+
                     img {
                         width: 5%;
                         height: 5%;

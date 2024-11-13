@@ -15,4 +15,5 @@ interface IEventDetailPageState {
     replyCommemt?: string;
     customer?: IEditUserProfileDataAPI;
     payment?: IOrderDataApi;
+    updateComments?: string;
 }
