@@ -63,8 +63,7 @@ const TicketBookingHistoryPage: ITicketBookingHistoryPage<ITicketBookingHistoryP
                             <p className="m-0 fs-4">{item?.event?.location}</p>
                         </span>
                         <p className="m-0 text-end bases__text--gray">
-                            Event time: {moment(item.event?.day_start).format('YYYY/MM/DD HH:ss')} ~{' '}
-                            {moment(item.event?.day_end).format('YYYY/mm/DD HH:ss')}
+                            Event time: {moment(item.event?.day_event).format('YYYY/MM/DD HH:ss')}
                         </p>
                     </div>
                 ))}

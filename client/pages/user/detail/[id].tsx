@@ -59,8 +59,9 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const slicedEvents = event?.slice(0, 4);
     const formattedDayStart = moment(eventDetails?.day_start).format('MMM DD, YYYY HH:mm:ss');
     const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
-    const dayStart = moment(formattedDayEnd).format('DD');
-    const monthStart = moment(formattedDayEnd).format('MMM');
+    const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
+    const dayStart = moment(formattedDayEvent).format('DD');
+    const monthStart = moment(formattedDayEvent).format('MMM');
 
     useEffect(() => {
         handleDetialsEvent();
@@ -361,6 +362,8 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             {formattedDayStart}
                             <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
                             {formattedDayEnd}
+                            <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
+                            {formattedDayEvent}
                         </p>
                     </div>
                 </div>
@@ -382,13 +385,20 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                     undefined,
                                     { scroll: false },
                                 );
-                            } else if (eventDetails?.location === 'Location C' || eventDetails?.location === 'ANOTHER') {
+                            } else if (eventDetails?.location === 'Location C') {
+                                router.push(
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE3.href, query: { id: id } },
+                                    undefined,
+                                    { scroll: false },
+                                );
+                            } else if (eventDetails?.location === 'ANOTHER') {
                                 router.push(
                                     { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_ANOTHER.href, query: { id: id } },
                                     undefined,
                                     { scroll: false },
                                 );
                             }
+
                         }}
                     >
                         Book now
@@ -535,7 +545,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <h3>{events?.name}</h3>
                             <div className="pages__eventdetail_relate_list_card_infor">
                                 <p className="pages__eventdetail_relate_list_card_infor_price">{events?.price} $</p>
-                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEnd}</p>
+                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEvent}</p>
                             </div>
                         </div>
                     ))}

@@ -49,11 +49,11 @@
         }
 
         &-selected {
-            background-color: #ff0000;
+            background-color: #00ff00;
         }
 
         &-unavailable {
-            background-color: #00ff00;
+            background-color: #ff0000;
         }
 
         &-content-container {
@@ -155,11 +155,11 @@
             margin: 5px;
 
             &.components__seattype2-selected {
-                background-color: #ff0000;
+                background-color: #00ff00;
             }
 
             &.components__seattype2-unavailable {
-                background-color: #00ff00;
+                background-color: #ff0000;
             }
         }
 

@@ -5,6 +5,7 @@ interface IEventDataApi {
     images?: string | FormData | undefined;
     day_start?: string;
     day_end?: string;
+    day_event?: string;
     event_type?: string;
     location?: string;
     ticket_type?: string[];

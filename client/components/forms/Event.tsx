@@ -56,6 +56,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
     const ticketQuantityValidatorRef = createRef<IValidatorComponentHandle>();
     const startDateTimeValidatorRef = createRef<IValidatorComponentHandle>();
     const endDateTimeValidatorRef = createRef<IValidatorComponentHandle>();
+    const eventDateValidatorRef = createRef<IValidatorComponentHandle>();
 
     const handleOnChange = (field: string, value: string | number | boolean) => {
         setState((prevState) => ({
@@ -76,6 +77,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                 description: event?.description ?? '',
                 day_start: event?.day_start ?? '',
                 day_end: event?.day_end ?? '',
+                day_event: event?.day_event ?? '',
                 event_type: event?.event_type ?? enums.EVENTTYPE.MUSIC,
                 location: event?.location ?? enums.EVENTLOCATION.LOCATIONA,
                 ticket_type: event?.ticket_type ?? [''],
@@ -472,6 +474,13 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
         }
     };
 
+    const handleValidateEventDateTime = () => {
+        handleSetValidateDateTime(true);
+        if (eventAdd?.day_event && !validateHelper.isDate(eventAdd?.day_event)) {
+            handleSetValidateDateTime(false);
+        }
+    };
+
     const handleValidateEndDateTime = () => {
         handleSetValidateDateTime(true, 'end');
         endDateTimeValidatorRef?.current?.onValidateMessage('');
@@ -530,6 +539,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             { ref: descriptionValidatorRef, value: eventAdd?.description, message: 'Description Is Not Empty!' },
             { ref: startDateValidatorRef, value: eventAdd?.day_start, message: 'Start Date Is Not Empty!' },
             { ref: endDateValidatorRef, value: eventAdd?.day_end, message: 'End Date Is Not Empty!' },
+            { ref: eventDateValidatorRef, value: eventAdd?.day_event, message: 'Event Date Is Not Empty!' },
             { ref: locationValidatorRef, value: eventAdd?.location, message: 'Location Is Not Empty!' },
             { ref: ticketTypeValidatorRef, value: eventAdd?.event_type, message: 'TicketType Is Not Empty!' },
             { ref: ticketPriceValidatorRef, value: eventAdd?.price, message: 'Ticket Price Is Not Empty!' },
@@ -636,6 +646,21 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     value={eventAdd?.day_end}
                                     onBlur={() => handleValidateEndDateTime()}
                                     onChange={(value: string) => handleOnChange('day_end', value)}
+                                    maxDate={null}
+                                    maxTime={null}
+                                    classNameDate="components__addevent_picker-date"
+                                    classNameTime="components__addevent_picker-time"
+                                />
+                            </Validator>
+
+                            <label htmlFor="location" className="pb-2">
+                                Event Date<span className="text-danger">*</span>
+                            </label>
+                            <Validator className="bases__width-percent--40 components__addevent_picker_from">
+                                <DateTimePicker
+                                    value={eventAdd?.day_event}
+                                    onBlur={() => handleValidateEventDateTime()}
+                                    onChange={(value: string) => handleOnChange('day_event', value)}
                                     maxDate={null}
                                     maxTime={null}
                                     classNameDate="components__addevent_picker-date"
