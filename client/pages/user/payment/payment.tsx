@@ -4,13 +4,13 @@ import { authHelper } from '@utils/helpers';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { fetchDetailsEvent } from '@redux/actions/api';
+import { fetchDetailsEvent, fetchUpdateOrderSeat } from '@redux/actions/api';
 import moment from 'moment';
 import axios from 'axios';
 
 const Payment = () => {
     const router = useRouter();
-    const { id, seatDetails, ticketPrice, username, email, phone } = router.query;
+    const { id, seatId, seatDetails, ticketPrice, username, email, phone } = router.query;
     const token = authHelper.accessToken();
     const dispatch = useDispatch();
 
@@ -90,40 +90,51 @@ const Payment = () => {
     };
 
     const handlePayment = async () => {
-        try {
-            const token = getCookie('token');
+        if (seatId && seatDetails.length > 0) {
+            try {
+                const res = await dispatch(fetchUpdateOrderSeat(seatId, seatDetails));
+                if (res && res.success) {
+                    try {
+                        const token = getCookie('token');
 
-            if (!token) {
-                console.error('Token not found in cookies');
-                return;
+                        if (!token) {
+                            console.error('Token not found in cookies');
+                            return;
+                        }
+
+                        const selectedPaymentMethod = (document.querySelector('input[name="payment"]:checked') as HTMLInputElement).value;
+
+                        const response = await axios.post(
+                            `http://localhost:5000/api/order/${id}`,
+                            {
+                                seatcode: formattedSeatDetails,
+                                totalmoney: ticketPrice,
+                                paymentCode: selectedPaymentMethod,
+                            },
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            },
+                        );
+
+                        const data = response.data;
+                        if (data.status === true) {
+                            const paymentUrl = data.paymentUrl;
+                            window.location.href = paymentUrl;
+                        } else {
+                            console.error('Failed to create order', data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error during payment', error);
+                    }
+                } else {
+                    console.error("Failed to update order seat:", res?.message || "Unknown error");
+                }
+            } catch (error) {
+                console.error("Error updating order seat:", error);
             }
-
-            const selectedPaymentMethod = (document.querySelector('input[name="payment"]:checked') as HTMLInputElement).value;
-
-            const response = await axios.post(
-                `http://localhost:5000/api/order/${id}`,
-                {
-                    seatcode: formattedSeatDetails,
-                    totalmoney: ticketPrice,
-                    paymentCode: selectedPaymentMethod,
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            );
-
-            const data = response.data;
-            if (data.status === true) {
-                const paymentUrl = data.paymentUrl;
-                window.location.href = paymentUrl;
-            } else {
-                console.error('Failed to create order', data.message);
-            }
-        } catch (error) {
-            console.error('Error during payment', error);
         }
     };
 
