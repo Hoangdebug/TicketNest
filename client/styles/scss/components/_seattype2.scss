@@ -147,6 +147,31 @@
             margin-bottom: 10px;
         }
 
+        &-row-label {
+            font-size: 1rem;
+            font-weight: bold;
+            color: rgb(255, 255, 255);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        &-section-left {
+            .components__seattype2-row {
+                .components__seattype2-row-label {
+                    left: 50px; 
+                }
+            }
+        }
+
+        &-section-right {
+            .components__seattype2-row {
+                .components__seattype2-row-label {
+                    right: 55px; 
+                }
+            }
+        }
+
         &-seat {
             width: 20px;
             height: 20px;

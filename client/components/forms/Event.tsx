@@ -172,6 +172,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             }
         }
     };
+    const today = new Date();
 
     const handleRemoveTicketPrice = (index: number) => {
         if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
@@ -619,9 +620,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             </Validator>
                         </div>
                         <div
-                            className={`w-100 d-flex flex-wrap components__addevent_picker ${
-                                !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                            }`}
+                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                                }`}
                         >
                             <label htmlFor="location" className="pb-2">
                                 Start Date<span className="text-danger">*</span>
@@ -631,8 +631,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     value={eventAdd?.day_start}
                                     onBlur={() => handleValidateStartDateTime()}
                                     onChange={(value: string) => handleOnChange('day_start', value)}
+                                    minDate={today}
                                     maxDate={null}
-                                    maxTime={null}
                                     classNameDate="components__addevent_picker-date"
                                     classNameTime="components__addevent_picker-time"
                                 />
@@ -646,8 +646,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     value={eventAdd?.day_end}
                                     onBlur={() => handleValidateEndDateTime()}
                                     onChange={(value: string) => handleOnChange('day_end', value)}
+                                    minDate={eventAdd?.day_start ? new Date(eventAdd.day_start) : today}
                                     maxDate={null}
-                                    maxTime={null}
                                     classNameDate="components__addevent_picker-date"
                                     classNameTime="components__addevent_picker-time"
                                 />
@@ -661,8 +661,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     value={eventAdd?.day_event}
                                     onBlur={() => handleValidateEventDateTime()}
                                     onChange={(value: string) => handleOnChange('day_event', value)}
+                                    minDate={eventAdd?.day_end ? new Date(eventAdd.day_end) : today}
                                     maxDate={null}
-                                    maxTime={null}
                                     classNameDate="components__addevent_picker-date"
                                     classNameTime="components__addevent_picker-time"
                                 />
