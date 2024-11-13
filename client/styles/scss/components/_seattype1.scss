@@ -116,7 +116,23 @@
 
         &-seat-row {
             display: flex;
+            align-items: center;
             gap: 10px;
+        }
+
+        &-seat-row-label {
+            width: 20px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        &-seat-row-label-middle {
+            width: 20px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            right: 10%;
         }
 
         &-seat {
