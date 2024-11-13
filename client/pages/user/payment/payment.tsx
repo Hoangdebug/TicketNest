@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const Payment = () => {
     const router = useRouter();
-    const { id, seatDetails, ticketPrice, yourName, yourEmail, yourPhone } = router.query;
+    const { id, seatDetails, ticketPrice, username, email, phone } = router.query;
     const token = authHelper.accessToken();
     const dispatch = useDispatch();
 
@@ -147,9 +147,9 @@ const Payment = () => {
                 <div className="components__payment-paymentSection-left">
                     <div className="components__payment-paymentSection-ticketInfo">
                         <h2>Ticket receiving info</h2>
-                        <p>Name: {yourName}</p>
-                        <p>Phone Number: {yourPhone}</p>
-                        <p>Email: {yourEmail}</p>
+                        <p>Name: {username}</p>
+                        <p>Phone Number: {phone}</p>
+                        <p>Email: {email}</p>
                     </div>
                     <div className="components__payment-paymentSection-paymentMethods">
                         <h2>Payment method</h2>
