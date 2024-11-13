@@ -315,3 +315,11 @@ export const orderList = async () => {
         throw err;
     }
 };
+
+export const createOrder = async (eid: string, data: IOrderDataApi) => {
+    try {
+        return await axios.post<ICreateorderDataApiRes>(`${routes.API.ORDER.href}/${eid}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
