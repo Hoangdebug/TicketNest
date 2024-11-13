@@ -21,8 +21,9 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
         event: [],
     });
 
-    const { eventDetails, event } = state;
-
+    const { eventDetails, customer } = state;
+    const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
+    
     const [yourName, setYourName] = useState('');
     const [yourEmail, setYourEmail] = useState('');
     const [yourPhone, setYourPhone] = useState('');
