@@ -9,15 +9,15 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
     const dispatch = useDispatch();
     const { id } = router.query;
 
-    const [state, setState] = useState<ISeatType1ComponentState>({
+    const [state, setState] = useState({
         eventDetails: undefined,
         seatDetails: undefined,
-        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N'],
+        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
         numSeatOfRowLeft: [],
         numSeatOfRowRight: [],
-        numSeatOfRowMiddleLeft: [],
-        numSeatOfRowMiddleRight: [],
+        numSeatOfRowMiddle: [],
         selectedSeat: [],
+        orderedSeats: [],
         ticketPrice: 0,
     });
 
@@ -27,9 +27,9 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
         rows,
         numSeatOfRowLeft,
         numSeatOfRowRight,
-        numSeatOfRowMiddleLeft,
-        numSeatOfRowMiddleRight,
+        numSeatOfRowMiddle,
         selectedSeat,
+        orderedSeats,
         ticketPrice,
     } = state;
 
@@ -39,7 +39,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
             const leftColumns = 3;
             const rightColumns = 3;
-            const middleColumns = 20;
+            const middleColumns = 10;
 
             const leftRows = Math.floor(leftQuantity / leftColumns);
             const leftExtraSeats = leftQuantity % leftColumns;
@@ -52,40 +52,28 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
             const leftSeats = Array.from({ length: leftRows }, () => leftColumns).concat(leftExtraSeats > 0 ? [leftExtraSeats] : []);
             const rightSeats = Array.from({ length: rightRows }, () => rightColumns).concat(rightExtraSeats > 0 ? [rightExtraSeats] : []);
-
             const middleSeats = Array.from({ length: middleRows }, () => middleColumns).concat(
                 middleExtraSeats > 0 ? [middleExtraSeats] : [],
             );
-
-            const middleSeatsLeft = middleSeats.map((row) => Math.min(row, 10));
-            const middleSeatsRight = middleSeats.map((row) => Math.min(row - 10, 10));
 
             setState((prevState) => ({
                 ...prevState,
                 numSeatOfRowLeft: leftSeats,
                 numSeatOfRowRight: rightSeats,
-                numSeatOfRowMiddleLeft: middleSeatsLeft,
-                numSeatOfRowMiddleRight: middleSeatsRight,
+                numSeatOfRowMiddle: middleSeats,
             }));
         }
     }, [seatDetails]);
 
     const toggleSeat = (row, seatNum, area) => {
-        const seatId = `${area === 'left' ? 'L-' : area === 'right' ? 'R-' : area === 'middle left' ? 'ML-' : 'MR-'}${row}${seatNum}`;
-        if (seatDetails?.ordered_seat?.includes(seatId)) return;
+        const seatId = `${area === 'left' ? 'L' : area === 'right' ? 'R' : 'M'}${row}${seatNum}`;
+        if (orderedSeats?.includes(seatId)) return;
 
         setState((prev) => {
             let newSelectedSeats = [...(prev.selectedSeat ?? [])];
             let newTicketPrice = prev.ticketPrice ?? 0;
 
-            let seatPrice = 0;
-            if (area === 'left') {
-                seatPrice = seatDetails?.price?.[0];
-            } else if (area === 'middle left' || area === 'middle right') {
-                seatPrice = seatDetails?.price?.[1];
-            } else if (area === 'right') {
-                seatPrice = seatDetails?.price?.[2];
-            }
+            const seatPrice = area === 'left' ? seatDetails?.price?.[0] : seatDetails?.price?.[1];
 
             const isSeatSelected = newSelectedSeats.includes(seatId);
 
@@ -185,10 +173,8 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                 <div
                                     key={seatNum}
                                     className={`components__seattype1-seat components__seattype1-seat-left ${
-                                        seatDetails?.ordered_seat?.includes(`L-${row}${seatNum + 1}`)
-                                            ? 'components__seattype1-status-unavailable'
-                                            : ''
-                                    } ${selectedSeat.includes(`L-${row}${seatNum + 1}`) ? 'selected' : ''}`}
+                                        selectedSeat.includes(`L${row}${seatNum + 1}`) ? 'selected' : ''
+                                    }`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'left')}
                                 >
                                     {seatNum + 1}
@@ -207,10 +193,8 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                 <div
                                     key={seatNum}
                                     className={`components__seattype1-seat components__seattype1-seat-right ${
-                                        seatDetails?.ordered_seat?.includes(`R-${row}${seatNum + 1}`)
-                                            ? 'components__seattype1-status-unavailable'
-                                            : ''
-                                    } ${selectedSeat.includes(`R-${row}${seatNum + 1}`) ? 'selected' : ''}`}
+                                        selectedSeat.includes(`R${row}${seatNum + 1}`) ? 'selected' : ''
+                                    }`}
                                     onClick={() => toggleSeat(row, seatNum + 1, 'right')}
                                 >
                                     {seatNum + 1}
@@ -221,21 +205,16 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                 </div>
 
                 <div className="components__seattype1-middle-seats">
-                    {/* Left Middle Seats */}
                     <div className="components__seattype1-left-middle-seats">
-                        {rows.map((row, index) => (
+                        {rows.slice(0, Math.ceil(numSeatOfRowMiddle.length / 2)).map((row, index) => (
                             <div key={index} className="components__seattype1-seat-row">
-                                {Array.from({ length: numSeatOfRowMiddleLeft[index] || 0 }).map((_, seatNum) => (
+                                {Array.from({ length: numSeatOfRowMiddle[index] || 0 }).map((_, seatNum) => (
                                     <div
                                         key={seatNum}
                                         className={`components__seattype1-seat components__seattype1-seat-middle ${
-                                            selectedSeat.includes(`ML-${row}${seatNum + 1}`) ? 'selected' : ''
-                                        } ${
-                                            seatDetails?.ordered_seat?.includes(`ML-${row}${seatNum + 1}`)
-                                                ? 'components__seattype1-status-unavailable'
-                                                : ''
+                                            selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
                                         }`}
-                                        onClick={() => toggleSeat(row, seatNum + 1, 'middle left')}
+                                        onClick={() => toggleSeat(row, seatNum + 1, 'middle')}
                                     >
                                         {seatNum + 1}
                                     </div>
@@ -244,23 +223,20 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                         ))}
                     </div>
 
-                    {/* Right Middle Seats */}
                     <div className="components__seattype1-right-middle-seats">
-                        {rows.map((row, index) => (
+                        {rows.slice(Math.ceil(numSeatOfRowMiddle.length / 2), numSeatOfRowMiddle.length).map((row, index) => (
                             <div key={index} className="components__seattype1-seat-row">
-                                {Array.from({ length: numSeatOfRowMiddleRight[index] || 0 }).map((_, seatNum) => (
+                                {Array.from({
+                                    length: numSeatOfRowMiddle[Math.ceil(numSeatOfRowMiddle.length / 2) + index] || 0,
+                                }).map((_, seatNum) => (
                                     <div
                                         key={seatNum}
                                         className={`components__seattype1-seat components__seattype1-seat-middle ${
-                                            selectedSeat.includes(`MR-${row}${seatNum + 11}`) ? 'selected' : ''
-                                        } ${
-                                            seatDetails?.ordered_seat?.includes(`MR-${row}${seatNum + 11}`)
-                                                ? 'components__seattype1-status-unavailable'
-                                                : ''
+                                            selectedSeat.includes(`M${row}${seatNum + 1}`) ? 'selected' : ''
                                         }`}
-                                        onClick={() => toggleSeat(row, seatNum + 11, 'middle right')}
+                                        onClick={() => toggleSeat(row, seatNum + 1, 'middle')}
                                     >
-                                        {seatNum + 11}
+                                        {seatNum + 1}
                                     </div>
                                 ))}
                             </div>
@@ -317,12 +293,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                             router.push(
                                                 {
                                                     pathname: routes.CLIENT.ORDER_PAGES.href,
-                                                    query: {
-                                                        id: id,
-                                                        seatId: seatDetails?._id,
-                                                        seatDetails: JSON.stringify(selectedSeat),
-                                                        ticketPrice: ticketPrice,
-                                                    },
+                                                    query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
                                                 },
                                                 undefined,
                                                 { scroll: false },

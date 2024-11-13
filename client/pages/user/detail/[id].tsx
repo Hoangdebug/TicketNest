@@ -39,7 +39,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         isValidate: true,
         listReplyComments: [],
     });
-    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt, updateComments } = state;
+    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt } = state;
 
     const [quantity, setQuantity] = useState(0);
 
@@ -59,9 +59,8 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const slicedEvents = event?.slice(0, 4);
     const formattedDayStart = moment(eventDetails?.day_start).format('MMM DD, YYYY HH:mm:ss');
     const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
-    const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
-    const dayStart = moment(formattedDayEvent).format('DD');
-    const monthStart = moment(formattedDayEvent).format('MMM');
+    const dayStart = moment(formattedDayEnd).format('DD');
+    const monthStart = moment(formattedDayEnd).format('MMM');
 
     useEffect(() => {
         handleDetialsEvent();
@@ -81,10 +80,10 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     }, [replyId]);
 
-    const handleOnChange = (field: string, value: string) => {
-        setState((prevState) => ({
-            ...prevState,
-            [field]: value,
+    const handleOnChange = (feild: string, value: string | null) => {
+        setState((prev) => ({
+            ...prev,
+            [feild]: value,
         }));
     };
 
@@ -167,7 +166,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const handleFetchUpdateComment = async (idComment: string) => {
         let validate = state.isValidate;
 
-        const validator = [{ ref: commentValidatorRef, value: updateComments, message: 'Enter your comment' }];
+        const validator = [{ ref: commentValidatorRef, value: comment, message: 'Enter your comment' }];
 
         validator.forEach(({ ref, value, message }) => {
             ref.current?.onValidateMessage('');
@@ -179,7 +178,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
 
         if (validate) {
             dispatch(
-                await fetchUpdateComment(idComment, { comment: updateComments }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
+                await fetchUpdateComment(id?.toString() ?? idComment, { comment }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
                     if (res?.code === http.SUCCESS_CODE) {
                         setState((prevState) => ({
                             ...prevState,
@@ -204,7 +203,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
 
-    const hanldeEditcomment = (id: string, commentParent: string) => {
+    const hanldeEditcomment = (id: string) => {
         dispatch(
             setModal({
                 isShow: true,
@@ -216,37 +215,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 button: (
                     <div className="d-flex gap-1 flex-row">
                         <Button startIcon={images.ICON_DELETE} background="red" onClick={() => hanldeDeleteComments(id)} />
-                        <Button buttonText="Update" background="green" onClick={() => handleEditReply(id, commentParent)} />
-                    </div>
-                ),
-            }),
-        );
-    };
-
-    const handleEditReply = (replyId: string, initialContent: string) => {
-        console.log(initialContent);
-        setState((prevState) => ({
-            ...prevState,
-            replyId,
-            updateComments: initialContent,
-        }));
-
-        dispatch(
-            setModal({
-                isShow: true,
-                content: (
-                    <div>
-                        <Input
-                            type="textarea"
-                            value={initialContent ?? ''}
-                            onChange={(value: string) => handleOnChange('initialContent', value)}
-                            placeholder="Enter your reply..."
-                        />
-                    </div>
-                ),
-                button: (
-                    <div className="d-flex gap-1 flex-row">
-                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(replyId)} />
+                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(id)} />
                     </div>
                 ),
             }),
@@ -378,73 +347,75 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     return (
         <div className="pages__eventdetail container">
             <div className="pages__eventdetail_headers">
-                <div className="pages__eventdetail_headers-container">
-                    <div className="pages__eventdetail_headers-content">
-                        <div className="pages__eventdetail_headers-details">
-                            <h1>{eventDetails?.name}</h1>
-                            <p className="pages__eventdetail_headers-time">
-                                📅
-                                {eventDetails?.day_event &&
-                                    new Intl.DateTimeFormat('en-GB', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        hour12: false,
-                                        timeZone: 'UTC',
-                                    }).format(new Date(eventDetails.day_event))}
-                            </p>
-                            <p className="pages__eventdetail_headers-location">📍{eventDetails?.location}</p>
-                            <div className="pages__eventdetail_headers-line-separator"></div>
-                            <div className="pages__eventdetail_headers-ticket-price">
-                                <span>From: {Math.min(...(eventDetails?.price ?? []))} đ</span>
-                                <button
-                                    className="pages__eventdetail_headers-book-now"
-                                    onClick={() => {
-                                        if (eventDetails?.location === 'Location A') {
-                                            router.push(
-                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id } },
-                                                undefined,
-                                                { scroll: false },
-                                            );
-                                        } else if (eventDetails?.location === 'Location B') {
-                                            router.push(
-                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE2.href, query: { id: id } },
-                                                undefined,
-                                                { scroll: false },
-                                            );
-                                        } else if (eventDetails?.location === 'Location C') {
-                                            router.push(
-                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE3.href, query: { id: id } },
-                                                undefined,
-                                                { scroll: false },
-                                            );
-                                        } else if (eventDetails?.location === 'ANOTHER') {
-                                            router.push(
-                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_ANOTHER.href, query: { id: id } },
-                                                undefined,
-                                                { scroll: false },
-                                            );
-                                        }
-                                    }}
-                                >
-                                    Book now
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="pages__eventdetail_headers-image">
-                            <Img src={eventDetails?.images as string} />
-                        </div>
+                <div className="pages__eventdetail_headers_sideleft col-md-2">
+                    <h4>{monthStart}</h4>
+                    <h4>{dayStart}</h4>
+                </div>
+                <div className="pages__eventdetail_headers_sideright col-md-10">
+                    <h2>{eventDetails?.name}</h2>
+                    <div className="pages__eventdetail_headers_sideright_param">
+                        <IoLocationOutline />
+                        <p>
+                            {eventDetails?.location}
+                            <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
+                            {formattedDayStart}
+                            <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
+                            {formattedDayEnd}
+                        </p>
                     </div>
                 </div>
             </div>
             <div className="pages__eventdetail_body">
                 <div className="pages__eventdetail_body_sideleft col-md-8">
+                    <button
+                        className="pages__eventdetail_body_sideright_book"
+                        onClick={() => {
+                            if (eventDetails?.location === 'Location A') {
+                                router.push(
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id } },
+                                    undefined,
+                                    { scroll: false },
+                                );
+                            } else if (eventDetails?.location === 'Location B') {
+                                router.push(
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE2.href, query: { id: id } },
+                                    undefined,
+                                    { scroll: false },
+                                );
+                            } else if (eventDetails?.location === 'Location C' || eventDetails?.location === 'ANOTHER') {
+                                router.push(
+                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_ANOTHER.href, query: { id: id } },
+                                    undefined,
+                                    { scroll: false },
+                                );
+                            }
+                        }}
+                    >
+                        Book now
+                    </button>
+                    <div className="pages__eventdetail_body_sideleft_image">
+                        <Img src={eventDetails?.images as string} />
+                    </div>
+                    <div className="pages__eventdetail_body_sideleft_actions">
+                        <button className="save-button">
+                            <CiHeart /> Save
+                        </button>
+                        <button className="share-button">
+                            <IoMdShare />
+                            Share
+                        </button>
+                    </div>
                     <div className="pages__eventdetail_body_sideleft_description">
                         <h2>About This Event</h2>
                         <p>{eventDetails?.description}</p>
+                        <ul>
+                            <li>Name: {eventDetails?.name}</li>
+                            <li>Location: {eventDetails?.location}</li>
+                            <li>Price: {eventDetails?.price}</li>
+                            <li>Quantity: {eventDetails?.quantity}</li>
+                            <li>Start Date: {eventDetails?.day_start}</li>
+                            <li>End Date: {eventDetails?.day_end}</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -492,11 +463,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
                                 <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
                                 {item?.userId?._id === profile?._id && (
-                                    <Button
-                                        buttonText="Edit"
-                                        startIcon=""
-                                        onClick={() => hanldeEditcomment(item?._id ?? '', item?.comment ?? '')}
-                                    />
+                                    <Button buttonText="Edit" startIcon="" onClick={() => hanldeEditcomment(item?._id ?? '')} />
                                 )}
                             </div>
 
@@ -538,7 +505,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                                     <Button
                                                         buttonText="Edit"
                                                         startIcon=""
-                                                        onClick={() => hanldeEditcomment(reply?._id ?? '', reply?.comment ?? '')}
+                                                        onClick={() => hanldeEditcomment(reply?._id ?? '')}
                                                     />
                                                 )}
                                             </div>
@@ -568,7 +535,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <h3>{events?.name}</h3>
                             <div className="pages__eventdetail_relate_list_card_infor">
                                 <p className="pages__eventdetail_relate_list_card_infor_price">{events?.price} $</p>
-                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEvent}</p>
+                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEnd}</p>
                             </div>
                         </div>
                     ))}

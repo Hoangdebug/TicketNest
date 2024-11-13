@@ -138,14 +138,6 @@
             &.selected {
                 background-color: green; // Màu ghế khi được chọn
             }
-            &.components__seattype1-status-unavailable {
-                background-color: red; // Màu ghế không khả dụng
-                color: white;
-                cursor: not-allowed;
-            }
-            &.selected {
-                background-color: green; // Màu ghế khi được chọn
-            }
         }
 
         &-selected-seats {

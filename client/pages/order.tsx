@@ -13,7 +13,7 @@ import { Input } from '@components/index';
 
 const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
     const router = useRouter();
-    const { id, seatId, seatDetails, ticketPrice } = router.query;
+    const { id, seatDetails, ticketPrice } = router.query;
     const token = authHelper.accessToken();
     const dispatch = useDispatch();
     const { profile } = useSelector((states: ReduxStates) => states);
@@ -110,7 +110,6 @@ const OrderPage: ISeatType1Page<ISeatType1PageProps> = () => {
                     query: {
                         id,
                         seatCount,
-                        seatId,
                         seatDetails,
                         ticketPrice,
                         username: customer?.username ?? '',
