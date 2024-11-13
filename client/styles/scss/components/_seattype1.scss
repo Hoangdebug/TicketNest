@@ -116,7 +116,23 @@
 
         &-seat-row {
             display: flex;
+            align-items: center;
             gap: 10px;
+        }
+
+        &-seat-row-label {
+            width: 20px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        &-seat-row-label-middle {
+            width: 20px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            right: 10%;
         }
 
         &-seat {
@@ -136,15 +152,17 @@
             }
 
             &.selected {
-                background-color: green; // Màu ghế khi được chọn
+                background-color: green;
             }
+
             &.components__seattype1-status-unavailable {
-                background-color: red; // Màu ghế không khả dụng
+                background-color: red;
                 color: white;
                 cursor: not-allowed;
             }
+
             &.selected {
-                background-color: green; // Màu ghế khi được chọn
+                background-color: green;
             }
         }
 
@@ -191,13 +209,9 @@
 
             &-color-box {
                 width: 30px;
-                /* Độ rộng của biểu tượng */
                 height: 15px;
-                /* Độ cao của biểu tượng */
                 background-color: #ffcccc;
-                /* Màu nền của biểu tượng */
                 border-radius: 8px;
-                /* Bo góc của biểu tượng */
                 margin-right: 5px;
             }
 
@@ -254,15 +268,15 @@
             }
 
             .components__seattype1-left-seat {
-                background-color: #add8e6; // Màu cho Left Area
+                background-color: #add8e6; 
             }
 
             .components__seattype1-middle-seat {
-                background-color: #fffacd; // Màu cho Middle Area
+                background-color: #fffacd;
             }
 
             .components__seattype1-right-seat {
-                background-color: #90ee90; // Màu cho Right Area
+                background-color: #90ee90; 
             }
 
             .components__seattype1-price-green {
