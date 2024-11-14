@@ -130,10 +130,10 @@ const Payment = () => {
                         console.error('Error during payment', error);
                     }
                 } else {
-                    console.error("Failed to update order seat:", res?.message || "Unknown error");
+                    console.error('Failed to update order seat:', res?.message || 'Unknown error');
                 }
             } catch (error) {
-                console.error("Error updating order seat:", error);
+                console.error('Error updating order seat:', error);
             }
         }
     };

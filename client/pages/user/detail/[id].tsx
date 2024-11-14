@@ -1,11 +1,6 @@
 import { IEventDetailPageState, IEventDetailPage, IEventDetailPageProps } from '@interfaces/pages/eventdetail';
 import { createRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { IoLocationOutline } from 'react-icons/io5';
-import { IoMdShare } from 'react-icons/io';
-import { CiHeart } from 'react-icons/ci';
-import { MdOutlinePeople } from 'react-icons/md';
-import { SlCalender } from 'react-icons/sl';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchCreateComment,
@@ -18,7 +13,6 @@ import {
     fetchUpdateComment,
 } from '@redux/actions/api';
 import { enums, http, images, routes } from '@utils/constants';
-import Countdown from '@components/commons/Countdown';
 import moment from 'moment';
 import { Button, Img, Input } from '@components/index';
 import Validator from '@components/commons/Validator';
@@ -39,29 +33,13 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         isValidate: true,
         listReplyComments: [],
     });
-    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt } = state;
+    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt, updateComments = '' } = state;
 
-    const [quantity, setQuantity] = useState(0);
-
-    const increaseQuantity = () => {
-        setQuantity(quantity + 1);
-    };
-
-    const decreaseQuantity = () => {
-        if (quantity > 0) {
-            setQuantity(quantity - 1);
-        }
-    };
     const commentValidatorRef = createRef<IValidatorComponentHandle>();
     const replyCommentValidatorRef = createRef<IValidatorComponentHandle>();
 
-    const totalMoney = quantity * (eventDetails?.price as any);
     const slicedEvents = event?.slice(0, 4);
-    const formattedDayStart = moment(eventDetails?.day_start).format('MMM DD, YYYY HH:mm:ss');
-    const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
     const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
-    const dayStart = moment(formattedDayEvent).format('DD');
-    const monthStart = moment(formattedDayEvent).format('MMM');
 
     useEffect(() => {
         handleDetialsEvent();
@@ -81,10 +59,10 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     }, [replyId]);
 
-    const handleOnChange = (feild: string, value: string | null) => {
-        setState((prev) => ({
-            ...prev,
-            [feild]: value,
+    const handleOnChange = (field: string, value: string) => {
+        setState((prevState) => ({
+            ...prevState,
+            [field]: value,
         }));
     };
 
@@ -167,7 +145,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const handleFetchUpdateComment = async (idComment: string) => {
         let validate = state.isValidate;
 
-        const validator = [{ ref: commentValidatorRef, value: comment, message: 'Enter your comment' }];
+        const validator = [{ ref: commentValidatorRef, value: updateComments, message: 'Enter your comment' }];
 
         validator.forEach(({ ref, value, message }) => {
             ref.current?.onValidateMessage('');
@@ -179,7 +157,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
 
         if (validate) {
             dispatch(
-                await fetchUpdateComment(id?.toString() ?? idComment, { comment }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
+                await fetchUpdateComment(idComment, { comment: updateComments }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
                     if (res?.code === http.SUCCESS_CODE) {
                         setState((prevState) => ({
                             ...prevState,
@@ -204,7 +182,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
 
-    const hanldeEditcomment = (id: string) => {
+    const hanldeEditcomment = (id: string, commentParent: string) => {
         dispatch(
             setModal({
                 isShow: true,
@@ -216,7 +194,30 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                 button: (
                     <div className="d-flex gap-1 flex-row">
                         <Button startIcon={images.ICON_DELETE} background="red" onClick={() => hanldeDeleteComments(id)} />
-                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(id)} />
+                        <Button buttonText="Update" background="green" onClick={() => handleEditReply(id, commentParent)} />
+                    </div>
+                ),
+            }),
+        );
+    };
+
+    const handleEditReply = (replyId: string, initialContent: string) => {
+        dispatch(
+            setModal({
+                isShow: true,
+                content: (
+                    <div>
+                        <Input
+                            type="text"
+                            value={updateComments}
+                            onChange={(value: string) => handleOnChange('updateComments', value)}
+                            placeholder="Enter your reply..."
+                        />
+                    </div>
+                ),
+                button: (
+                    <div className="d-flex gap-1 flex-row">
+                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(replyId)} />
                     </div>
                 ),
             }),
@@ -352,16 +353,19 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     <div className="pages__eventdetail_headers-content">
                         <div className="pages__eventdetail_headers-details">
                             <h1>{eventDetails?.name}</h1>
-                            <p className="pages__eventdetail_headers-time">📅{eventDetails?.day_event &&
-                                new Intl.DateTimeFormat('en-GB', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    hour12: false,
-                                    timeZone: 'UTC',
-                                }).format(new Date(eventDetails.day_event))}</p>
+                            <p className="pages__eventdetail_headers-time">
+                                📅
+                                {eventDetails?.day_event &&
+                                    new Intl.DateTimeFormat('en-GB', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: false,
+                                        timeZone: 'UTC',
+                                    }).format(new Date(eventDetails.day_event))}
+                            </p>
                             <p className="pages__eventdetail_headers-location">📍{eventDetails?.location}</p>
                             <div className="pages__eventdetail_headers-line-separator"></div>
                             <div className="pages__eventdetail_headers-ticket-price">
@@ -394,7 +398,6 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                                 { scroll: false },
                                             );
                                         }
-
                                     }}
                                 >
                                     Book now
@@ -403,7 +406,8 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                         </div>
 
                         <div className="pages__eventdetail_headers-image">
-                            <Img src={eventDetails?.images as string} />                        </div>
+                            <Img src={eventDetails?.images as string} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -459,7 +463,11 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
                                 <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
                                 {item?.userId?._id === profile?._id && (
-                                    <Button buttonText="Edit" startIcon="" onClick={() => hanldeEditcomment(item?._id ?? '')} />
+                                    <Button
+                                        buttonText="Edit"
+                                        startIcon=""
+                                        onClick={() => hanldeEditcomment(item?._id ?? '', item?.comment ?? '')}
+                                    />
                                 )}
                             </div>
 
@@ -501,7 +509,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                                     <Button
                                                         buttonText="Edit"
                                                         startIcon=""
-                                                        onClick={() => hanldeEditcomment(reply?._id ?? '')}
+                                                        onClick={() => hanldeEditcomment(reply?._id ?? '', reply?.comment ?? '')}
                                                     />
                                                 )}
                                             </div>

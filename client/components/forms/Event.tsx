@@ -620,8 +620,9 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                             </Validator>
                         </div>
                         <div
-                            className={`w-100 d-flex flex-wrap components__addevent_picker ${!isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                                }`}
+                            className={`w-100 d-flex flex-wrap components__addevent_picker ${
+                                !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
+                            }`}
                         >
                             <label htmlFor="location" className="pb-2">
                                 Start Date<span className="text-danger">*</span>

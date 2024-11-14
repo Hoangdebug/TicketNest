@@ -12,7 +12,7 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
     const [state, setState] = useState<ISeatType1ComponentState>({
         eventDetails: undefined,
         seatDetails: undefined,
-        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', "K", "L", "M", "N"],
+        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N'],
         numSeatOfRowLeft: [],
         numSeatOfRowRight: [],
         numSeatOfRowMiddleLeft: [],
@@ -54,11 +54,11 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
             const rightSeats = Array.from({ length: rightRows }, () => rightColumns).concat(rightExtraSeats > 0 ? [rightExtraSeats] : []);
 
             const middleSeats = Array.from({ length: middleRows }, () => middleColumns).concat(
-                middleExtraSeats > 0 ? [middleExtraSeats] : []
+                middleExtraSeats > 0 ? [middleExtraSeats] : [],
             );
 
-            const middleSeatsLeft = middleSeats.map(row => Math.min(row, 10));
-            const middleSeatsRight = middleSeats.map(row => Math.min(row - 10, 10));
+            const middleSeatsLeft = middleSeats.map((row) => Math.min(row, 10));
+            const middleSeatsRight = middleSeats.map((row) => Math.min(row - 10, 10));
 
             setState((prevState) => ({
                 ...prevState,
@@ -69,8 +69,6 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
             }));
         }
     }, [seatDetails]);
-
-
 
     const toggleSeat = (row, seatNum, area) => {
         const seatId = `${area === 'left' ? 'L-' : area === 'right' ? 'R-' : area === 'middle left' ? 'ML-' : 'MR-'}${row}${seatNum}`;
@@ -181,87 +179,107 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
 
             <div className="components__seattype1-seat-map">
                 <div className="components__seattype1-left-seats">
-                    {rows.map((row, index) => (
-                        (numSeatOfRowLeft[index] || 0) > 0 && (
-                            <div key={row} className="components__seattype1-seat-row">
-                                <div className="components__seattype1-seat-row-label">{row}</div>
-                                {Array.from({ length: numSeatOfRowLeft[index] || 0 }).map((_, seatNum) => (
-                                    <div
-                                        key={seatNum}
-                                        className={`components__seattype1-seat components__seattype1-seat-left ${seatDetails?.ordered_seat?.includes(`L-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''
-                                            } ${selectedSeat.includes(`L-${row}${seatNum + 1}`) ? 'selected' : ''
-                                            }`}
-                                        onClick={() => toggleSeat(row, seatNum + 1, 'left')}
-                                    >
-                                        {seatNum + 1}
-                                    </div>
-                                ))}
-                            </div>
-                        )
-                    ))}
+                    {rows.map(
+                        (row, index) =>
+                            (numSeatOfRowLeft[index] || 0) > 0 && (
+                                <div key={row} className="components__seattype1-seat-row">
+                                    <div className="components__seattype1-seat-row-label">{row}</div>
+                                    {Array.from({ length: numSeatOfRowLeft[index] || 0 }).map((_, seatNum) => (
+                                        <div
+                                            key={seatNum}
+                                            className={`components__seattype1-seat components__seattype1-seat-left ${
+                                                seatDetails?.ordered_seat?.includes(`L-${row}${seatNum + 1}`)
+                                                    ? 'components__seattype1-status-unavailable'
+                                                    : ''
+                                            } ${selectedSeat.includes(`L-${row}${seatNum + 1}`) ? 'selected' : ''}`}
+                                            onClick={() => toggleSeat(row, seatNum + 1, 'left')}
+                                        >
+                                            {seatNum + 1}
+                                        </div>
+                                    ))}
+                                </div>
+                            ),
+                    )}
                 </div>
 
                 <div className="components__seattype1-stage">STAGE</div>
 
                 <div className="components__seattype1-right-seats">
-                    {rows.map((row, index) => (
-                        (numSeatOfRowRight[index] || 0) > 0 && (
-                            <div key={row} className="components__seattype1-seat-row">
-                                {Array.from({ length: numSeatOfRowRight[index] || 0 }).map((_, seatNum) => (
-                                    <div
-                                        key={seatNum}
-                                        className={`components__seattype1-seat components__seattype1-seat-right ${seatDetails?.ordered_seat?.includes(`R-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''
-                                            } ${selectedSeat.includes(`R-${row}${seatNum + 1}`) ? 'selected' : ''
-                                            }`}
-                                        onClick={() => toggleSeat(row, seatNum + 1, 'right')}
-                                    >
-                                        {seatNum + 1}
-                                    </div>
-                                ))}
-                                <div className="components__seattype1-seat-row-label">{row}</div>
-                            </div>
-                        )
-                    ))}
+                    {rows.map(
+                        (row, index) =>
+                            (numSeatOfRowRight[index] || 0) > 0 && (
+                                <div key={row} className="components__seattype1-seat-row">
+                                    {Array.from({ length: numSeatOfRowRight[index] || 0 }).map((_, seatNum) => (
+                                        <div
+                                            key={seatNum}
+                                            className={`components__seattype1-seat components__seattype1-seat-right ${
+                                                seatDetails?.ordered_seat?.includes(`R-${row}${seatNum + 1}`)
+                                                    ? 'components__seattype1-status-unavailable'
+                                                    : ''
+                                            } ${selectedSeat.includes(`R-${row}${seatNum + 1}`) ? 'selected' : ''}`}
+                                            onClick={() => toggleSeat(row, seatNum + 1, 'right')}
+                                        >
+                                            {seatNum + 1}
+                                        </div>
+                                    ))}
+                                    <div className="components__seattype1-seat-row-label">{row}</div>
+                                </div>
+                            ),
+                    )}
                 </div>
 
                 <div className="components__seattype1-middle-seats">
                     {/* Left Middle Seats */}
                     <div className="components__seattype1-left-middle-seats">
-                        {rows.map((row, index) => (
-                            (numSeatOfRowMiddleLeft[index] || 0) > 0 && (
-                                <div key={index} className="components__seattype1-seat-row">
-                                    {Array.from({ length: numSeatOfRowMiddleLeft[index] || 0 }).map((_, seatNum) => (
-                                        <div
-                                            key={seatNum}
-                                            className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`ML-${row}${seatNum + 1}`) ? 'selected' : ''} ${seatDetails?.ordered_seat?.includes(`ML-${row}${seatNum + 1}`) ? 'components__seattype1-status-unavailable' : ''}`}
-                                            onClick={() => toggleSeat(row, seatNum + 1, 'middle left')}
-                                        >
-                                            {seatNum + 1}
-                                        </div>
-                                    ))}
-                                    <div className="components__seattype1-seat-row-label-middle">{row}</div> 
-                                </div>
-                            )
-                        ))}
+                        {rows.map(
+                            (row, index) =>
+                                (numSeatOfRowMiddleLeft[index] || 0) > 0 && (
+                                    <div key={index} className="components__seattype1-seat-row">
+                                        {Array.from({ length: numSeatOfRowMiddleLeft[index] || 0 }).map((_, seatNum) => (
+                                            <div
+                                                key={seatNum}
+                                                className={`components__seattype1-seat components__seattype1-seat-middle ${
+                                                    selectedSeat.includes(`ML-${row}${seatNum + 1}`) ? 'selected' : ''
+                                                } ${
+                                                    seatDetails?.ordered_seat?.includes(`ML-${row}${seatNum + 1}`)
+                                                        ? 'components__seattype1-status-unavailable'
+                                                        : ''
+                                                }`}
+                                                onClick={() => toggleSeat(row, seatNum + 1, 'middle left')}
+                                            >
+                                                {seatNum + 1}
+                                            </div>
+                                        ))}
+                                        <div className="components__seattype1-seat-row-label-middle">{row}</div>
+                                    </div>
+                                ),
+                        )}
                     </div>
 
                     <div className="components__seattype1-right-middle-seats">
-                        {rows.map((row, index) => (
-                            (numSeatOfRowMiddleRight[index] || 0) > 0 && ( 
-                                <div key={index} className="components__seattype1-seat-row">
-                                    <div className="components__seattype1-seat-row-label-middle">{row}</div> 
-                                    {Array.from({ length: numSeatOfRowMiddleRight[index] || 0 }).map((_, seatNum) => (
-                                        <div
-                                            key={seatNum}
-                                            className={`components__seattype1-seat components__seattype1-seat-middle ${selectedSeat.includes(`MR-${row}${seatNum + 11}`) ? 'selected' : ''} ${seatDetails?.ordered_seat?.includes(`MR-${row}${seatNum + 11}`) ? 'components__seattype1-status-unavailable' : ''}`}
-                                            onClick={() => toggleSeat(row, seatNum + 11, 'middle right')}
-                                        >
-                                            {seatNum + 11}
-                                        </div>
-                                    ))}
-                                </div>
-                            )
-                        ))}
+                        {rows.map(
+                            (row, index) =>
+                                (numSeatOfRowMiddleRight[index] || 0) > 0 && (
+                                    <div key={index} className="components__seattype1-seat-row">
+                                        <div className="components__seattype1-seat-row-label-middle">{row}</div>
+                                        {Array.from({ length: numSeatOfRowMiddleRight[index] || 0 }).map((_, seatNum) => (
+                                            <div
+                                                key={seatNum}
+                                                className={`components__seattype1-seat components__seattype1-seat-middle ${
+                                                    selectedSeat.includes(`MR-${row}${seatNum + 11}`) ? 'selected' : ''
+                                                } ${
+                                                    seatDetails?.ordered_seat?.includes(`MR-${row}${seatNum + 11}`)
+                                                        ? 'components__seattype1-status-unavailable'
+                                                        : ''
+                                                }`}
+                                                onClick={() => toggleSeat(row, seatNum + 11, 'middle right')}
+                                            >
+                                                {seatNum + 11}
+                                            </div>
+                                        ))}
+                                    </div>
+                                ),
+                        )}
                     </div>
                 </div>
 
@@ -314,7 +332,12 @@ const SeatType1: ISeatType1Component<ISeatType1ComponentProps> = () => {
                                             router.push(
                                                 {
                                                     pathname: routes.CLIENT.ORDER_PAGES.href,
-                                                    query: { id: id, seatId: seatDetails?._id, seatDetails: selectedSeat, ticketPrice: ticketPrice },
+                                                    query: {
+                                                        id: id,
+                                                        seatId: seatDetails?._id,
+                                                        seatDetails: selectedSeat,
+                                                        ticketPrice: ticketPrice,
+                                                    },
                                                 },
                                                 undefined,
                                                 { scroll: false },

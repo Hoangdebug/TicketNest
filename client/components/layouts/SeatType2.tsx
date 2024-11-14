@@ -170,12 +170,13 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                             const seatId = `L-${row}${seatNum + 1}`;
                                             const isSelected = selectedSeat?.includes(seatId);
                                             const isOrdered = seatDetails?.ordered_seat?.includes(seatId);
-                                            const seatClass = `components__seattype2-seat ${isSelected
-                                                ? 'components__seattype2-selected'
-                                                : isOrdered
+                                            const seatClass = `components__seattype2-seat ${
+                                                isSelected
+                                                    ? 'components__seattype2-selected'
+                                                    : isOrdered
                                                     ? 'components__seattype2-unavailable'
                                                     : 'available'
-                                                }`;
+                                            }`;
                                             return (
                                                 <div
                                                     key={seatNum}
@@ -196,12 +197,13 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                             const seatId = `R-${row}${seatNum + 1}`;
                                             const isSelected = selectedSeat?.includes(seatId);
                                             const isOrdered = seatDetails?.ordered_seat?.includes(seatId);
-                                            const seatClass = `components__seattype2-seat ${isSelected
+                                            const seatClass = `components__seattype2-seat ${
+                                                isSelected
                                                     ? 'components__seattype2-selected'
                                                     : isOrdered
-                                                        ? 'components__seattype2-unavailable'
-                                                        : 'available'
-                                                }`;
+                                                    ? 'components__seattype2-unavailable'
+                                                    : 'available'
+                                            }`;
                                             return (
                                                 <div
                                                     key={seatNum}
@@ -262,7 +264,12 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                         router.push(
                                             {
                                                 pathname: routes.CLIENT.ORDER_PAGES.href,
-                                                query: { id: id, seatId: seatDetails?._id, seatDetails: selectedSeat, ticketPrice: ticketPrice },
+                                                query: {
+                                                    id: id,
+                                                    seatId: seatDetails?._id,
+                                                    seatDetails: selectedSeat,
+                                                    ticketPrice: ticketPrice,
+                                                },
                                             },
                                             undefined,
                                             { scroll: false },
