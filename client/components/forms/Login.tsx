@@ -37,6 +37,10 @@ const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
         setShowPassword(!showPassword);
     };
 
+    const handleGoogleLogin = () => {
+        window.location.href = 'http://localhost:5000/api/user/auth/google';
+    };
+
     const submitForm = async () => {
         let isValidate = true;
 
@@ -161,7 +165,9 @@ const LoginForm: ILoginComponent<ILoginComponentProps> = () => {
                     <span>Register for a free trial now</span>
                 </button>
                 <div className="text-center">Or sign in with</div>
-                <button className="components__login-form-thirdButton">Google</button>
+                <button onClick={() => handleGoogleLogin()} className="components__login-form-thirdButton">
+                    Google
+                </button>
                 <p id="error-message" className="error-message text-danger mt-2"></p>
             </div>
         </div>
