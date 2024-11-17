@@ -51,6 +51,7 @@ const EventPageOrganizer: IEventListPage<IEventListPageProps> = () => {
             ...item,
             day_end: moment(item.day_end).format('YYYY-MM-DD'),
             day_start: moment(item.day_start).format('YYYY-MM-DD'),
+            day_event: moment(item.day_event).format('YYYY-MM-DD'),
             ...editBtn,
         };
     });
@@ -122,6 +123,10 @@ const EventPageOrganizer: IEventListPage<IEventListPageProps> = () => {
                 },
                 {
                     field: 'description',
+                    className: 'text-center',
+                },
+                {
+                    field: 'day_event',
                     className: 'text-center',
                 },
                 {

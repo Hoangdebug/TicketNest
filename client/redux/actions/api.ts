@@ -398,6 +398,33 @@ export const fetchAddSeat = (data: ISeatType2DataAPI = { ticket_type: [] }, isLo
     };
 };
 
+export const fetchUpdateOrderSeat = (seatId: string, newOrderedSeat: string[], isLoad: boolean = true): any => {
+    return async (dispatch: Dispatch): Promise<ISeattype2DataApiRes | IErrorAPIRes | null> => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        const data = {
+            new_ordered_seat: newOrderedSeat,
+        };
+
+        try {
+            const res: AxiosResponse<ISeattype2DataApiRes> = await apiHelper.updateOrderSeat(seatId, data);
+            return res.data;
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                return res.data;
+            }
+            return { code: 500, mes: err.message };
+        } finally {
+            if (isLoad) {
+                dispatch(setLoader(false));
+            }
+        }
+    };
+};
+
 export const fetchUpdateEvent = async (
     id: string,
     data: IEventDataApi,

@@ -4,7 +4,7 @@ import { authHelper } from '@utils/helpers';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { fetchCreateOrder, fetchDetailsEvent } from '@redux/actions/api';
+import { fetchDetailsEvent } from '@redux/actions/api';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -23,8 +23,8 @@ const Payment = () => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
 
-    const { eventDetails, event, payment } = state;
-    const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
+    const { eventDetails, event } = state;
+    const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
 
     const handleDetailsEvent = async () => {
         dispatch(
@@ -89,75 +89,43 @@ const Payment = () => {
         return undefined;
     };
 
-    const handlePaymentRequest = async () => {
-        const selectedPaymentMethod = (document.querySelector('input[name="payment"]:checked') as HTMLInputElement)?.value;
+    const handlePayment = async () => {
+        try {
+            const token = getCookie('token');
 
-        dispatch(
-            await fetchCreateOrder(
-                id?.toString() ?? '',
+            if (!token) {
+                console.error('Token not found in cookies');
+                return;
+            }
+
+            const selectedPaymentMethod = (document.querySelector('input[name="payment"]:checked') as HTMLInputElement).value;
+
+            const response = await axios.post(
+                `http://localhost:5000/api/order/${id}`,
                 {
-                    seat_code: formattedSeatDetails,
-                    total_money: ticketPrice as string,
-                    payment: selectedPaymentMethod,
+                    seatcode: formattedSeatDetails,
+                    totalmoney: ticketPrice,
+                    paymentCode: selectedPaymentMethod,
                 },
-                (res: ICreateorderDataApiRes | IErrorAPIRes | null) => {
-                    if (res?.code === http.SUCCESS_CODE) {
-                        const paymentUrl = (res as ICreateorderDataApiRes)?.result?.paymentUrl;
-                        if (paymentUrl) {
-                            window.open(paymentUrl, '_blank');
-                        } else {
-                            console.error('Payment URL is missing in the response');
-                            alert('Failed to retrieve payment URL. Please try again.');
-                        }
-                    } else {
-                        console.error('Failed to create order:', res?.mes || 'Unknown error');
-                    }
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
                 },
-            ),
-        );
+            );
+
+            const data = response.data;
+            if (data.status === true) {
+                const paymentUrl = data.paymentUrl;
+                window.location.href = paymentUrl;
+            } else {
+                console.error('Failed to create order', data.message);
+            }
+        } catch (error) {
+            console.error('Error during payment', error);
+        }
     };
-
-    // const handlePayment = async () => {
-    //     try {
-    //         const token = getCookie('token');
-
-    //         if (!token) {
-    //             console.error('Token not found in cookies');
-    //             return;
-    //         }
-
-    //         const selectedPaymentMethod = (document.querySelector('input[name="payment"]:checked') as HTMLInputElement)?.value;
-
-    //         const response = await axios.post(
-    //             `http://localhost:5000/api/order/${id}`,
-    //             {
-    //                 seatcode: formattedSeatDetails,
-    //                 totalmoney: ticketPrice,
-    //                 paymentCode: selectedPaymentMethod,
-    //             },
-    //             {
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             },
-    //         );
-
-    //         const data = response.data;
-    //         if (data.status === true) {
-    //             const paymentUrl = data.paymentUrl;
-    //             if (paymentUrl) {
-    //                 window.open(paymentUrl, '_blank');
-    //             } else {
-    //                 console.error('Payment URL is missing');
-    //             }
-    //         } else {
-    //             console.error('Failed to create order', data.message);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error during payment', error);
-    //     }
-    // };
 
     return (
         <div className="components__payment">
@@ -165,7 +133,7 @@ const Payment = () => {
                 <h1>{eventDetails?.name}</h1>
                 <p>{eventDetails?.event_type}</p>
                 <p>{eventDetails?.location}</p>
-                <p>{formattedDayEnd}</p>
+                <p>{formattedDayEvent}</p>
             </div>
             <div className="components__payment-timer">
                 <span>Complete your booking within</span>
@@ -203,7 +171,7 @@ const Payment = () => {
                         <p>Subtotal: {ticketPrice}</p>
                         <p>Total: {ticketPrice}</p>
                     </div>
-                    <button className="components__payment-paymentSection-payButton" disabled={isDisabled} onClick={handlePaymentRequest}>
+                    <button className="components__payment-paymentSection-payButton" disabled={isDisabled} onClick={handlePayment}>
                         Payment
                     </button>
                 </div>

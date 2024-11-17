@@ -59,8 +59,9 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const slicedEvents = event?.slice(0, 4);
     const formattedDayStart = moment(eventDetails?.day_start).format('MMM DD, YYYY HH:mm:ss');
     const formattedDayEnd = moment(eventDetails?.day_end).format('MMM DD, YYYY HH:mm:ss');
-    const dayStart = moment(formattedDayEnd).format('DD');
-    const monthStart = moment(formattedDayEnd).format('MMM');
+    const formattedDayEvent = moment(eventDetails?.day_event).format('MMM DD, YYYY HH:mm:ss');
+    const dayStart = moment(formattedDayEvent).format('DD');
+    const monthStart = moment(formattedDayEvent).format('MMM');
 
     useEffect(() => {
         handleDetialsEvent();
@@ -347,75 +348,73 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     return (
         <div className="pages__eventdetail container">
             <div className="pages__eventdetail_headers">
-                <div className="pages__eventdetail_headers_sideleft col-md-2">
-                    <h4>{monthStart}</h4>
-                    <h4>{dayStart}</h4>
-                </div>
-                <div className="pages__eventdetail_headers_sideright col-md-10">
-                    <h2>{eventDetails?.name}</h2>
-                    <div className="pages__eventdetail_headers_sideright_param">
-                        <IoLocationOutline />
-                        <p>
-                            {eventDetails?.location}
-                            <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
-                            {formattedDayStart}
-                            <span className="pages__eventdetail_headers_sideright_param_separator">•</span>
-                            {formattedDayEnd}
-                        </p>
+                <div className="pages__eventdetail_headers-container">
+                    <div className="pages__eventdetail_headers-content">
+                        <div className="pages__eventdetail_headers-details">
+                            <h1>{eventDetails?.name}</h1>
+                            <p className="pages__eventdetail_headers-time">
+                                📅
+                                {eventDetails?.day_event &&
+                                    new Intl.DateTimeFormat('en-GB', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: false,
+                                        timeZone: 'UTC',
+                                    }).format(new Date(eventDetails.day_event))}
+                            </p>
+                            <p className="pages__eventdetail_headers-location">📍{eventDetails?.location}</p>
+                            <div className="pages__eventdetail_headers-line-separator"></div>
+                            <div className="pages__eventdetail_headers-ticket-price">
+                                <span>From: {Math.min(...(eventDetails?.price ?? []))} đ</span>
+                                <button
+                                    className="pages__eventdetail_headers-book-now"
+                                    onClick={() => {
+                                        if (eventDetails?.location === 'Location A') {
+                                            router.push(
+                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id } },
+                                                undefined,
+                                                { scroll: false },
+                                            );
+                                        } else if (eventDetails?.location === 'Location B') {
+                                            router.push(
+                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE2.href, query: { id: id } },
+                                                undefined,
+                                                { scroll: false },
+                                            );
+                                        } else if (eventDetails?.location === 'Location C') {
+                                            router.push(
+                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE3.href, query: { id: id } },
+                                                undefined,
+                                                { scroll: false },
+                                            );
+                                        } else if (eventDetails?.location === 'ANOTHER') {
+                                            router.push(
+                                                { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_ANOTHER.href, query: { id: id } },
+                                                undefined,
+                                                { scroll: false },
+                                            );
+                                        }
+                                    }}
+                                >
+                                    Book now
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="pages__eventdetail_headers-image">
+                            <Img src={eventDetails?.images as string} />{' '}
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="pages__eventdetail_body">
                 <div className="pages__eventdetail_body_sideleft col-md-8">
-                    <button
-                        className="pages__eventdetail_body_sideright_book"
-                        onClick={() => {
-                            if (eventDetails?.location === 'Location A') {
-                                router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE1.href, query: { id: id } },
-                                    undefined,
-                                    { scroll: false },
-                                );
-                            } else if (eventDetails?.location === 'Location B') {
-                                router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_TYPE2.href, query: { id: id } },
-                                    undefined,
-                                    { scroll: false },
-                                );
-                            } else if (eventDetails?.location === 'Location C' || eventDetails?.location === 'ANOTHER') {
-                                router.push(
-                                    { pathname: routes.CLIENT.EVENT_DETAILS_PAGES_ORDER_ANOTHER.href, query: { id: id } },
-                                    undefined,
-                                    { scroll: false },
-                                );
-                            }
-                        }}
-                    >
-                        Book now
-                    </button>
-                    <div className="pages__eventdetail_body_sideleft_image">
-                        <Img src={eventDetails?.images as string} />
-                    </div>
-                    <div className="pages__eventdetail_body_sideleft_actions">
-                        <button className="save-button">
-                            <CiHeart /> Save
-                        </button>
-                        <button className="share-button">
-                            <IoMdShare />
-                            Share
-                        </button>
-                    </div>
                     <div className="pages__eventdetail_body_sideleft_description">
                         <h2>About This Event</h2>
                         <p>{eventDetails?.description}</p>
-                        <ul>
-                            <li>Name: {eventDetails?.name}</li>
-                            <li>Location: {eventDetails?.location}</li>
-                            <li>Price: {eventDetails?.price}</li>
-                            <li>Quantity: {eventDetails?.quantity}</li>
-                            <li>Start Date: {eventDetails?.day_start}</li>
-                            <li>End Date: {eventDetails?.day_end}</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -535,7 +534,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                             <h3>{events?.name}</h3>
                             <div className="pages__eventdetail_relate_list_card_infor">
                                 <p className="pages__eventdetail_relate_list_card_infor_price">{events?.price} $</p>
-                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEnd}</p>
+                                <p className="pages__eventdetail_relate_list_card_infor_date">{formattedDayEvent}</p>
                             </div>
                         </div>
                     ))}

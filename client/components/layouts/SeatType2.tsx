@@ -13,15 +13,14 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
         eventDetails: undefined,
         event: [],
         seatDetails: undefined,
-        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
+        rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O'],
         numSeatOfRowLeft: [],
         numSeatOfRowRight: [],
         selectedSeat: [],
-        orderedSeats: [],
         ticketPrice: 0,
     });
 
-    const { eventDetails, seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, selectedSeat = [], orderedSeats, ticketPrice } = state;
+    const { eventDetails, seatDetails, rows, numSeatOfRowLeft, numSeatOfRowRight, selectedSeat = [], ticketPrice } = state;
 
     useEffect(() => {
         if (seatDetails?.quantity && seatDetails?.price) {
@@ -82,8 +81,8 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
     };
 
     const toggleSeat = (row: string, seatNum: number, area: 'left' | 'right') => {
-        const seatId = `${area === 'left' ? 'L' : 'R'}${row}${seatNum}`; // Thêm tiền tố L cho bên trái và R cho bên phải
-        if (orderedSeats?.includes(seatId)) return;
+        const seatId = `${area === 'left' ? 'L-' : 'R-'}${row}${seatNum}`; // Thêm tiền tố L cho bên trái và R cho bên phải
+        if (seatDetails?.ordered_seat?.includes(seatId)) return;
 
         setState((prev) => {
             let newSelectedSeats = [...(prev.selectedSeat ?? [])];
@@ -168,9 +167,9 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                 <div key={row} className="components__seattype2-row">
                                     {numSeatOfRowLeft?.[rowIndex] &&
                                         Array.from({ length: numSeatOfRowLeft[rowIndex] }).map((_, seatNum) => {
-                                            const seatId = `L${row}${seatNum + 1}`;
+                                            const seatId = `L-${row}${seatNum + 1}`;
                                             const isSelected = selectedSeat?.includes(seatId);
-                                            const isOrdered = orderedSeats?.includes(seatId);
+                                            const isOrdered = seatDetails?.ordered_seat?.includes(seatId);
                                             const seatClass = `components__seattype2-seat ${
                                                 isSelected
                                                     ? 'components__seattype2-selected'
@@ -196,9 +195,9 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                 <div key={row} className="components__seattype2-row">
                                     {numSeatOfRowRight?.[rowIndex] &&
                                         Array.from({ length: numSeatOfRowRight[rowIndex] }).map((_, seatNum) => {
-                                            const seatId = `R${row}${seatNum + 1}`;
+                                            const seatId = `R-${row}${seatNum + 1}`;
                                             const isSelected = selectedSeat?.includes(seatId);
-                                            const isOrdered = orderedSeats?.includes(seatId);
+                                            const isOrdered = seatDetails?.ordered_seat?.includes(seatId);
                                             const seatClass = `components__seattype2-seat ${
                                                 isSelected
                                                     ? 'components__seattype2-selected'

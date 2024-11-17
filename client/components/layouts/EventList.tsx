@@ -27,6 +27,7 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
 
     const formattedDayStart = moment(dataEvent?.[0]?.day_start).format('MMM DD, YYYY');
     const formattedDayEnd = moment(dataEvent?.[0]?.day_end).format('MMM DD, YYYY');
+    const formattedDayEvent = moment(dataEvent?.[0]?.day_event).format('MMM DD, YYYY');
     const listTypeSearch = [
         { title: 'All', query: 'All' },
         { title: 'Music', query: 'Music' },
@@ -75,8 +76,8 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                                 <div className="p-3 ">
                                     <div className="d-flex align-items-center flex-row gap-2">
                                         <h3 className="fw-bold pb-2 bases__font--20 ">{item?.name}</h3>
-                                        <p className="m-0">Max: {Math.max(...item?.price)} $</p>
-                                        <p className="m-0">Min: {Math.min(...item?.price)} $</p>
+                                        <p className="m-0">Max: {Math.max(...item?.price)} đ</p>
+                                        <p className="m-0">Min: {Math.min(...item?.price)} đ</p>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span className="d-flex flex-row w-100 gap-2">
@@ -86,6 +87,10 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                                         <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
                                             <WatchLaterIcon />
                                             <p className="m-0">{formattedDayEnd}</p>
+                                        </span>
+                                        <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
+                                            <WatchLaterIcon />
+                                            <p className="m-0">{formattedDayEvent}</p>
                                         </span>
                                     </div>
                                 </div>
