@@ -1055,3 +1055,34 @@ export const fetchListOrder = async (callBack?: (result: IOrderDataApiRes | IErr
         }
     };
 };
+
+export const fetchCreateOrder = async (
+    eid: string,
+    data: IOrderDataApi,
+    callBack?: (result: ICreateorderDataApiRes | IErrorAPIRes | null) => void,
+    isLoad: boolean = true,
+) => {
+    return async (dispatch: Dispatch) => {
+        if (isLoad) {
+            dispatch(setLoader(true));
+        }
+
+        try {
+            const res = await apiHelper.createOrder(eid, data);
+            if (callBack) {
+                callBack(res?.data);
+            }
+        } catch (err) {
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
+            }
+        }
+
+        if (isLoad) {
+            dispatch(setLoader(false));
+        }
+    };
+};
