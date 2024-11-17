@@ -161,10 +161,10 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                 <div className="components__seattype2-column">
                     <div className="components__seattype2-screen">Screen</div>
                     <div className="components__seattype2-seat-map">
-                        {/* Left section */}
                         <div className="components__seattype2-section components__seattype2-section-left">
                             {state.rowsLeft?.map((row, rowIndex) => (
                                 <div key={row} className="components__seattype2-row">
+                                    <span className="components__seattype2-row-label">{row}</span>
                                     {numSeatOfRowLeft?.[rowIndex] &&
                                         Array.from({ length: numSeatOfRowLeft[rowIndex] }).map((_, seatNum) => {
                                             const seatId = `L-${row}${seatNum + 1}`;
@@ -189,7 +189,6 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                             ))}
                         </div>
 
-                        {/* Right section */}
                         <div className="components__seattype2-section components__seattype2-section-right">
                             {state.rowsRight?.map((row, rowIndex) => (
                                 <div key={row} className="components__seattype2-row">
@@ -213,13 +212,13 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                                 />
                                             );
                                         })}
+                                    <span className="components__seattype2-row-label">{row}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Event Info Section */}
                 <div className="components__seattype2-event-info">
                     <h2>🗓 {eventDetails?.name}</h2>
                     <p>
@@ -265,7 +264,12 @@ const SeatType2: ISeatType2Component<ISeatType2ComponentProps> = () => {
                                         router.push(
                                             {
                                                 pathname: routes.CLIENT.ORDER_PAGES.href,
-                                                query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
+                                                query: {
+                                                    id: id,
+                                                    seatId: seatDetails?._id,
+                                                    seatDetails: selectedSeat,
+                                                    ticketPrice: ticketPrice,
+                                                },
                                             },
                                             undefined,
                                             { scroll: false },

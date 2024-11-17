@@ -172,6 +172,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
             }
         }
     };
+    const today = new Date();
 
     const handleRemoveTicketPrice = (index: number) => {
         if (eventAdd?.location === enums.EVENTLOCATION.ANOTHER) {
@@ -631,8 +632,8 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     value={eventAdd?.day_start}
                                     onBlur={() => handleValidateStartDateTime()}
                                     onChange={(value: string) => handleOnChange('day_start', value)}
+                                    minDate={today}
                                     maxDate={null}
-                                    maxTime={null}
                                     classNameDate="components__addevent_picker-date"
                                     classNameTime="components__addevent_picker-time"
                                 />
@@ -646,8 +647,23 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     value={eventAdd?.day_end}
                                     onBlur={() => handleValidateEndDateTime()}
                                     onChange={(value: string) => handleOnChange('day_end', value)}
+                                    minDate={eventAdd?.day_start ? new Date(eventAdd.day_start) : today}
                                     maxDate={null}
-                                    maxTime={null}
+                                    classNameDate="components__addevent_picker-date"
+                                    classNameTime="components__addevent_picker-time"
+                                />
+                            </Validator>
+
+                            <label htmlFor="location" className="pb-2">
+                                Event Date<span className="text-danger">*</span>
+                            </label>
+                            <Validator className="bases__width-percent--40 components__addevent_picker_from">
+                                <DateTimePicker
+                                    value={eventAdd?.day_event}
+                                    onBlur={() => handleValidateEventDateTime()}
+                                    onChange={(value: string) => handleOnChange('day_event', value)}
+                                    minDate={eventAdd?.day_end ? new Date(eventAdd.day_end) : today}
+                                    maxDate={null}
                                     classNameDate="components__addevent_picker-date"
                                     classNameTime="components__addevent_picker-time"
                                 />

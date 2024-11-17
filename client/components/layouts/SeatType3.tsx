@@ -280,7 +280,12 @@ const SeatType3: ISeatType3Component<ISeatType3ComponentProps> = () => {
                                             router.push(
                                                 {
                                                     pathname: routes.CLIENT.ORDER_PAGES.href,
-                                                    query: { id: id, seatDetails: JSON.stringify(selectedSeat), ticketPrice: ticketPrice },
+                                                    query: {
+                                                        id: id,
+                                                        seatId: seatDetails?._id,
+                                                        seatDetails: selectedSeat,
+                                                        ticketPrice: ticketPrice,
+                                                    },
                                                 },
                                                 undefined,
                                                 { scroll: false },
