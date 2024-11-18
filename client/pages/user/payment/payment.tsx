@@ -118,8 +118,12 @@ const Payment = () => {
                                 },
                             },
                         );
-
                         const data = response.data;
+                        console.log('Response data:', data);
+                        const orderId = data.result._id;
+                        await axios.post(`http://localhost:5000/api/order/sendOrderEmail/${orderId}`);
+
+                        console.log('Order email sent successfully');
                         if (data.status === true) {
                             const paymentUrl = data.paymentUrl;
                             window.location.href = paymentUrl;

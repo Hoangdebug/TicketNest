@@ -207,7 +207,7 @@ const UPLOAD_IMG_API: IRouteConstant = {
 
 const CHANGEPASSWORD_API: IRouteConstant = {
     href: '/user/changepassword',
-};
+}
 
 const EVENT_API: IRouteConstant = {
     href: 'event/',
