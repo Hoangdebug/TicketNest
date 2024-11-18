@@ -161,7 +161,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     if (res?.code === http.SUCCESS_CODE) {
                         setState((prevState) => ({
                             ...prevState,
-                            comment: '',
+                            updateComments: '',
                         }));
                         handleFetchListComment();
                     } else {
@@ -183,6 +183,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     };
 
     const hanldeEditcomment = (id: string, commentParent: string) => {
+        console.log(commentParent);
         dispatch(
             setModal({
                 isShow: true,
@@ -201,7 +202,12 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         );
     };
 
-    const handleEditReply = (replyId: string, initialContent: string) => {
+    const handleEditReply = (replyId: string, updateComments: string) => {
+        setState((prevState) => ({
+            ...prevState,
+            updateComments,
+        }));
+
         dispatch(
             setModal({
                 isShow: true,
@@ -209,7 +215,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     <div>
                         <Input
                             type="text"
-                            value={updateComments}
+                            value={state.updateComments}
                             onChange={(value: string) => handleOnChange('updateComments', value)}
                             placeholder="Enter your reply..."
                         />
