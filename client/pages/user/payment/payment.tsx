@@ -118,8 +118,12 @@ const Payment = () => {
                                 },
                             },
                         );
-
                         const data = response.data;
+                        console.log('Response data:', data);
+                        const orderId = data.result._id;
+                        await axios.post(`http://localhost:5000/api/order/sendOrderEmail/${orderId}`);
+
+                        console.log('Order email sent successfully');
                         if (data.status === true) {
                             const paymentUrl = data.paymentUrl;
                             window.location.href = paymentUrl;
@@ -130,10 +134,10 @@ const Payment = () => {
                         console.error('Error during payment', error);
                     }
                 } else {
-                    console.error("Failed to update order seat:", res?.message || "Unknown error");
+                    console.error('Failed to update order seat:', res?.message || 'Unknown error');
                 }
             } catch (error) {
-                console.error("Error updating order seat:", error);
+                console.error('Error updating order seat:', error);
             }
         }
     };
