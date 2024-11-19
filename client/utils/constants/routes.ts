@@ -264,6 +264,10 @@ const COMMENT_API: IRouteConstant = {
 const ORDER_API: IRouteConstant = {
     href: 'order',
 };
+
+const RATING_API: IRouteConstant = {
+    href: '/rating',
+};
 export const API = {
     LOGIN: LOGIN_API,
     REGISTER: REGISTER_API,
@@ -291,4 +295,7 @@ export const API = {
 
     // order
     ORDER: ORDER_API,
+
+    // rating
+    RATING: RATING_API,
 };
