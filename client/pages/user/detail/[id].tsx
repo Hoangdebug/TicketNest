@@ -183,7 +183,6 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     };
 
     const hanldeEditcomment = (id: string, commentParent: string) => {
-        console.log(commentParent);
         dispatch(
             setModal({
                 isShow: true,
@@ -215,7 +214,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     <div>
                         <Input
                             type="text"
-                            value={state.updateComments}
+                            value={updateComments}
                             onChange={(value: string) => handleOnChange('updateComments', value)}
                             placeholder="Enter your reply..."
                         />
