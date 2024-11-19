@@ -4,13 +4,14 @@ import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     fetchCreateComment,
+    fetchCreateRating,
     fetchDeleteComment,
     fetchDetailsEvent,
     fetchListComment,
     fetchListEvent,
+    fetchListRating,
     fetchListReplyComment,
     fetchReplyComment,
-    fetchUpdateComment,
 } from '@redux/actions/api';
 import { enums, http, images, routes } from '@utils/constants';
 import moment from 'moment';
@@ -19,6 +20,7 @@ import Validator from '@components/commons/Validator';
 import { validateHelper } from '@utils/helpers';
 import { setModal } from '@redux/actions';
 import { ReduxStates } from '@redux/reducers';
+import CommentForm from '@components/forms/Comment';
 
 const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     const router = useRouter();
@@ -32,8 +34,9 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         listComments: [],
         isValidate: true,
         listReplyComments: [],
+        listRating: [],
     });
-    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt, updateComments = '' } = state;
+    const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt, rating, listRating } = state;
 
     const commentValidatorRef = createRef<IValidatorComponentHandle>();
     const replyCommentValidatorRef = createRef<IValidatorComponentHandle>();
@@ -45,6 +48,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         handleDetialsEvent();
         handleFetchListEvents();
         handleFetchListComment();
+        handleFetchListRating();
     }, []);
 
     useEffect(() => {
@@ -142,46 +146,6 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         );
     };
 
-    const handleFetchUpdateComment = async (idComment: string) => {
-        let validate = state.isValidate;
-
-        const validator = [{ ref: commentValidatorRef, value: updateComments, message: 'Enter your comment' }];
-
-        validator.forEach(({ ref, value, message }) => {
-            ref.current?.onValidateMessage('');
-            if (validateHelper.isEmpty(String(value ?? ''))) {
-                ref.current?.onValidateMessage(message);
-                validate = false;
-            }
-        });
-
-        if (validate) {
-            dispatch(
-                await fetchUpdateComment(idComment, { comment: updateComments }, (res: ICommentDataAPIRes | IErrorAPIRes | null) => {
-                    if (res?.code === http.SUCCESS_CODE) {
-                        setState((prevState) => ({
-                            ...prevState,
-                            comment: '',
-                        }));
-                        handleFetchListComment();
-                    } else {
-                        setModal({
-                            isShow: true,
-                            content: (
-                                <>
-                                    <div className="text-center bases__margin--bottom31">
-                                        <Img src={images.ICON_TIMES} className="bases__width--90 bases__height--75" />
-                                    </div>
-                                    <div className="bases__text--bold bases__font--14 text-center">Error while you add new comment!!!</div>
-                                </>
-                            ),
-                        });
-                    }
-                }),
-            );
-        }
-    };
-
     const hanldeEditcomment = (id: string, commentParent: string) => {
         dispatch(
             setModal({
@@ -201,25 +165,63 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         );
     };
 
-    const handleEditReply = (replyId: string, initialContent: string) => {
+    const handleEditReply = (replyId: string, updateComments: string) => {
         dispatch(
             setModal({
                 isShow: true,
                 content: (
-                    <div>
-                        <Input
-                            type="text"
-                            value={updateComments}
-                            onChange={(value: string) => handleOnChange('updateComments', value)}
-                            placeholder="Enter your reply..."
-                        />
-                    </div>
+                    <>
+                        <CommentForm dataComment={updateComments} idComment={replyId} />
+                    </>
                 ),
-                button: (
-                    <div className="d-flex gap-1 flex-row">
-                        <Button buttonText="Update" background="green" onClick={() => handleFetchUpdateComment(replyId)} />
-                    </div>
-                ),
+                onClose() {
+                    dispatch(setModal({ isShow: false }));
+                    handleFetchListComment();
+                },
+            }),
+        );
+    };
+
+    const handleFetchCreateRating = async (value: number) => {
+        setState((prevState) => ({
+            ...prevState,
+            rating: value,
+        }));
+
+        dispatch(
+            await fetchCreateRating(id?.toString() ?? '', { rating }, (res: IRatingDataAPIRes | IErrorAPIRes | null) => {
+                if (res && res.code === http.SUCCESS_CODE) {
+                    handleFetchListRating();
+                } else if (res && res.code === http.VALIDATION_FAIL_CODE)
+                    dispatch(
+                        setModal({
+                            isShow: true,
+                            content: (
+                                <>
+                                    <div className="text-center bases__margin--bottom31">
+                                        <Img src={images.ICON_TIMES} className="bases__width--90 bases__height--75" />
+                                    </div>
+                                    <div className="bases__text--bold bases__font--14 text-center">
+                                        Error while rate!! Please try again.
+                                    </div>
+                                </>
+                            ),
+                        }),
+                    );
+            }),
+        );
+    };
+
+    const handleFetchListRating = async () => {
+        dispatch(
+            await fetchListRating(id?.toString() ?? '', (res: IListRatingDataAPIRes | IErrorAPIRes | null) => {
+                const data = (res as IListRatingDataAPIRes).result;
+                if (res && res.code === http.SUCCESS_CODE) {
+                    setState((prevState) => ({
+                        ...prevState,
+                        listRating: data,
+                    }));
+                }
             }),
         );
     };
@@ -346,6 +348,35 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
 
+    const renderUIRating = () => {
+        const dataUserRating = listRating?.find((rating) => rating?.userId?._id === profile._id);
+        const calculateRating = (value: number) => {
+            handleFetchCreateRating(value);
+        };
+        return (
+            <div className="postion-relative">
+                <div className="radio-input">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                        <input
+                            key={value}
+                            className={`star s${value}`}
+                            type="radio"
+                            id={`value-${value}`}
+                            name="value-radio"
+                            value={value}
+                            checked={value <= (dataUserRating?.rating ?? 0)}
+                            disabled={!!dataUserRating}
+                            onChange={() => calculateRating(value)}
+                        />
+                    ))}
+                </div>
+                <div className="data_length">
+                    <p>{`(${listRating?.length})`}</p>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="pages__eventdetail container">
             <div className="pages__eventdetail_headers">
@@ -353,6 +384,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                     <div className="pages__eventdetail_headers-content">
                         <div className="pages__eventdetail_headers-details">
                             <h1>{eventDetails?.name}</h1>
+                            {renderUIRating()}
                             <p className="pages__eventdetail_headers-time">
                                 📅
                                 {eventDetails?.day_event &&
@@ -366,6 +398,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
                                         timeZone: 'UTC',
                                     }).format(new Date(eventDetails.day_event))}
                             </p>
+
                             <p className="pages__eventdetail_headers-location">📍{eventDetails?.location}</p>
                             <div className="pages__eventdetail_headers-line-separator"></div>
                             <div className="pages__eventdetail_headers-ticket-price">
@@ -439,87 +472,104 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
             <hr />
 
             <div className="p-3 d-flex gap-3 w-100 flex-column">
-                {listComments?.map((item, index) => (
-                    <div key={index}>
-                        <div className="pages__eventdetail_comment p-3">
-                            {item.isDeleted ? (
-                                <div>{item.comment}</div>
-                            ) : (
-                                <div className="pages__eventdetail_comment_infor">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        <div className="pages__eventdetail_comment_infor_user">
-                                            <Img src={(item?.userId?.images as '') || images.ICON_USER} />
-                                            <h4>{item?.userId?.username}</h4>
+                {listComments?.map((item, index) => {
+                    const userRating = listRating?.find((rating) => rating?.userId?._id === item?.userId?._id)?.rating;
+
+                    return (
+                        <div key={index}>
+                            <div className="pages__eventdetail_comment p-3">
+                                {item.isDeleted ? (
+                                    <div>{item.comment}</div>
+                                ) : (
+                                    <div className="pages__eventdetail_comment_infor">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <div className="pages__eventdetail_comment_infor_user">
+                                                <Img src={(item?.userId?.images as '') || images.ICON_USER} />
+                                                <h4>
+                                                    {item?.userId?.username}
+                                                    {userRating && (
+                                                        <span style={{ fontSize: '14px', color: '#FFD700' }}>{userRating} ★</span>
+                                                    )}
+                                                </h4>
+                                            </div>
+                                            <div className="pages__eventdetail_comment_time bases__width26 text-end">
+                                                {moment(item?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
+                                            </div>
                                         </div>
-                                        <div className="pages__eventdetail_comment_time bases__width26 text-end">
-                                            {moment(item?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
+                                        <div className="pages__eventdetail_comment_infor_content">
+                                            <p>{item?.comment}</p>
                                         </div>
                                     </div>
-                                    <div className="pages__eventdetail_comment_infor_content">
-                                        <p>{item?.comment}</p>
-                                    </div>
+                                )}
+                                <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
+                                    <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
+                                    {item?.userId?._id === profile?._id && (
+                                        <Button
+                                            buttonText="Edit"
+                                            startIcon=""
+                                            onClick={() => hanldeEditcomment(item?._id ?? '', item?.comment ?? '')}
+                                        />
+                                    )}
                                 </div>
-                            )}
-                            <div className="pages__eventdetail_comment_time d-flex justify-content-end flex-row gap-1">
-                                <Button buttonText="Reply" startIcon="" onClick={() => handleReplyClick(item?._id ?? '')} />
-                                {item?.userId?._id === profile?._id && (
-                                    <Button
-                                        buttonText="Edit"
-                                        startIcon=""
-                                        onClick={() => hanldeEditcomment(item?._id ?? '', item?.comment ?? '')}
-                                    />
+
+                                {replyId === item._id && (
+                                    <div className="reply-form pt-4">
+                                        <Validator ref={replyCommentValidatorRef}>
+                                            <Input
+                                                type="textarea"
+                                                value={replyCommemt ?? ''}
+                                                onChange={(value: string) => handleOnChange('replyCommemt', value)}
+                                                placeholder="Enter your reply..."
+                                            />
+                                        </Validator>
+                                        <div className="d-flex justify-content-end pt-3">
+                                            <Button buttonText="Send" onClick={() => handleFetchReplyComment(item._id ?? '')} />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {replyId === item._id && (
+                                    <div className="reply-list pt-3 pl-3">
+                                        {listReplyComments?.map((reply, replyIndex) => {
+                                            const userRating = listRating?.find(
+                                                (rating) => rating?.userId?._id === reply?.userId?._id,
+                                            )?.rating;
+                                            return (
+                                                <div key={replyIndex} className="reply-comment p-2 border-top bases__margin--left90">
+                                                    <div className="d-flex justify-content-between align-items-center">
+                                                        <div className="pages__eventdetail_comment_infor_user d-flex flex-row ">
+                                                            <Img src={(reply?.userId?.images as '') || images.ICON_USER} />
+                                                            <h5>{reply?.userId?.username}</h5>
+                                                            {userRating && (
+                                                                <span style={{ fontSize: '14px', color: '#FFD700' }}>{userRating} ★</span>
+                                                            )}
+                                                        </div>
+                                                        <div className="reply-comment-time bases__width26 text-end">
+                                                            {moment(reply?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
+                                                        </div>
+                                                    </div>
+                                                    <div className="reply-comment-content">
+                                                        <p>{reply?.comment}</p>
+                                                    </div>
+
+                                                    <div className="d-flex justify-content-end">
+                                                        {reply?.userId?._id === profile?._id && (
+                                                            <Button
+                                                                buttonText="Edit"
+                                                                startIcon=""
+                                                                onClick={() => hanldeEditcomment(reply?._id ?? '', reply?.comment ?? '')}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
                                 )}
                             </div>
-
-                            {replyId === item._id && (
-                                <div className="reply-form pt-4">
-                                    <Validator ref={replyCommentValidatorRef}>
-                                        <Input
-                                            type="textarea"
-                                            value={replyCommemt ?? ''}
-                                            onChange={(value: string) => handleOnChange('replyCommemt', value)}
-                                            placeholder="Enter your reply..."
-                                        />
-                                    </Validator>
-                                    <div className="d-flex justify-content-end pt-3">
-                                        <Button buttonText="Send" onClick={() => handleFetchReplyComment(item._id ?? '')} />
-                                    </div>
-                                </div>
-                            )}
-
-                            {replyId === item._id && (
-                                <div className="reply-list pt-3 pl-3">
-                                    {listReplyComments?.map((reply, replyIndex) => (
-                                        <div key={replyIndex} className="reply-comment p-2 border-top bases__margin--left90">
-                                            <div className="d-flex justify-content-between align-items-center">
-                                                <div className="pages__eventdetail_comment_infor_user">
-                                                    <Img src={(reply?.userId?.images as '') || images.ICON_USER} />
-                                                    <h5>{reply?.userId?.username}</h5>
-                                                </div>
-                                                <div className="reply-comment-time bases__width26 text-end">
-                                                    {moment(reply?.createdAt ?? '').format('DD/MM/YYYY HH:mm')}
-                                                </div>
-                                            </div>
-                                            <div className="reply-comment-content">
-                                                <p>{reply?.comment}</p>
-                                            </div>
-
-                                            <div className="d-flex justify-content-end">
-                                                {reply?.userId?._id === profile?._id && (
-                                                    <Button
-                                                        buttonText="Edit"
-                                                        startIcon=""
-                                                        onClick={() => hanldeEditcomment(reply?._id ?? '', reply?.comment ?? '')}
-                                                    />
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             <div className="pages__eventdetail_relate">

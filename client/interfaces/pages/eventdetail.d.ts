@@ -16,4 +16,6 @@ interface IEventDetailPageState {
     customer?: IEditUserProfileDataAPI;
     payment?: IOrderDataApi;
     updateComments?: string;
+    rating?: number;
+    listRating?: IRatingDataApi[];
 }

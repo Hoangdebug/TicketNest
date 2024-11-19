@@ -20,7 +20,7 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
         event: [],
         status: 'all',
         search: '',
-        statusEventFilter: enums.EventStatus.PENDING,
+        statusEventFilter: enums.EventStatus.ACCEPTED,
         statusEvent: 'all',
         currentPage: pageQuery,
         totalPage: 0,
@@ -169,15 +169,16 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
         );
     };
 
-    const handleUpdateStatusEventByAdmin = async (idsToUpdate: string[]) => {
+    const handleUpdateStatusEventByAdmin = async (idsToUpdate: string) => {
         console.log(statusEventFilter);
         if (!statusEventFilter || statusEventFilter === 'all') {
             console.error('Invalid status selected for update.');
             return;
         }
+
         dispatch(
             await fetchUpdateStatusEventByAdmin(
-                idsToUpdate.join(','),
+                idsToUpdate.toString(),
                 { status: statusEventFilter },
                 (res: IEventUpdateByAdmin | IErrorAPIRes | null) => {
                     if (res?.code === http.SUCCESS_CODE) {
@@ -205,10 +206,6 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
     const renderEventTypeOptions = () => {
         const eventTypeOptions = [
             {
-                value: enums.EventStatus.PENDING,
-                label: enums.EventStatus.PENDING,
-            },
-            {
                 value: enums.EventStatus.CANCELLED,
                 label: enums.EventStatus.CANCELLED,
             },
@@ -231,7 +228,7 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
                         <div className="pt-3">
                             <Select
                                 className="p-2"
-                                value={statusEventFilter}
+                                value={statusEventFilter ?? ''}
                                 onChange={(value: string) => handleOnChange('statusEventFilter', value)}
                                 options={renderEventTypeOptions()}
                             />
@@ -246,7 +243,7 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
                         buttonText="OK"
                         background="blue"
                         onClick={() => {
-                            handleUpdateStatusEventByAdmin([id]);
+                            handleUpdateStatusEventByAdmin(id);
                             dispatch(
                                 setModal({
                                     isShow: false,
@@ -335,7 +332,7 @@ const EventManagerAcceptPage: IEventManagerAcceptPage<IEventManagerAcceptPagePro
                         ))}
                     </div>
                     {event?.map((item, index) => (
-                        <div className='className="d-flex flex-column p-3 pages__events--box mt-3 gap-4'>
+                        <div key={index} className='className="d-flex flex-column p-3 pages__events--box mt-3 gap-4'>
                             <div key={index}>
                                 <div className="d-flex flex-row justify-content-between align-items-center">
                                     <div className="pages__events--header-title d-flex flex-row">
