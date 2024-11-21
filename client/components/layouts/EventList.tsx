@@ -6,6 +6,10 @@ import WatchLaterIcon from '@mui/icons-material/WatchLater';
 import { routes } from '@utils/constants';
 import moment from 'moment';
 import Img from '@components/commons/Img';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import DatePickerPopup from './DatePickerPopup';
+import FilterPopup from './FilterPopup';
 
 const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     const { dataEvent } = props;
@@ -13,8 +17,26 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
 
     const [state, setState] = useState<IEventListComponentState>({
         type: 'All',
+        isActive: false,
     });
     const { type } = state;
+
+    const [filterCriteria, setFilterCriteria] = useState<{
+        priceRange: [number, number];
+        ticketType: string;
+        location: string;
+        dateRange: { start: string; end: string } | null;
+    }>({
+        priceRange: [0, 1000000],
+        ticketType: 'all',
+        location: 'all',
+        dateRange: null,
+    });
+
+    const [filteredEvents, setFilteredEvents] = useState<IEventDataApi[] | []>([]);
+
+    const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+    const [isFilterPopupOpen, setIsFilterPopupOpen] = useState(false);
 
     useEffect(() => {
         const { type } = router.query;
@@ -35,28 +57,74 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
         { title: 'Work Shop', query: 'Workshop' },
     ];
 
-    const filteredEvents = dataEvent?.filter((event) => (type === 'All' ? true : event?.event_type === type));
+    useEffect(() => {
+        const newFilteredEvents = dataEvent?.filter((event) => {
+            const matchesType = type === 'All' || event?.event_type === type;
+
+            const matchesPrice =
+                filterCriteria.priceRange[0] <= Math.min(...(event?.price || [])) &&
+                filterCriteria.priceRange[1] >= Math.max(...(event?.price || []));
+
+            const matchesTicketType = filterCriteria.ticketType === 'all' || event?.ticket_type?.includes(filterCriteria.ticketType);
+
+            const matchesLocation = filterCriteria.location === 'all' || event?.location === filterCriteria.location;
+
+            const matchesDateRange =
+                !filterCriteria.dateRange ||
+                (moment(event?.day_event).isSameOrAfter(filterCriteria.dateRange.start) &&
+                    moment(event?.day_event).isSameOrBefore(filterCriteria.dateRange.end));
+
+            return matchesType && matchesPrice && matchesTicketType && matchesLocation && matchesDateRange;
+        });
+
+        setFilteredEvents(newFilteredEvents || []);
+    }, [type, filterCriteria, dataEvent]);
+
+    const toggleDatePicker = () => setIsDatePickerOpen(!isDatePickerOpen);
+    const toggleFilterPopup = () => setIsFilterPopupOpen(!isFilterPopupOpen);
 
     return (
         <div className="components__event p-4">
-            <div className="components__event--content col-sm-12 bases__margin--bottom40">
-                <h1 className="fw-bold">Explore Events</h1>
-                <div className="d-flex gap-3 py-4">
-                    {listTypeSearch.map((item, index) => (
-                        <div key={index}>
-                            <Button
-                                buttonText={item.title}
-                                background={type === item.query ? 'black' : 'white'}
-                                textColor={type === item.query ? 'white' : 'black'}
-                                className={`${type === item.query ? 'actived' : ''} components__event--btnFilter`}
-                                onClick={() =>
-                                    router.push({ pathname: router.pathname, query: { type: item.query } }, undefined, { scroll: false })
-                                }
-                            />
-                        </div>
-                    ))}
-                </div>
+            <div className="components__event--filter d-flex gap-3 py-4">
+                <Button
+                    buttonText="All dates"
+                    icon={<CalendarTodayIcon />}
+                    className="components__event--btnFilter"
+                    onClick={toggleDatePicker}
+                />
+                <Button
+                    buttonText="Filter"
+                    icon={<FilterListIcon />}
+                    className="components__event--btnFilter"
+                    onClick={toggleFilterPopup}
+                />
             </div>
+
+            {isDatePickerOpen && (
+                <DatePickerPopup
+                    onClose={() => setIsDatePickerOpen(false)}
+                    onApply={(selectedDates) => {
+                        console.log('Selected Dates:', selectedDates);
+                        setFilterCriteria((prev) => ({
+                            ...prev,
+                            dateRange: selectedDates,
+                        }));
+                        setIsDatePickerOpen(false);
+                    }}
+                />
+            )}
+
+            {isFilterPopupOpen && (
+                <FilterPopup
+                    onClose={() => setIsFilterPopupOpen(false)}
+                    onApply={(filters) => {
+                        console.log('Applied Filters:', filters);
+                        setFilterCriteria(filters);
+                        setIsFilterPopupOpen(false);
+                    }}
+                />
+            )}
+
             <div className="components__event--items row">
                 {filteredEvents && filteredEvents.length > 0 ? (
                     filteredEvents.map((item, index) => (
@@ -67,8 +135,7 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                                 router.push({ pathname: routes.CLIENT.EVENT_DETAILS.href, query: { id: item._id } }, undefined, {
                                     scroll: false,
                                 })
-                            }
-                        >
+                            }>
                             <div className="components__event--items-card">
                                 <div className="w-100" style={{ position: 'relative' }}>
                                     <Img src={item?.images as string} className="components__event--items-card-img img-fluid w-100" />
