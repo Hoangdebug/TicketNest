@@ -173,6 +173,14 @@ export const listEventOrganizer = async () => {
     }
 };
 
+export const searchEvents = async (keyword: string) => {
+    try {
+        return await axios.get(`${routes.API.EVENT_SEARCH.href}=${keyword}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const detailsEvent = async (id: string) => {
     try {
         return await axios.get<IEventDetailsApiRes>(`${routes.API.EVENT.href}/${id}`);
