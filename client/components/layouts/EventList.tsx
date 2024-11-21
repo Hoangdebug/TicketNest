@@ -10,7 +10,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import DatePickerPopup from './DatePickerPopup';
 import FilterPopup from './FilterPopup';
-import { searchEvents } from '@redux/actions/api';
+import { searchEvents, fetchAddFavourite } from '@redux/actions/api';
 import { useDispatch, useSelector } from 'react-redux';
 
 const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
@@ -112,6 +112,30 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
         }
     }, [searchKeyword, dataEvent]);
 
+    const user_id = "673c8aa8ac6ce1ce4b08d0bd";  // Replace with the actual user ID from state or props
+
+    const addtoFavourite = async (item: IEventDataApi) => {
+        const data = {
+            user: user_id,  
+            event: item?._id, 
+        };
+        dispatch(
+            await fetchAddFavourite(data, (res: IRatingDataAPIRes | IErrorAPIRes | null) => {
+                if (res && 'success' in res && res.success && 'result' in res && Array.isArray(res.result) && res.result.length > 0) {
+                    const seat = res.result[0];
+                    console.log('Fetched Seat:', seat);
+                    setState((prevState) => ({
+                        ...prevState,
+                        seatDetails: seat,
+                    }));
+                } else {
+                    // Handle case when no result or error occurs
+                    console.error("Failed to add to favourites:", res);
+                }
+            })
+        );
+    }
+    
     const [sortCriteria, setSortCriteria] = useState('default');
     const handleSort = (criteria) => {
         setSortCriteria(criteria);
@@ -232,6 +256,9 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                                             <p className="m-0">{formattedDayEvent}</p>
                                         </span>
                                     </div>
+                                    <button className='d-flex ' style={{ justifyContent: "center" }} onClick={() => addtoFavourite(item)}>
+                                        Add to Favourite
+                                    </button>  
                                 </div>
                             </div>
                         </div>
