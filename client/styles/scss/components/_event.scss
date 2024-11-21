@@ -1,5 +1,168 @@
 .components {
     &__event {
+        &-popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -20%);
+            background: white;
+            width: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1050;
+
+            &-header {
+                font-size: 18px;
+                font-weight: bold;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 10px;
+            }
+
+            &-filters {
+                display: flex;
+                justify-content: space-between;
+
+                .filter-button {
+                    flex: 1;
+                    padding: 8px 12px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    background: #f9f9f9;
+                    font-size: 14px;
+                    cursor: pointer;
+                    text-align: center;
+                    margin: 0 2px;
+
+                    &.active {
+                        background: #6ac045;
+                        color: white;
+                        border-color: #6ac045;
+                    }
+
+                    &:hover:not(.active) {
+                        background: #e0e0e0;
+                    }
+                }
+            }
+
+            &-body {
+                margin-top: 15px;
+
+                label {
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                    display: block;
+                }
+
+                .form-control {
+                    width: 100%;
+                    padding: 8px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    background: #f9f9f9;
+                    font-size: 14px;
+                }
+            }
+
+            &-footer {
+                margin-top: 15px;
+
+                .btn-reset {
+                    background: transparent;
+                    color: #6ac045;
+                    border: none;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+
+                .btn-apply {
+                    background: #6ac045;
+                    color: white;
+                    border: none;
+                    font-weight: bold;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        &-filter {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -20%);
+            background: white;
+            width: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1050;
+
+            &-header {
+                font-size: 18px;
+                font-weight: bold;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 10px;
+            }
+
+            &-body {
+                margin-top: 15px;
+
+                .filter-section {
+                    label {
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                        display: block;
+                    }
+
+                    .form-control {
+                        width: 100%;
+                        padding: 8px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        background: #f9f9f9;
+                        font-size: 14px;
+                    }
+
+                    .d-flex {
+                        display: flex;
+                        align-items: center;
+                        gap: 5px;
+
+                        input {
+                            width: 100%;
+                            max-width: 100px;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            &-footer {
+                margin-top: 15px;
+
+                .btn-reset {
+                    background: transparent;
+                    color: #6ac045;
+                    border: none;
+                    font-weight: bold;
+                    cursor: pointer;
+                }
+
+                .btn-apply {
+                    background: #6ac045;
+                    color: white;
+                    border: none;
+                    font-weight: bold;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            }
+        }
+
         &--content {
         }
 
