@@ -668,21 +668,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     classNameTime="components__addevent_picker-time"
                                 />
                             </Validator>
-
-                            <label htmlFor="location" className="pb-2">
-                                Event Date<span className="text-danger">*</span>
-                            </label>
-                            <Validator className="bases__width-percent--40 components__addevent_picker_from">
-                                <DateTimePicker
-                                    value={eventAdd?.day_event}
-                                    onBlur={() => handleValidateEventDateTime()}
-                                    onChange={(value: string) => handleOnChange('day_event', value)}
-                                    maxDate={null}
-                                    maxTime={null}
-                                    classNameDate="components__addevent_picker-date"
-                                    classNameTime="components__addevent_picker-time"
-                                />
-                            </Validator>
+                            
                         </div>
                         <div className="form-group">
                             <label htmlFor="avatar" className="pb-2">
