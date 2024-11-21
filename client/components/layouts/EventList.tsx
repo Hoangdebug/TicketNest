@@ -24,6 +24,7 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     const { type } = state;
 
     const [filterCriteria, setFilterCriteria] = useState<{
+        //
         priceRange: [number, number];
         ticketType: string;
         location: string;
@@ -52,11 +53,12 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     const formattedDayStart = moment(dataEvent?.[0]?.day_start).format('MMM DD, YYYY');
     const formattedDayEnd = moment(dataEvent?.[0]?.day_end).format('MMM DD, YYYY');
     const formattedDayEvent = moment(dataEvent?.[0]?.day_event).format('MMM DD, YYYY');
+
     const listTypeSearch = [
         { title: 'All', query: 'All' },
         { title: 'Music', query: 'Music' },
         { title: 'Dramatic', query: 'Dramatic' },
-        { title: 'Work Shop', query: 'Workshop' },
+        { title: 'Workshop', query: 'Workshop' },
     ];
 
     useEffect(() => {
@@ -67,7 +69,7 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                 filterCriteria.priceRange[0] <= Math.min(...(event?.price || [])) &&
                 filterCriteria.priceRange[1] >= Math.max(...(event?.price || []));
 
-            const matchesTicketType = filterCriteria.ticketType === 'all' || event?.ticket_type?.includes(filterCriteria.ticketType);
+            const matchesTicketType = filterCriteria.ticketType === 'all' || event?.event_type?.includes(filterCriteria.ticketType);
 
             const matchesLocation = filterCriteria.location === 'all' || event?.location === filterCriteria.location;
 
@@ -86,11 +88,14 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     const toggleFilterPopup = () => setIsFilterPopupOpen(!isFilterPopupOpen);
 
     const [searchKeyword, setSearchKeyword] = useState('');
+
     const dispatch = useDispatch();
+
     const handleSearch = async () => {
         console.log(`Searching for events with keyword: ${searchKeyword}`);
         dispatch(
             await searchEvents(searchKeyword, (res) => {
+                //search
                 if (res && res.code === 200) {
                     console.log('Search results received:', res.result);
                     setFilteredEvents(res.result);
@@ -130,6 +135,27 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
             })
         );
     }
+    
+    const [sortCriteria, setSortCriteria] = useState('default');
+    const handleSort = (criteria) => {
+        setSortCriteria(criteria);
+        let sortedEvents = [...filteredEvents];
+        if (criteria === 'price_asc') {
+            //tang dan tien
+            sortedEvents.sort((a, b) => Math.max(...a.price) - Math.max(...b.price));
+        } else if (criteria === 'price_desc') {
+            //giam dan tien
+            sortedEvents.sort((a, b) => Math.max(...b.price) - Math.max(...a.price));
+        } else if (criteria === 'date_asc') {
+            //tang dan ngay
+            sortedEvents.sort((a, b) => new Date(a.day_event) - new Date(b.day_event));
+        } else if (criteria === 'date_desc') {
+            //giam dan ngay
+            sortedEvents.sort((a, b) => new Date(b.day_event) - new Date(a.day_event));
+        }
+        setFilteredEvents(sortedEvents);
+    };
+
     return (
         <div className="components__event p-4">
             {/*Search textbox*/}
@@ -143,6 +169,18 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                 />
                 <Button buttonText="Search" className="btn-primary" onClick={handleSearch} />
             </div>
+
+            {/*Sort*/}
+            <div className="components__event--sort d-flex mb-4">
+                <select className="form-select" value={sortCriteria} onChange={(e) => handleSort(e.target.value)}>
+                    <option value="default">Default</option>
+                    <option value="price_asc">Price: Low to High</option>
+                    <option value="price_desc">Price: High to Low</option>
+                    <option value="date_asc">Date: Earliest First</option>
+                    <option value="date_desc">Date: Latest First</option>
+                </select>
+            </div>
+
             <div className="components__event--filter d-flex gap-3 py-4">
                 <Button
                     buttonText="All dates"

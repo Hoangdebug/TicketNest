@@ -1,5 +1,17 @@
 .components {
     &__event {
+        &--sort {
+            margin-bottom: 20px;
+        
+            select {
+                padding: 8px 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background: #f9f9f9;
+                font-size: 14px;
+            }
+        }
+        
         &-popup {
             position: fixed;
             top: 20%;
