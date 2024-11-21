@@ -545,6 +545,21 @@ export const fetchDetailsEvent = async (
     };
 };
 
+export const searchEvents = async (
+    keyword: string,
+    callBack?: (result: IEventListComponentProps | IErrorAPIRes | null) => void,
+    isLoad: boolean = true,
+) => {
+    return async (dispatch: Dispatch) => {
+        console.log(`Searching for events with keyword: ${keyword}`); // Debug log
+        const response = await apiHelper.searchEvents(keyword); // Kiểm tra API Helper
+        console.log(response); // Log response từ API
+        if (callBack) {
+            callBack(response?.data);
+        }
+    };
+};
+
 export const fetchDetailsSeat = async (
     id: string,
     callBack?: (result: ISeattype2DetailsApiRes | IErrorAPIRes | null) => void,

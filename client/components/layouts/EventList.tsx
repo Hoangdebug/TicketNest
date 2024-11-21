@@ -3,13 +3,15 @@ import Button from '@components/commons/Button';
 import { useRouter } from 'next/router';
 import TodayIcon from '@mui/icons-material/Today';
 import WatchLaterIcon from '@mui/icons-material/WatchLater';
-import { routes } from '@utils/constants';
+import { http, routes } from '@utils/constants';
 import moment from 'moment';
 import Img from '@components/commons/Img';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import DatePickerPopup from './DatePickerPopup';
 import FilterPopup from './FilterPopup';
+import { searchEvents } from '@redux/actions/api';
+import { useDispatch, useSelector } from 'react-redux';
 
 const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     const { dataEvent } = props;
@@ -76,8 +78,44 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     const toggleDatePicker = () => setIsDatePickerOpen(!isDatePickerOpen);
     const toggleFilterPopup = () => setIsFilterPopupOpen(!isFilterPopupOpen);
 
+    const [searchKeyword, setSearchKeyword] = useState('');
+
+    const dispatch = useDispatch();
+
+    const handleSearch = async () => {
+        console.log(`Searching for events with keyword: ${searchKeyword}`);
+        dispatch(
+            await searchEvents(searchKeyword, (res) => {
+                if (res && res.code === 200) {
+                    console.log('Search results received:', res.result);
+                    setFilteredEvents(res.result);
+                } else {
+                    console.log('No results found or error occurred');
+                    setFilteredEvents([]);
+                }
+            }),
+        );
+    };
+
+    useEffect(() => {
+        if (!searchKeyword) {
+            setFilteredEvents(dataEvent); // Hiển thị dữ liệu ban đầu nếu không có từ khóa
+        }
+    }, [searchKeyword, dataEvent]);
+
     return (
         <div className="components__event p-4">
+            <div className="components__event--search d-flex mb-4">
+                <input
+                    type="text"
+                    placeholder="Search events by name or location..."
+                    className="form-control me-2"
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                />
+                <Button buttonText="Search" className="btn-primary" onClick={handleSearch} />
+            </div>
+
             <div className="components__event--filter d-flex gap-3 py-4">
                 <Button
                     buttonText="All dates"

@@ -181,6 +181,14 @@ export const detailsEvent = async (id: string) => {
     }
 };
 
+export const searchEvents = async (keyword: string) => {
+    try {
+        return await axios.get(`${routes.API.EVENT_SEARCH.href}=${keyword}`);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export const detailsSeat = async (id: string) => {
     try {
         return await axios.get<ISeattype2DetailsApiRes>(`${routes.API.SEAT.href}/${id}`);

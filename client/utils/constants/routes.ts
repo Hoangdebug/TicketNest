@@ -213,6 +213,10 @@ const EVENT_API: IRouteConstant = {
     href: 'event/',
 };
 
+const EVENT_SEARCH: IRouteConstant = {
+    href: 'event/search?keyword',
+};
+
 const SEAT_API: IRouteConstant = {
     href: 'seat/',
 };
@@ -281,6 +285,7 @@ export const API = {
     COMMENT: COMMENT_API,
     // organizer
     EVENT: EVENT_API,
+    EVENT_SEARCH: EVENT_SEARCH,
     SEAT: SEAT_API,
     ORGANIZER_LIST_EVENT: EVENT_LIST_ORGANIZER_API,
     EVENT_UPLOAD_IMG: EVENT_UPLOAD_IMG_API,
