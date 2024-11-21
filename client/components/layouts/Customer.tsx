@@ -1,15 +1,23 @@
 import Button from '@components/commons/Button';
+import Input from '@components/commons/Input';
 import Table from '@components/commons/Table';
 import { setModal } from '@redux/actions';
 import { fetchBanCustomerByAdmin } from '@redux/actions/api';
 import { http, images } from '@utils/constants';
-import React, { createRef } from 'react';
+import React, { createRef, useState } from 'react';
 import Img from 'react-cool-img';
 import { useDispatch } from 'react-redux';
 
 const AdminListCustomerComponents: IAdminListCustomerComponents<IAdminListCustomerComponentsProps> = (props) => {
     const { customers, updateCustomers } = props;
     const dispatch = useDispatch();
+
+    const [state, setState] = useState<IAdminListCustomerComponentsState>({
+        search: '',
+        sortBy: '',
+        sortOrder: 'asc',
+    });
+    const { search, sortBy, sortOrder } = state;
 
     const tableRef = createRef<ITableComponentHandle>();
 
@@ -71,8 +79,42 @@ const AdminListCustomerComponents: IAdminListCustomerComponents<IAdminListCustom
             }),
         );
     };
+    const handleOnChange = (field: string, value: string) => {
+        setState((prevState) => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
+    const filteredCustomers = customers?.filter((customer) => {
+        const searchLower = search?.toLowerCase();
+        return (
+            customer?.username?.toLowerCase().includes(searchLower as string) ||
+            customer?.phone?.toLowerCase().includes(searchLower as string) ||
+            customer?.type?.toLowerCase().includes(searchLower as string)
+        );
+    });
 
-    const renderData = customers?.map((item) => {
+    const sortedCustomers = [...(filteredCustomers as [])].sort((a, b) => {
+        if (!sortBy) return 0;
+        const fieldA = a[sortBy]?.toString().toLowerCase() || '';
+        const fieldB = b[sortBy]?.toString().toLowerCase() || '';
+
+        if (sortOrder === 'asc') {
+            return fieldA > fieldB ? 1 : fieldA < fieldB ? -1 : 0;
+        } else {
+            return fieldA < fieldB ? 1 : fieldA > fieldB ? -1 : 0;
+        }
+    });
+
+    const handleSort = (column: string) => {
+        setState((prevState) => ({
+            ...prevState,
+            sortBy: column,
+            sortOrder: prevState.sortBy === column && prevState.sortOrder === 'asc' ? 'desc' : 'asc',
+        }));
+    };
+
+    const renderData = sortedCustomers?.map((item) => {
         const editBtn = {
             export: {
                 srcIcon: images.ICON_DELETE,
@@ -92,7 +134,7 @@ const AdminListCustomerComponents: IAdminListCustomerComponents<IAdminListCustom
                 userType = 'USER';
                 break;
             default:
-                userType = item.type;
+                userType = item?.type;
         }
 
         return {
@@ -111,23 +153,27 @@ const AdminListCustomerComponents: IAdminListCustomerComponents<IAdminListCustom
             },
             {
                 title: 'Users Name',
-                isSort: false,
+                isSort: true,
+                onClick: () => handleSort('username'),
                 className: 'text-center',
             },
             {
                 title: 'Days Of Birth',
                 isSort: true,
                 className: 'text-center',
+                onClick: () => handleSort('dob'),
             },
             {
                 title: 'Gender',
                 isSort: true,
                 className: 'text-center',
+                onClick: () => handleSort('gender'),
             },
             {
                 title: 'Phone',
                 isSort: true,
                 className: 'text-center',
+                onClick: () => handleSort('phone'),
             },
             {
                 title: 'Address',
@@ -138,6 +184,7 @@ const AdminListCustomerComponents: IAdminListCustomerComponents<IAdminListCustom
                 title: 'Permission ',
                 isSort: true,
                 className: 'text-center',
+                onClick: () => handleSort('type'),
             },
         ],
         body: {
@@ -178,6 +225,7 @@ const AdminListCustomerComponents: IAdminListCustomerComponents<IAdminListCustom
 
     return (
         <div className="pages__organizer-table">
+            <Input placeholder="Enter your keywords....." value={search} onChange={(value: string) => handleOnChange('search', value)} />
             <Table ref={tableRef} heads={tableEventRender.heads} body={tableEventRender.body} total={customers?.length} />
         </div>
     );
