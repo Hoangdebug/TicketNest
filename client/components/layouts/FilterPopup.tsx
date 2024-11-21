@@ -10,6 +10,7 @@ const FilterPopup: React.FC<{
     const [location, setLocation] = useState<string>('all');
 
     const handleApply = () => {
+        //
         onApply({
             priceRange,
             ticketType,
@@ -40,9 +41,7 @@ const FilterPopup: React.FC<{
                             className="form-control"
                             value={priceRange[0]}
                             min={0}
-                            onChange={(e) =>
-                                setPriceRange([Math.min(+e.target.value, priceRange[1]), priceRange[1]])
-                            }
+                            onChange={(e) => setPriceRange([Math.min(+e.target.value, priceRange[1]), priceRange[1]])}
                         />
                         <span>–</span>
                         <input
@@ -50,9 +49,7 @@ const FilterPopup: React.FC<{
                             className="form-control"
                             value={priceRange[1]}
                             max={1000000}
-                            onChange={(e) =>
-                                setPriceRange([priceRange[0], Math.max(priceRange[0], +e.target.value)])
-                            }
+                            onChange={(e) => setPriceRange([priceRange[0], Math.max(priceRange[0], +e.target.value)])}
                         />
                     </div>
                 </div>
@@ -61,11 +58,7 @@ const FilterPopup: React.FC<{
                     <label htmlFor="ticket-type" className="pb-2">
                         Ticket Type
                     </label>
-                    <select
-                        className="form-control"
-                        value={ticketType}
-                        onChange={(e) => setTicketType(e.target.value)}
-                    >
+                    <select className="form-control" value={ticketType} onChange={(e) => setTicketType(e.target.value)}>
                         <option value="all">All Types</option>
                         <option value="Music">Music</option>
                         <option value="Dramatic">Dramatic</option>
@@ -77,15 +70,11 @@ const FilterPopup: React.FC<{
                     <label htmlFor="location" className="pb-2">
                         Location
                     </label>
-                    <select
-                        className="form-control"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                    >
+                    <select className="form-control" value={location} onChange={(e) => setLocation(e.target.value)}>
                         <option value="all">All Locations</option>
-                        <option value="Location A">location A</option>
-                        <option value="Location B">location B</option>
-                        <option value="Location C">location C</option>
+                        <option value="Location A">location A - Stadium</option>
+                        <option value="Location B">location B - Theatre</option>
+                        <option value="Location C">location C - Auditorium</option>
                         <option value="ANOTHER">ANOTHER</option>
                     </select>
                 </div>
