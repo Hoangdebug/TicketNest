@@ -332,3 +332,19 @@ export const createOrder = async (eid: string, data: IOrderDataApi) => {
         throw err;
     }
 };
+
+export const createRating = async (eventId: string, data: IRatingDataApi) => {
+    try {
+        return await axios.post<IRatingDataAPIRes>(`${routes.API.RATING.href}/${eventId}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const listRating = async (eventId: string) => {
+    try {
+        return await axios.get<IListRatingDataAPIRes>(`${routes.API.RATING.href}/${eventId}`);
+    } catch (err) {
+        throw err;
+    }
+};
