@@ -21,7 +21,8 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     });
     const { type } = state;
 
-    const [filterCriteria, setFilterCriteria] = useState<{ //
+    const [filterCriteria, setFilterCriteria] = useState<{
+        //
         priceRange: [number, number];
         ticketType: string;
         location: string;
@@ -50,7 +51,7 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
     const formattedDayStart = moment(dataEvent?.[0]?.day_start).format('MMM DD, YYYY');
     const formattedDayEnd = moment(dataEvent?.[0]?.day_end).format('MMM DD, YYYY');
     const formattedDayEvent = moment(dataEvent?.[0]?.day_event).format('MMM DD, YYYY');
-    
+
     const listTypeSearch = [
         { title: 'All', query: 'All' },
         { title: 'Music', query: 'Music' },
@@ -66,7 +67,7 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                 filterCriteria.priceRange[0] <= Math.min(...(event?.price || [])) &&
                 filterCriteria.priceRange[1] >= Math.max(...(event?.price || []));
 
-            const matchesTicketType = filterCriteria.ticketType === 'all' || event?.ticket_type?.includes(filterCriteria.ticketType);
+            const matchesTicketType = filterCriteria.ticketType === 'all' || event?.event_type?.includes(filterCriteria.ticketType);
 
             const matchesLocation = filterCriteria.location === 'all' || event?.location === filterCriteria.location;
 
