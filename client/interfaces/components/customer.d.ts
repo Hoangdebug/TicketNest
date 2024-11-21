@@ -7,4 +7,7 @@ interface IAdminListCustomerComponentsProps extends IBaseCompProps {
 
 interface IAdminListCustomerComponentsState {
     ids?: string[];
+    search?: string;
+    sortBy?: any;
+    sortOrder?: any;
 }

@@ -6,4 +6,7 @@ interface ICustomerListOrderPageProps extends IBasePageProps {}
 
 interface ICustomerListOrderState {
     listOrder?: IOrderDataApi[];
+    search?: string;
+    sortBy?: any;
+    sortOrder?: any;
 }
