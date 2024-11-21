@@ -1,3 +1,5 @@
+import { Favorite } from "@mui/icons-material";
+
 const HOME: IRouteConstant = {
     href: '/home',
 };
@@ -272,6 +274,10 @@ const ORDER_API: IRouteConstant = {
 const RATING_API: IRouteConstant = {
     href: '/rating',
 };
+
+const ADDFAVOURITE_API : IRouteConstant = {
+    href : '/favourites'
+}
 export const API = {
     LOGIN: LOGIN_API,
     REGISTER: REGISTER_API,
@@ -303,4 +309,7 @@ export const API = {
 
     // rating
     RATING: RATING_API,
+
+    //favourite
+    FAVOURITE : ADDFAVOURITE_API
 };

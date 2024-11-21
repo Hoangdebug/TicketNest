@@ -356,3 +356,11 @@ export const listRating = async (eventId: string) => {
         throw err;
     }
 };
+
+export const addFavourite = async (data: addFavourite) => {
+    try {
+        return await axios.post<addFavouriteRes>(`${routes.API.FAVOURITE.href}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
