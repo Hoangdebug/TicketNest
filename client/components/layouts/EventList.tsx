@@ -246,15 +246,15 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span className="d-flex flex-row w-100 gap-2">
                                             <TodayIcon />
-                                            <p className="m-0">{formattedDayStart}</p>
+                                            <p className="m-0">{moment(item?.day_start).format('MMM DD, YYYY')}</p>
                                         </span>
                                         <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
                                             <WatchLaterIcon />
-                                            <p className="m-0">{formattedDayEnd}</p>
+                                            <p className="m-0">{moment(item?.day_end).format('MMM DD, YYYY')}</p>
                                         </span>
                                         <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
                                             <WatchLaterIcon />
-                                            <p className="m-0">{formattedDayEvent}</p>
+                                            <p className="m-0">{moment(item?.day_event).format('MMM DD, YYYY')}</p>
                                         </span>
                                     </div>
                                     <button className="d-flex " style={{ justifyContent: 'center' }} onClick={() => addtoFavourite(item)}>

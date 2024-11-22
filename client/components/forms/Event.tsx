@@ -622,8 +622,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                         <div
                             className={`w-100 d-flex flex-wrap components__addevent_picker ${
                                 !isValidateStartDateTime || !isValidateEndDateTime ? 'components__addevent_picker_invalid' : ''
-                            }`}
-                        >
+                            }`}>
                             <label htmlFor="location" className="pb-2">
                                 Start Date<span className="text-danger">*</span>
                             </label>
@@ -668,21 +667,6 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                     classNameTime="components__addevent_picker-time"
                                 />
                             </Validator>
-
-                            <label htmlFor="location" className="pb-2">
-                                Event Date<span className="text-danger">*</span>
-                            </label>
-                            <Validator className="bases__width-percent--40 components__addevent_picker_from">
-                                <DateTimePicker
-                                    value={eventAdd?.day_event}
-                                    onBlur={() => handleValidateEventDateTime()}
-                                    onChange={(value: string) => handleOnChange('day_event', value)}
-                                    maxDate={null}
-                                    maxTime={null}
-                                    classNameDate="components__addevent_picker-date"
-                                    classNameTime="components__addevent_picker-time"
-                                />
-                            </Validator>
                         </div>
                         <div className="form-group">
                             <label htmlFor="avatar" className="pb-2">
@@ -692,8 +676,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                 {!previewUrl && (
                                     <label
                                         htmlFor="avatar"
-                                        style={{ cursor: 'pointer', padding: '70px', border: '1px solid #ffbdbd', borderRadius: '10px' }}
-                                    >
+                                        style={{ cursor: 'pointer', padding: '70px', border: '1px solid #ffbdbd', borderRadius: '10px' }}>
                                         <img src={images.ICON_FILE_UPLOAD} alt="" />
                                     </label>
                                 )}
@@ -716,8 +699,7 @@ const AddEventForm: IAddEventComponent<IAddEventComponentProps> = (props) => {
                                             <button
                                                 type="button"
                                                 className="btn btn-danger btn-sm position-absolute top-0 end-0"
-                                                onClick={handleDeleteAvatar}
-                                            >
+                                                onClick={handleDeleteAvatar}>
                                                 X
                                             </button>
                                         </div>
