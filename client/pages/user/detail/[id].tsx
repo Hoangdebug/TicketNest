@@ -37,7 +37,7 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         listRating: [],
     });
     const { eventDetails, event, comment, replyId, listComments, listReplyComments, replyCommemt, rating, listRating } = state;
-
+    const [selectedRating, setSelectedRating] = useState<number>(0);
     const commentValidatorRef = createRef<IValidatorComponentHandle>();
     const replyCommentValidatorRef = createRef<IValidatorComponentHandle>();
 
@@ -50,6 +50,13 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         handleFetchListComment();
         handleFetchListRating();
     }, []);
+
+    useEffect(() => {
+        const dataUserRating = listRating?.find((rating) => rating?.userId?._id === profile._id);
+        if (dataUserRating?.rating) {
+            setSelectedRating(dataUserRating.rating);
+        }
+    }, [listRating, profile]);
 
     useEffect(() => {
         setState((prevState) => ({
@@ -183,13 +190,8 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
     };
 
     const handleFetchCreateRating = async (value: number) => {
-        setState((prevState) => ({
-            ...prevState,
-            rating: value,
-        }));
-
         dispatch(
-            await fetchCreateRating(id?.toString() ?? '', { rating }, (res: IRatingDataAPIRes | IErrorAPIRes | null) => {
+            await fetchCreateRating(id?.toString() ?? '', { rating: value }, (res: IRatingDataAPIRes | IErrorAPIRes | null) => {
                 if (res && res.code === http.SUCCESS_CODE) {
                     handleFetchListRating();
                 } else if (res && res.code === http.VALIDATION_FAIL_CODE)
@@ -348,30 +350,33 @@ const EventDetailPage: IEventDetailPage<IEventDetailPageProps> = () => {
         }
     };
 
+    const calculateRating = (value: number) => {
+        console.log('Rating value:', value);
+        setSelectedRating(value);
+        handleFetchCreateRating(value);
+    };
+
     const renderUIRating = () => {
         const dataUserRating = listRating?.find((rating) => rating?.userId?._id === profile._id);
-        const calculateRating = (value: number) => {
-            handleFetchCreateRating(value);
-        };
+
         return (
             <div className="postion-relative">
                 <div className="radio-input">
-                    {[1, 2, 3, 4, 5].map((value) => (
+                    {[5, 4, 3, 2, 1].map((value) => (
                         <input
-                            key={value}
                             className={`star s${value}`}
                             type="radio"
                             id={`value-${value}`}
                             name="value-radio"
                             value={value}
-                            checked={value <= (dataUserRating?.rating ?? 0)}
+                            checked={selectedRating === value}
                             disabled={!!dataUserRating}
                             onChange={() => calculateRating(value)}
                         />
                     ))}
                 </div>
                 <div className="data_length">
-                    <p>{`(${listRating?.length})`}</p>
+                    <p>{`(${listRating?.length ?? 0})`}</p>
                 </div>
             </div>
         );
