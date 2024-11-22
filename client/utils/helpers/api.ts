@@ -1,9 +1,7 @@
 import { routes } from '@utils/constants';
 import { axios } from '@utils/plugins';
 import { AxiosRequestConfig } from 'axios';
-import { authHelper } from '.';
-import { IFavouriteDataApiRes } from '@interfaces/utils/apis/favouritelist'; // Đảm bảo rằng bạn import đúng interface
-
+import { authHelper } from '.'; // Đảm bảo rằng bạn import đúng interface
 
 const checkAccessTokenAndParams = (data: IAccessTokenAndParams) => {
     const { token, params } = data;
@@ -369,8 +367,7 @@ export const addFavourite = async (data: addFavourite) => {
 
 export const getFavourites = async (userId: string) => {
     try {
-        const response = await axios.get<IFavouriteDataApiRes>(`${routes.API.FAVOURITE.href}/user/${userId}`);
-        return response.data;
+        return await axios.get<IFavouriteDataApiRes>(`${routes.API.FAVOURITE.href}/user/${userId}`);
     } catch (err) {
         throw err;
     }
