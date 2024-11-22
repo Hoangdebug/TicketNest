@@ -1,6 +1,6 @@
 interface addFavourite {
-    user?: string,
-    event?: string
+    user?: string;
+    event?: string;
 }
 
 interface addFavouriteRes extends IBaseAPIRes {
