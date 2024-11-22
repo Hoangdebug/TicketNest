@@ -100,6 +100,7 @@ const Header: IHeaderComponent<IHeaderComponentProps> = (props) => {
                                         <Link href={routes.CLIENT.EDIT_PROFILE_PAGE.href}>Edit Profile</Link>
                                         <Link href={routes.CLIENT.REQUEST_ORGNIZE_PAGE.href}>Request organizer</Link>
                                         <Link href={routes.CLIENT.TICKET_BOOKING_HISTORY.href}>Ticket Booking History</Link>
+                                        <Link href={routes.CLIENT.LIST_FAVOURITE_EVENT_PAGE.href}>List Event Favourite</Link>
                                         <a onClick={handleLogout} style={{ fontSize: '15px', cursor: 'pointer' }}>
                                             Log out
                                         </a>

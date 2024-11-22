@@ -2,6 +2,8 @@ import { routes } from '@utils/constants';
 import { axios } from '@utils/plugins';
 import { AxiosRequestConfig } from 'axios';
 import { authHelper } from '.';
+import { IFavouriteDataApiRes } from '@interfaces/utils/apis/favouritelist'; // Đảm bảo rằng bạn import đúng interface
+
 
 const checkAccessTokenAndParams = (data: IAccessTokenAndParams) => {
     const { token, params } = data;
@@ -360,6 +362,15 @@ export const listRating = async (eventId: string) => {
 export const addFavourite = async (data: addFavourite) => {
     try {
         return await axios.post<addFavouriteRes>(`${routes.API.FAVOURITE.href}`, data);
+    } catch (err) {
+        throw err;
+    }
+};
+
+export const getFavourites = async (userId: string) => {
+    try {
+        const response = await axios.get<IFavouriteDataApiRes>(`${routes.API.FAVOURITE.href}/user/${userId}`);
+        return response.data;
     } catch (err) {
         throw err;
     }
