@@ -112,12 +112,12 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
         }
     }, [searchKeyword, dataEvent]);
 
-    const user_id = "673c8aa8ac6ce1ce4b08d0bd";  // Replace with the actual user ID from state or props
+    const user_id = '673c8aa8ac6ce1ce4b08d0bd'; // Replace with the actual user ID from state or props
 
     const addtoFavourite = async (item: IEventDataApi) => {
         const data = {
-            user: user_id,  
-            event: item?._id, 
+            user: user_id,
+            event: item?._id,
         };
         dispatch(
             await fetchAddFavourite(data, (res: IRatingDataAPIRes | IErrorAPIRes | null) => {
@@ -130,12 +130,12 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                     }));
                 } else {
                     // Handle case when no result or error occurs
-                    console.error("Failed to add to favourites:", res);
+                    console.error('Failed to add to favourites:', res);
                 }
-            })
+            }),
         );
-    }
-    
+    };
+
     const [sortCriteria, setSortCriteria] = useState('default');
     const handleSort = (criteria) => {
         setSortCriteria(criteria);
@@ -245,20 +245,20 @@ const EventList: IEventListComponent<IEventListComponentProps> = (props) => {
                                     <div className="d-flex justify-content-between align-items-center">
                                         <span className="d-flex flex-row w-100 gap-2">
                                             <TodayIcon />
-                                            <p className="m-0">{formattedDayStart}</p>
+                                            <p className="m-0">{moment(item?.day_start).format('MMM DD, YYYY')}</p>
                                         </span>
                                         <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
                                             <WatchLaterIcon />
-                                            <p className="m-0">{formattedDayEnd}</p>
+                                            <p className="m-0">{moment(item?.day_end).format('MMM DD, YYYY')}</p>
                                         </span>
                                         <span className="d-flex flex-row w-100 gap-2" style={{ justifyContent: 'flex-end' }}>
                                             <WatchLaterIcon />
-                                            <p className="m-0">{formattedDayEvent}</p>
+                                            <p className="m-0">{moment(item?.day_event).format('MMM DD, YYYY')}</p>
                                         </span>
                                     </div>
-                                    <button className='d-flex ' style={{ justifyContent: "center" }} onClick={() => addtoFavourite(item)}>
+                                    <button className="d-flex " style={{ justifyContent: 'center' }} onClick={() => addtoFavourite(item)}>
                                         Add to Favourite
-                                    </button>  
+                                    </button>
                                 </div>
                             </div>
                         </div>
