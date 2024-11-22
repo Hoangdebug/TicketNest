@@ -1,4 +1,3 @@
-import { Favorite } from '@mui/icons-material';
 
 const HOME: IRouteConstant = {
     href: '/home',
@@ -136,6 +135,10 @@ const TICKET_BOOKING_HISTORY_PAGE: IRouteConstant = {
     href: '/ticketHistory',
 };
 
+const LIST_FAVOURITE_EVENT_PAGE: IRouteConstant = {
+    href: '/favouritepage',
+};
+
 const ORDER_ADMIN_MANAGER_PAGE: IRouteConstant = {
     href: '/admin/customer/orderList',
 };
@@ -179,6 +182,7 @@ export const CLIENT = {
     PAYMENT_RETURN_PAGE: PAYMENT_RETURN_PAGE,
     PAYMENT_SUCCESS_PAGE: PAYMENT_SUCCESS_PAGE,
     TICKET_BOOKING_HISTORY: TICKET_BOOKING_HISTORY_PAGE,
+    LIST_FAVOURITE_EVENT_PAGE : LIST_FAVOURITE_EVENT_PAGE,
     ORDER_ADMIN_MANAGER: ORDER_ADMIN_MANAGER_PAGE,
     PAYMENT_FAIL_PAGE: PAYMENT_FAIL_PAGE,
 };
@@ -310,6 +314,6 @@ export const API = {
     // rating
     RATING: RATING_API,
 
-    //favourite
+    // favourite
     FAVOURITE: ADDFAVOURITE_API,
 };
