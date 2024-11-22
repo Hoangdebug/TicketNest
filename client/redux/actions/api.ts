@@ -2,8 +2,6 @@ import { Dispatch } from 'redux';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { authHelper, apiHelper } from '@utils/helpers';
 import { SET_LOADER, SET_MEMBER_PROFILE } from '@redux/actions/type';
-import { getFavourites } from '@utils/helpers/api';
-import { IFavouriteDataApiRes } from '@interfaces/utils/apis/favouritelist'; // Chỉnh sửa theo đường dẫn đúng
 
 const setLoader = (data: boolean = false) => {
     return {
@@ -1076,35 +1074,27 @@ export const fetchListOrder = async (callBack?: (result: IOrderDataApiRes | IErr
 export const fetchUserFavourites = async (
     userId: string,
     callBack?: (result: IFavouriteDataApiRes | IErrorAPIRes | null) => void,
-    isLoad: boolean = true
+    isLoad: boolean = true,
 ) => {
     return async (dispatch: Dispatch) => {
-        // Hiển thị loader nếu cần
         if (isLoad) {
             dispatch(setLoader(true));
         }
 
         try {
-            // Gọi hàm getFavourites để lấy dữ liệu
-            const res = await getFavourites(userId);
-
-            // Nếu có callback, gọi callback và truyền dữ liệu trả về
+            const res = await apiHelper.getFavourites(userId);
             if (callBack) {
-                callBack(res); // Truyền dữ liệu trực tiếp
+                callBack(res?.data);
             }
         } catch (err) {
-            // Nếu có lỗi, kiểm tra loại lỗi và xử lý
-            const errorData = err as AxiosError;
-            if (callBack) {
-                // Truyền lỗi qua callback
-                callBack({
-                    code: errorData?.response?.status,
-                    message: errorData?.message,
-                } as IErrorAPIRes);
+            if (!(err instanceof Error)) {
+                const res = err as AxiosResponse<IErrorAPIRes, AxiosError>;
+                if (callBack) {
+                    callBack(res?.data);
+                }
             }
         }
 
-        // Ẩn loader sau khi xử lý xong
         if (isLoad) {
             dispatch(setLoader(false));
         }
